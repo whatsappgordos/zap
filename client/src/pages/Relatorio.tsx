@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { MessageCircle, X, Lock, MessageSquare, Music, Image as ImageIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MapView } from "@/components/Map";
+import { StaticMap } from "@/components/StaticMap";
 
 interface Conversation {
   id: string;
@@ -54,13 +54,39 @@ export default function Relatorio() {
         
         setLocationData(location);
         
+        const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+          const R = 6371;
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLon = (lon2 - lon1) * Math.PI / 180;
+          const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          return R * c;
+        };
+        
         const motels = [
-          { name: "Motel Paraíso", distance: "2.3 km", rating: "4.5", latitude: data.latitude + 0.02, longitude: data.longitude + 0.02 },
-          { name: "Motel Luxo", distance: "3.1 km", rating: "4.2", latitude: data.latitude - 0.015, longitude: data.longitude + 0.025 },
-          { name: "Motel Discreto", distance: "1.8 km", rating: "4.7", latitude: data.latitude + 0.01, longitude: data.longitude - 0.015 },
+          { name: "Motel Paraíso", latitude: data.latitude + 0.02, longitude: data.longitude + 0.02, rating: "4.5" },
+          { name: "Motel Luxo", latitude: data.latitude - 0.015, longitude: data.longitude + 0.025, rating: "4.2" },
+          { name: "Motel Discreto", latitude: data.latitude + 0.01, longitude: data.longitude - 0.015, rating: "4.7" },
         ];
         
-        setMotelData(motels[Math.floor(Math.random() * motels.length)]);
+        const motelsWithDistance = motels.map(motel => ({
+          ...motel,
+          distance: calculateDistance(data.latitude, data.longitude, motel.latitude, motel.longitude)
+        }));
+        
+        const closestMotel = motelsWithDistance.reduce((prev, current) => 
+          prev.distance < current.distance ? prev : current
+        );
+        
+        setMotelData({
+          name: closestMotel.name,
+          distance: closestMotel.distance.toFixed(1) + " km",
+          rating: closestMotel.rating,
+          latitude: closestMotel.latitude,
+          longitude: closestMotel.longitude
+        });
       } catch (error) {
         console.error('Error fetching location:', error);
       } finally {
@@ -278,11 +304,13 @@ export default function Relatorio() {
               </div>
             ) : locationData ? (
               <div className="w-full rounded-lg mb-3 sm:mb-4 overflow-hidden shadow-md border border-gray-200">
-                <MapView
-                  initialCenter={{ lat: locationData.latitude, lng: locationData.longitude }}
-                  initialZoom={15}
+                <StaticMap
+                  latitude={locationData.latitude}
+                  longitude={locationData.longitude}
                   motelData={motelData ? {
                     name: motelData.name,
+                    distance: motelData.distance,
+                    rating: motelData.rating,
                     latitude: motelData.latitude,
                     longitude: motelData.longitude,
                   } : undefined}

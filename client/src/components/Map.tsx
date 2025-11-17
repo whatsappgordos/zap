@@ -48,96 +48,58 @@
  *
  * -------------------------------
  * 📐 GEOMETRY (from `geometry` library)
- * - Pure utility functions; not attached to map.
- * const dist = google.maps.geometry.spherical.computeDistanceBetween(p1, p2);
- *
- * -------------------------------
- * 🛣️ ROUTES (from `routes` library)
- * - Combines DirectionsService (standalone) + DirectionsRenderer (map-attached)
- * const directionsService = new google.maps.DirectionsService();
- * const directionsRenderer = new google.maps.DirectionsRenderer({ map });
- * directionsService.route(
- *   { origin, destination, travelMode: "DRIVING" },
- *   (res, status) => status === "OK" && directionsRenderer.setDirections(res)
+ * - Standalone service; use for calculations.
+ * const distance = google.maps.geometry.spherical.computeDistanceBetween(
+ *   new google.maps.LatLng(37.7749, -122.4194),
+ *   new google.maps.LatLng(40.7128, -74.0060)
  * );
  *
- * -------------------------------
- * 🌦️ MAP LAYERS (attach directly to map)
- * - new google.maps.TrafficLayer().setMap(map);
- * - new google.maps.TransitLayer().setMap(map);
- * - new google.maps.BicyclingLayer().setMap(map);
- *
- * -------------------------------
- * ✅ SUMMARY
- * - “map-attached” → AdvancedMarkerElement, DirectionsRenderer, Layers.
- * - “standalone” → Geocoder, DirectionsService, DistanceMatrixService, ElevationService.
- * - “data-only” → Place, Geometry utilities.
+ * ======
+ * CRITICAL NOTES:
+ * - Do NOT use `useEffect` to attach listeners; use map.addListener() directly
+ * - Do NOT use React state to manage map state; Google Maps manages it
+ * - Do NOT recreate map on every render; use useCallback to memoize init function
+ * - Do NOT call setState inside map listeners; use refs or direct DOM updates
+ * - The proxy handles all API authentication; no API key needed
  */
 
-/// <reference types="@types/google.maps" />
-
-import { useEffect, useRef } from "react";
-import { usePersistFn } from "@/hooks/usePersistFn";
-import { cn } from "@/lib/utils";
+import { useCallback, useEffect, useRef } from "react";
 
 declare global {
   interface Window {
-    google?: typeof google;
+    google: any;
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const FORGE_BASE_URL =
-  import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
-  "https://forge.butterfly-effect.dev";
-const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
-
-function loadMapScript() {
-  return new Promise(resolve => {
-    const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
-    script.async = true;
-    script.crossOrigin = "anonymous";
-    script.onload = () => {
-      resolve(null);
-      script.remove(); // Clean up immediately
-    };
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script");
-    };
-    document.head.appendChild(script);
-  });
-}
-
 interface MapViewProps {
-  className?: string;
-  initialCenter?: google.maps.LatLngLiteral;
+  initialCenter?: { lat: number; lng: number };
   initialZoom?: number;
-  onMapReady?: (map: google.maps.Map) => void;
+  onMapReady?: (map: any) => void;
   motelData?: {
     name: string;
+    distance: string;
+    rating: string;
     latitude: number;
     longitude: number;
   };
 }
 
 export function MapView({
-  className,
-  initialCenter = { lat: 37.7749, lng: -122.4194 },
+  initialCenter = { lat: 40.7128, lng: -74.006 },
   initialZoom = 12,
   onMapReady,
   motelData,
 }: MapViewProps) {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<google.maps.Map | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const map = useRef<any>(null);
+  const infoWindowRef = useRef<any>(null);
 
-  const init = usePersistFn(async () => {
-    await loadMapScript();
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
+  const init = useCallback(async () => {
+    if (!containerRef.current || !window.google) return;
+    if (map.current) return; // Prevent re-initialization
+
+    // Initialize map
+    map.current = new window.google.maps.Map(containerRef.current, {
       zoom: initialZoom,
       center: initialCenter,
       mapTypeControl: true,
@@ -146,30 +108,73 @@ export function MapView({
       streetViewControl: true,
       mapId: "DEMO_MAP_ID",
     });
+
     // Adicionar marcador do motel se os dados forem fornecidos
     if (motelData && window.google?.maps?.marker?.AdvancedMarkerElement) {
       const motelPosition = {
         lat: motelData.latitude,
         lng: motelData.longitude,
       };
-      
-      new window.google.maps.marker.AdvancedMarkerElement({
+
+      // Criar conteudo da InfoWindow
+      const infoContent = document.createElement("div");
+      infoContent.style.padding = "12px";
+      infoContent.style.fontFamily = "Arial, sans-serif";
+      infoContent.style.maxWidth = "250px";
+      infoContent.innerHTML = `
+        <div>
+          <h3 style="margin: 0 0 8px 0; color: #d32f2f; font-size: 16px;">${motelData.name}</h3>
+          <p style="margin: 4px 0; color: #666; font-size: 14px;">
+            <strong>Distancia:</strong> ${motelData.distance}
+          </p>
+          <p style="margin: 4px 0; color: #666; font-size: 14px;">
+            <strong>Avaliacao:</strong> ⭐ ${motelData.rating}
+          </p>
+        </div>
+      `;
+
+      infoWindowRef.current = new window.google.maps.InfoWindow({
+        content: infoContent,
+      });
+
+      const marker = new window.google.maps.marker.AdvancedMarkerElement({
         map: map.current,
         position: motelPosition,
         title: motelData.name,
       });
+
+      marker.addListener("click", () => {
+        if (infoWindowRef.current) {
+          infoWindowRef.current.open({
+            anchor: marker,
+            map: map.current,
+          });
+        }
+      });
+
+      // Centralizar mapa no motel
+      map.current.setCenter(motelPosition);
+      map.current.setZoom(15);
     }
-    
+
     if (onMapReady) {
       onMapReady(map.current);
     }
-  });
+  }, [initialCenter, initialZoom, onMapReady, motelData]);
 
   useEffect(() => {
     init();
   }, [init]);
 
   return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
+    <div
+      ref={containerRef}
+      style={{
+        width: "100%",
+        height: "400px",
+        borderRadius: "8px",
+        overflow: "hidden",
+      }}
+    />
   );
 }
