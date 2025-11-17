@@ -55,3 +55,10 @@
 
 - [x] Corrigir script start para servir corretamente no Render
 - [ ] Testar deploy corrigido no Render (aguardando feedback do usuário)
+
+
+## Melhorias Adicionais
+
+- [ ] Substituir seção de Localização Suspeita por MAPA INTERATIVO do Google Maps
+- [ ] Adicionar marcador do motel no mapa
+- [ ] Remover seção de texto (IP, localização, motel simples)
