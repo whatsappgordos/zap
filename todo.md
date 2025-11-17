@@ -36,7 +36,7 @@
 - [x] Aumentar tempo de carregamento para ~4 segundos
 - [x] Substituir 3 círculos azuis por 3 fotos (mesmo tamanho)
 - [x] Substituir 6 quadrados cinzentos por 6 fotos de mídia recuperada
-- [ ] Implementar geolocalização por IP na seção "Localização Suspeita"
-- [ ] Exibir IP do visitante
-- [ ] Mostrar localização aproximada (cidade/estado)
-- [ ] Integrar mapa com motel próximo da região
+- [x] Implementar geolocalização por IP na seção "Localização Suspeita"
+- [x] Exibir IP do visitante
+- [x] Mostrar localização aproximada (cidade/estado)
+- [x] Integrar motel próximo da região
