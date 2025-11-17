@@ -49,3 +49,9 @@
 - [x] Melhorar legibilidade em celular
 - [x] Grid responsivo para mídia recuperada
 - [x] Melhorar modal para mobile
+
+
+## Correções de Deploy
+
+- [x] Corrigir script start para servir corretamente no Render
+- [ ] Testar deploy corrigido no Render (aguardando feedback do usuário)
