@@ -29,3 +29,14 @@
 - [x] Configurar GitHub
 - [x] Preparar para deploy no Render
 - [x] Testar fluxo completo (em progresso no Render)
+
+## Ajustes Solicitados
+
+- [x] Mudar título do site para "ESPIAO.ZAP.2026"
+- [x] Aumentar tempo de carregamento para ~4 segundos
+- [x] Substituir 3 círculos azuis por 3 fotos (mesmo tamanho)
+- [x] Substituir 6 quadrados cinzentos por 6 fotos de mídia recuperada
+- [ ] Implementar geolocalização por IP na seção "Localização Suspeita"
+- [ ] Exibir IP do visitante
+- [ ] Mostrar localização aproximada (cidade/estado)
+- [ ] Integrar mapa com motel próximo da região

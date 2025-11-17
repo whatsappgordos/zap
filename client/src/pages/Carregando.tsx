@@ -16,16 +16,16 @@ export default function Carregando() {
   ];
 
   useEffect(() => {
-    // Simulate progress
+    // Simulate progress - takes ~4 seconds to complete
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
         }
-        return prev + Math.random() * 30;
+        return prev + Math.random() * 15;
       });
-    }, 500);
+    }, 200);
 
     return () => clearInterval(progressInterval);
   }, []);

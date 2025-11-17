@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { MessageCircle, X, Lock, MessageSquare, Music, Image as ImageIcon } from "lucide-react";
+import { MessageCircle, X, Lock, MessageSquare, Music, Image as ImageIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Conversation {
@@ -12,9 +12,63 @@ interface Conversation {
   messages?: Array<{ text: string; time: string; sender: "them" | "you"; blocked?: boolean }>;
 }
 
+interface LocationData {
+  ip: string;
+  city: string;
+  state: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface MotelData {
+  name: string;
+  distance: string;
+  rating: string;
+}
+
 export default function Relatorio() {
   const [, setLocation] = useLocation();
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [locationData, setLocationData] = useState<LocationData | null>(null);
+  const [motelData, setMotelData] = useState<MotelData | null>(null);
+  const [loadingLocation, setLoadingLocation] = useState(true);
+
+  useEffect(() => {
+    // Fetch user's IP and location
+    const fetchLocation = async () => {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        
+        const location: LocationData = {
+          ip: data.ip,
+          city: data.city,
+          state: data.region,
+          country: data.country_name,
+          latitude: data.latitude,
+          longitude: data.longitude,
+        };
+        
+        setLocationData(location);
+        
+        // Simulate finding a nearby motel
+        const motels = [
+          { name: "Motel Paraíso", distance: "2.3 km", rating: "4.5" },
+          { name: "Motel Luxo", distance: "3.1 km", rating: "4.2" },
+          { name: "Motel Discreto", distance: "1.8 km", rating: "4.7" },
+        ];
+        
+        setMotelData(motels[Math.floor(Math.random() * motels.length)]);
+      } catch (error) {
+        console.error('Error fetching location:', error);
+      } finally {
+        setLoadingLocation(false);
+      }
+    };
+    
+    fetchLocation();
+  }, []);
 
   const conversations: Conversation[] = [
     {
@@ -114,7 +168,11 @@ export default function Relatorio() {
                   className="w-full p-4 border-2 border-dashed border-red-300 rounded-lg hover:bg-gray-50 transition text-left"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex-shrink-0"></div>
+                    <img
+                      src={`/avatar-${conv.id}.png`}
+                      alt="Avatar"
+                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                    />
                     <div className="flex-1">
                       <p className="font-semibold text-gray-800">{conv.number}</p>
                       <div className="flex items-center gap-1">
@@ -146,12 +204,21 @@ export default function Relatorio() {
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 relative"
+                  className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center text-gray-400 relative overflow-hidden"
                 >
-                  <Lock className="w-6 h-6" />
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-500">
-                    Bloqueado
-                  </span>
+                  <img
+                    src={`/media-${i}.png`}
+                    alt={`Mídia ${i}`}
+                    className="w-full h-full object-cover opacity-40"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                    <div className="text-center">
+                      <Lock className="w-6 h-6 text-white mb-1 mx-auto" />
+                      <span className="text-xs font-bold text-white">
+                        Bloqueado
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -209,9 +276,46 @@ export default function Relatorio() {
               O número esteve neste motel nos últimos 7 dias. Abaixo está a localização mais recente registrada.
             </p>
 
-            <div className="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400">
-              <Lock className="w-8 h-8" />
-            </div>
+            {loadingLocation ? (
+              <div className="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400">
+                <div className="text-center">
+                  <div className="animate-spin mb-2">⏳</div>
+                  <p>Localizando...</p>
+                </div>
+              </div>
+            ) : locationData ? (
+              <div className="w-full bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-4 mb-4 border border-green-200">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-red-500" />
+                    <div>
+                      <p className="text-sm text-gray-600">Localização Detectada</p>
+                      <p className="font-semibold text-gray-800">{locationData.city}, {locationData.state} - {locationData.country}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded p-3 border border-gray-200">
+                    <p className="text-xs text-gray-500 mb-1">IP Detectado</p>
+                    <p className="font-mono text-sm font-bold text-gray-800">{locationData.ip}</p>
+                  </div>
+                  
+                  {motelData && (
+                    <div className="bg-white rounded p-3 border border-orange-200">
+                      <p className="text-xs text-gray-500 mb-2">🏨 Motel Próximo Detectado</p>
+                      <p className="font-semibold text-gray-800">{motelData.name}</p>
+                      <div className="flex justify-between text-sm text-gray-600 mt-1">
+                        <span>📍 {motelData.distance}</span>
+                        <span>⭐ {motelData.rating}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400">
+                <Lock className="w-8 h-8" />
+              </div>
+            )}
 
             <Button
               onClick={() => handleUnlock("localizacao")}
@@ -245,13 +349,13 @@ export default function Relatorio() {
               </div>
               <button
                 onClick={() => setSelectedConversation(null)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-400 hover:text-gray-600"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Messages */}
+            {/* Modal Content */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {selectedConversation.messages?.map((msg, i) => (
                 <div
@@ -260,29 +364,22 @@ export default function Relatorio() {
                 >
                   <div
                     className={`max-w-xs px-3 py-2 rounded-lg ${
-                      msg.sender === "you"
+                      msg.blocked
+                        ? "bg-gray-200 text-gray-500 italic"
+                        : msg.sender === "you"
                         ? "bg-green-500 text-white"
-                        : msg.blocked
-                        ? "bg-gray-200 text-gray-500"
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
                     <p className="text-sm">{msg.text}</p>
-                    <p className={`text-xs mt-1 ${msg.sender === "you" ? "text-green-100" : "text-gray-500"}`}>
-                      {msg.time}
-                    </p>
+                    <p className="text-xs opacity-70 mt-1">{msg.time}</p>
                   </div>
                 </div>
               ))}
-              <div className="text-center py-4">
-                <p className="text-sm text-gray-600">
-                  Para visualizar a conversa completa, você precisa desbloquear as conversas.
-                </p>
-              </div>
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t">
+            <div className="border-t p-4">
               <Button
                 onClick={() => {
                   setSelectedConversation(null);
