@@ -64,3 +64,4 @@
 - [x] Corrigir as 6 fotos da seção "Mídia Recuperada" que estavam pretas
 - [ ] Remover seção de texto (IP, localização, motel simples)
 - [x] Melhorar marcador do motel para mostrar o MAIS PRÓXIMO com informações (nome, distância, rating)
+- [x] Corrigir mapa estático que está em branco no site ao vivo
