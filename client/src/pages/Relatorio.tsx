@@ -40,8 +40,25 @@ export default function Relatorio() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
+        // Tentar múltiplas APIs de geolocalização
+        let data;
+        try {
+          const response = await fetch('https://ipapi.co/json/');
+          data = await response.json();
+        } catch (e) {
+          // Fallback para outra API
+          const response = await fetch('https://ip-api.com/json/');
+          data = await response.json();
+          // Mapear campos da API ip-api.com para o formato esperado
+          data = {
+            ip: data.query,
+            city: data.city,
+            region: data.region,
+            country_name: data.country,
+            latitude: data.lat,
+            longitude: data.lon
+          };
+        }
         
         const location: LocationData = {
           ip: data.ip,
