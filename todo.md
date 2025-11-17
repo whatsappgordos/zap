@@ -26,6 +26,6 @@
 
 ## Deploy e Configuração
 
-- [ ] Configurar GitHub
+- [x] Configurar GitHub
 - [ ] Preparar para deploy no Render
 - [ ] Testar fluxo completo
