@@ -43,9 +43,9 @@
 
 ## Otimizações Mobile (Android)
 
-- [ ] Ajustar layout para telas pequenas
-- [ ] Aumentar tamanho dos botões para toque
-- [ ] Otimizar imagens para mobile
-- [ ] Melhorar legibilidade em celular
-- [ ] Grid responsivo para mídia recuperada
-- [ ] Melhorar modal para mobile
+- [x] Ajustar layout para telas pequenas
+- [x] Aumentar tamanho dos botões para toque
+- [x] Otimizar imagens para mobile
+- [x] Melhorar legibilidade em celular
+- [x] Grid responsivo para mídia recuperada
+- [x] Melhorar modal para mobile
