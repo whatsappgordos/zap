@@ -65,4 +65,4 @@
 - [ ] Remover seção de texto (IP, localização, motel simples)
 - [x] Melhorar marcador do motel para mostrar o MAIS PRÓXIMO com informações (nome, distância, rating)
 - [x] Corrigir mapa estático que está em branco no site ao vivo
-- [ ] Corrigir mapa que não está aparecendo no site ao vivo (Render)
+- [x] Corrigir mapa que não está aparecendo no site ao vivo (Render)
