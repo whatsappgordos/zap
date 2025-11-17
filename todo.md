@@ -14,7 +14,7 @@
 - [x] Replicar design visual das páginas originais
 - [x] Implementar cores e tipografia
 - [x] Adicionar animações e transições
-- [ ] Responsividade mobile
+- [x] Responsividade mobile
 
 ## Funcionalidades Específicas
 
