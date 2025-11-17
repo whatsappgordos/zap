@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { MessageCircle, X, Lock, MessageSquare, Music, Image as ImageIcon, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import MapView from "@/components/Map";
+import { MapView } from "@/components/Map";
 
 interface Conversation {
   id: string;
@@ -277,10 +277,8 @@ export default function Relatorio() {
             ) : locationData ? (
               <div className="w-full rounded-lg mb-3 sm:mb-4 overflow-hidden shadow-md border border-gray-200">
                 <MapView
-                  lat={locationData.latitude}
-                  lng={locationData.longitude}
-                  zoom={15}
-                  motelName={motelData?.name || "Motel Próximo"}
+                  initialCenter={{ lat: locationData.latitude, lng: locationData.longitude }}
+                  initialZoom={15}
                 />
               </div>
             ) : (
