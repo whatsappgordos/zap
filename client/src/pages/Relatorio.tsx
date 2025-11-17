@@ -135,54 +135,52 @@ export default function Relatorio() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-500 to-green-600 flex flex-col">
       {/* Header */}
-      <header className="bg-green-500 py-6 px-4 text-white">
+      <header className="bg-green-500 py-4 px-3 sm:py-6 sm:px-4 text-white">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold">Relatório de Acesso ao WhatsApp</h1>
-          <p className="text-green-100 text-sm mt-1">
-            Confira abaixo os principais dados recuperados da análise do número informado.
+          <h1 className="text-xl sm:text-2xl font-bold">Relatório de Acesso ao WhatsApp</h1>
+          <p className="text-green-100 text-xs sm:text-sm mt-1">
+            Confira abaixo os principais dados recuperados.
           </p>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <main className="flex-1 px-3 py-4 sm:px-4 sm:py-8">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {/* Análise de Conversas */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <div className="flex items-center gap-2 mb-4">
-              <MessageSquare className="w-5 h-5 text-green-500" />
-              <h2 className="text-xl font-bold text-gray-800">Análise de Conversas</h2>
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800">Análise de Conversas</h2>
             </div>
-            <p className="text-gray-700 mb-4">
-              <span className="text-red-600 font-bold">148 conversas suspeitas</span> foram encontradas durante a análise. O sistema conseguiu recuperar{" "}
-              <span className="text-yellow-600 font-bold">mensagens apagadas</span> e algumas foram classificadas como{" "}
-              <span className="text-red-600 font-bold">críticas</span> com base no conteúdo.
+            <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
+              <span className="text-red-600 font-bold">148 conversas suspeitas</span> foram encontradas. O sistema conseguiu recuperar <span className="text-yellow-600 font-bold">mensagens apagadas</span>.
             </p>
-            <p className="text-gray-600 text-sm mb-4">Toque em uma conversa abaixo para visualizar os detalhes.</p>
+            <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">Toque em uma conversa abaixo para visualizar os detalhes.</p>
 
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {conversations.map((conv) => (
                 <button
                   key={conv.id}
                   onClick={() => setSelectedConversation(conv)}
-                  className="w-full p-4 border-2 border-dashed border-red-300 rounded-lg hover:bg-gray-50 transition text-left"
+                  className="w-full p-3 sm:p-4 border-2 border-dashed border-red-300 rounded-lg hover:bg-gray-50 transition text-left active:scale-95"
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2 sm:gap-3">
                     <img
                       src={`/avatar-${conv.id}.png`}
                       alt="Avatar"
-                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0"
                     />
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-800">{conv.number}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm sm:text-base">{conv.number}</p>
                       <div className="flex items-center gap-1">
-                        {conv.type === "message" && <MessageSquare className="w-4 h-4 text-red-500" />}
-                        {conv.type === "audio" && <Music className="w-4 h-4 text-red-500" />}
-                        {conv.type === "photo" && <ImageIcon className="w-4 h-4 text-red-500" />}
-                        <p className="text-sm text-gray-600">{conv.title}</p>
+                        {conv.type === "message" && <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />}
+                        {conv.type === "audio" && <Music className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />}
+                        {conv.type === "photo" && <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />}
+                        <p className="text-xs sm:text-sm text-gray-600 truncate">{conv.title}</p>
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500">{conv.time}</p>
+                    <p className="text-xs text-gray-500 flex-shrink-0">{conv.time}</p>
                   </div>
                 </button>
               ))}
@@ -190,17 +188,16 @@ export default function Relatorio() {
           </div>
 
           {/* Mídia Recuperada */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <div className="flex items-center gap-2 mb-4">
-              <ImageIcon className="w-5 h-5 text-green-500" />
-              <h2 className="text-xl font-bold text-gray-800">Mídia Recuperada</h2>
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800">Mídia Recuperada</h2>
             </div>
-            <p className="text-gray-700 mb-4">
-              <span className="text-red-600 font-bold">3 áudios comprometedores</span> foram recuperados durante a análise. Além disso, o sistema encontrou{" "}
-              <span className="text-red-600 font-bold">267 fotos apagadas</span> que podem conter conteúdo sensível.
+            <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
+              <span className="text-red-600 font-bold">3 áudios</span> e <span className="text-red-600 font-bold">267 fotos apagadas</span> foram encontradas.
             </p>
 
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
@@ -213,7 +210,7 @@ export default function Relatorio() {
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
                     <div className="text-center">
-                      <Lock className="w-6 h-6 text-white mb-1 mx-auto" />
+                      <Lock className="w-4 h-4 sm:w-6 sm:h-6 text-white mb-1 mx-auto" />
                       <span className="text-xs font-bold text-white">
                         Bloqueado
                       </span>
@@ -226,144 +223,144 @@ export default function Relatorio() {
             <div className="space-y-2">
               <Button
                 onClick={() => handleUnlock("audios")}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm sm:text-base"
               >
-                🔓 DESBLOQUEAR ÁUDIOS COMPLETOS
+                🔓 DESBLOQUEAR ÁUDIOS
               </Button>
               <Button
                 onClick={() => handleUnlock("fotos")}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm sm:text-base"
               >
-                🔓 DESBLOQUEAR TODAS AS FOTOS
+                🔓 DESBLOQUEAR FOTOS
               </Button>
             </div>
           </div>
 
           {/* Palavras-chave Suspeitas */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Palavras-chave Suspeitas</h2>
-            <p className="text-gray-700 mb-4">
-              O sistema escaneou 4.327 mensagens e identificou várias palavras-chave que podem indicar comportamento suspeito.
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Palavras-chave Suspeitas</h2>
+            <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
+              O sistema escaneou 4.327 mensagens e identificou várias palavras-chave suspeitas.
             </p>
 
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
               {[
                 { word: "Gostosa", count: 13 },
                 { word: "Amor", count: 9 },
                 { word: "Segredo", count: 8 },
                 { word: "Escondido", count: 6 },
-                { word: "Não conta", count: 5 },
               ].map((item, i) => (
-                <div key={i} className="p-3 bg-gray-50 rounded-lg">
-                  <p className="font-semibold text-gray-800">"{item.word}"</p>
-                  <p className="text-red-600 font-bold">{item.count}</p>
+                <div key={i} className="p-2 sm:p-3 bg-gray-50 rounded-lg">
+                  <p className="font-semibold text-gray-800 text-sm sm:text-base">"{item.word}"</p>
+                  <p className="text-red-600 font-bold text-sm">{item.count}</p>
                 </div>
               ))}
             </div>
 
             <Button
               onClick={() => handleUnlock("mensagens")}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm sm:text-base"
             >
               🔓 VER TODAS AS MENSAGENS
             </Button>
           </div>
 
           {/* Localização Suspeita */}
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Localização Suspeita</h2>
-            <p className="text-gray-700 mb-4">
-              O número esteve neste motel nos últimos 7 dias. Abaixo está a localização mais recente registrada.
+          <div className="bg-white rounded-lg p-4 sm:p-6 shadow-lg">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Localização Suspeita</h2>
+            <p className="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
+              O número esteve neste motel nos últimos 7 dias.
             </p>
 
             {loadingLocation ? (
-              <div className="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400">
+              <div className="w-full h-40 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
                 <div className="text-center">
                   <div className="animate-spin mb-2">⏳</div>
-                  <p>Localizando...</p>
+                  <p className="text-sm">Localizando...</p>
                 </div>
               </div>
             ) : locationData ? (
-              <div className="w-full bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-4 mb-4 border border-green-200">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-red-500" />
-                    <div>
-                      <p className="text-sm text-gray-600">Localização Detectada</p>
-                      <p className="font-semibold text-gray-800">{locationData.city}, {locationData.state} - {locationData.country}</p>
-                    </div>
+              <div className="w-full bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 border border-green-200 space-y-2 sm:space-y-3">
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm text-gray-600">Localização Detectada</p>
+                    <p className="font-semibold text-gray-800 text-sm sm:text-base">{locationData.city}, {locationData.state}</p>
                   </div>
-                  
-                  <div className="bg-white rounded p-3 border border-gray-200">
-                    <p className="text-xs text-gray-500 mb-1">IP Detectado</p>
-                    <p className="font-mono text-sm font-bold text-gray-800">{locationData.ip}</p>
-                  </div>
-                  
-                  {motelData && (
-                    <div className="bg-white rounded p-3 border border-orange-200">
-                      <p className="text-xs text-gray-500 mb-2">🏨 Motel Próximo Detectado</p>
-                      <p className="font-semibold text-gray-800">{motelData.name}</p>
-                      <div className="flex justify-between text-sm text-gray-600 mt-1">
-                        <span>📍 {motelData.distance}</span>
-                        <span>⭐ {motelData.rating}</span>
-                      </div>
-                    </div>
-                  )}
                 </div>
+                
+                <div className="bg-white rounded p-2 sm:p-3 border border-gray-200">
+                  <p className="text-xs text-gray-500 mb-1">IP Detectado</p>
+                  <p className="font-mono text-xs sm:text-sm font-bold text-gray-800 break-all">{locationData.ip}</p>
+                </div>
+                
+                {motelData && (
+                  <div className="bg-white rounded p-2 sm:p-3 border border-orange-200">
+                    <p className="text-xs text-gray-500 mb-1">🏨 Motel Próximo</p>
+                    <p className="font-semibold text-gray-800 text-sm">{motelData.name}</p>
+                    <div className="flex justify-between text-xs text-gray-600 mt-1">
+                      <span>📍 {motelData.distance}</span>
+                      <span>⭐ {motelData.rating}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
-              <div className="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400">
-                <Lock className="w-8 h-8" />
+              <div className="w-full h-40 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
+                <Lock className="w-6 h-6 sm:w-8 sm:h-8" />
               </div>
             )}
 
             <Button
               onClick={() => handleUnlock("localizacao")}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm sm:text-base"
             >
               🔓 VER HISTÓRICO COMPLETO
             </Button>
           </div>
 
           {/* Main Unlock Button */}
-          <div className="sticky bottom-4 left-0 right-0">
-            <Button
-              onClick={() => handleUnlock("tudo")}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-lg shadow-lg"
-            >
-              🔓 DESBLOQUEAR TUDO POR R$ 27,90
-            </Button>
-          </div>
+          <div className="h-20 sm:h-24"></div>
         </div>
       </main>
 
+      {/* Sticky Unlock Button */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4">
+        <Button
+          onClick={() => handleUnlock("tudo")}
+          className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 sm:py-4 rounded-lg text-base sm:text-lg shadow-lg"
+        >
+          🔓 DESBLOQUEAR TUDO POR R$ 27,90
+        </Button>
+      </div>
+
       {/* Conversation Modal */}
       {selectedConversation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-md w-full max-h-96 flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+          <div className="bg-white rounded-t-lg sm:rounded-lg max-w-md w-full max-h-96 flex flex-col sm:max-h-96">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b">
-              <div>
-                <p className="font-semibold text-gray-800">{selectedConversation.number}</p>
+            <div className="flex items-center justify-between p-3 sm:p-4 border-b">
+              <div className="min-w-0">
+                <p className="font-semibold text-gray-800 text-sm sm:text-base">{selectedConversation.number}</p>
                 <p className="text-xs text-gray-500">{selectedConversation.title}</p>
               </div>
               <button
                 onClick={() => setSelectedConversation(null)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 p-1 flex-shrink-0"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 sm:space-y-3">
               {selectedConversation.messages?.map((msg, i) => (
                 <div
                   key={i}
                   className={`flex ${msg.sender === "you" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-xs px-3 py-2 rounded-lg ${
+                    className={`max-w-xs px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm ${
                       msg.blocked
                         ? "bg-gray-200 text-gray-500 italic"
                         : msg.sender === "you"
@@ -371,7 +368,7 @@ export default function Relatorio() {
                         : "bg-gray-100 text-gray-800"
                     }`}
                   >
-                    <p className="text-sm">{msg.text}</p>
+                    <p>{msg.text}</p>
                     <p className="text-xs opacity-70 mt-1">{msg.time}</p>
                   </div>
                 </div>
@@ -379,15 +376,15 @@ export default function Relatorio() {
             </div>
 
             {/* Modal Footer */}
-            <div className="border-t p-4">
+            <div className="border-t p-3 sm:p-4">
               <Button
                 onClick={() => {
                   setSelectedConversation(null);
                   handleUnlock("conversas");
                 }}
-                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg"
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm sm:text-base"
               >
-                🔓 DESBLOQUEAR CONVERSAS COMPLETAS
+                🔓 DESBLOQUEAR
               </Button>
             </div>
           </div>

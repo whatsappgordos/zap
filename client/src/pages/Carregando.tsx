@@ -49,33 +49,33 @@ export default function Carregando() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 py-4 px-4">
+      <header className="bg-white border-b border-gray-200 py-3 px-3 sm:py-4 sm:px-4">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MessageCircle className="w-6 h-6 text-green-500" />
-            <span className="font-semibold text-gray-800">WhatsApp</span>
+            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
+            <span className="font-semibold text-gray-800 text-sm sm:text-base">WhatsApp</span>
           </div>
-          <button className="text-green-500 hover:text-green-600 transition">
+          <button className="text-green-500 hover:text-green-600 transition text-lg">
             ⬇️
           </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-        <div className="max-w-md w-full space-y-8">
+      <main className="flex-1 flex flex-col items-center justify-center px-3 py-6 sm:px-4 sm:py-12">
+        <div className="max-w-md w-full space-y-4 sm:space-y-8">
           {/* Title */}
-          <div className="text-center space-y-3">
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="text-center space-y-2 sm:space-y-3">
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
               Processando Acesso ao WhatsApp
             </h1>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-xs sm:text-sm">
               Aguarde enquanto conectamos aos servidores e preparamos seu acesso.
             </p>
           </div>
 
           {/* Video/Image Placeholder */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="bg-gray-800 rounded-lg overflow-hidden aspect-video flex items-center justify-center relative">
               <img
                 src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop"
@@ -83,9 +83,9 @@ export default function Carregando() {
                 className="w-full h-full object-cover opacity-50"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
+                <div className="text-center px-2">
                   <div className="text-white text-xs font-bold mb-2 bg-red-600 px-2 py-1 rounded inline-block">
-                    MULHER DE PASTOR CONTA COMO DESCOBRIU TRAIÇÃO COM O ESPIÃO
+                    DESCOBRIU TRAIÇÃO COM O ESPÍAO
                   </div>
                 </div>
               </div>
@@ -93,7 +93,7 @@ export default function Carregando() {
 
             {/* Loading Spinner */}
             <div className="flex justify-center">
-              <div className="relative w-16 h-16">
+              <div className="relative w-12 h-12 sm:w-16 sm:h-16">
                 <div className="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
                 <div
                   className="absolute inset-0 border-4 border-transparent border-t-green-500 rounded-full animate-spin"
@@ -113,24 +113,24 @@ export default function Carregando() {
                   style={{ width: `${Math.min(progress, 100)}%` }}
                 ></div>
               </div>
-              <p className="text-center text-sm font-semibold text-gray-700">
-                Conectando aos servidores... {Math.floor(Math.min(progress, 100))}%
+              <p className="text-center text-xs sm:text-sm font-semibold text-gray-700">
+                Conectando... {Math.floor(Math.min(progress, 100))}%
               </p>
             </div>
 
             {/* Steps */}
-            <div className="space-y-2 bg-white p-4 rounded-lg">
+            <div className="space-y-2 bg-white p-3 sm:p-4 rounded-lg max-h-48 overflow-y-auto">
               {steps.map((step, index) => (
-                <div key={index} className="flex items-start gap-3">
+                <div key={index} className="flex items-start gap-2 sm:gap-3">
                   {index < currentStep ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   ) : index === currentStep ? (
-                    <div className="w-5 h-5 border-2 border-gray-400 border-t-green-500 rounded-full animate-spin flex-shrink-0 mt-0.5"></div>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-gray-400 border-t-green-500 rounded-full animate-spin flex-shrink-0 mt-0.5"></div>
                   ) : (
-                    <Phone className="w-5 h-5 text-gray-300 flex-shrink-0 mt-0.5" />
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300 flex-shrink-0 mt-0.5" />
                   )}
                   <p
-                    className={`text-sm ${
+                    className={`text-xs sm:text-sm ${
                       index <= currentStep ? "text-gray-700" : "text-gray-400"
                     }`}
                   >
@@ -144,21 +144,21 @@ export default function Carregando() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-6 px-4">
+      <footer className="bg-white border-t border-gray-200 py-4 px-3 sm:py-6 sm:px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-6 mb-4 text-sm">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-3 sm:mb-4 text-xs sm:text-sm">
             <a href="#" className="text-gray-500 hover:text-gray-700 underline">
-              Política de Privacidade
+              Privacidade
             </a>
             <a href="#" className="text-gray-500 hover:text-gray-700 underline">
-              Termos de Uso
+              Termos
             </a>
             <a href="#" className="text-gray-500 hover:text-gray-700 underline">
-              Suporte por Email
+              Suporte
             </a>
           </div>
           <p className="text-center text-xs text-gray-500">
-            © 2024 Proteja Seu Relacionamento. Todos os direitos reservados.
+            © 2024 Proteja Seu Relacionamento
           </p>
         </div>
       </footer>

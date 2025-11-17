@@ -40,3 +40,12 @@
 - [x] Exibir IP do visitante
 - [x] Mostrar localização aproximada (cidade/estado)
 - [x] Integrar motel próximo da região
+
+## Otimizações Mobile (Android)
+
+- [ ] Ajustar layout para telas pequenas
+- [ ] Aumentar tamanho dos botões para toque
+- [ ] Otimizar imagens para mobile
+- [ ] Melhorar legibilidade em celular
+- [ ] Grid responsivo para mídia recuperada
+- [ ] Melhorar modal para mobile
