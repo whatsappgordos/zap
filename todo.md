@@ -59,6 +59,7 @@
 
 ## Melhorias Adicionais
 
-- [ ] Substituir seção de Localização Suspeita por MAPA INTERATIVO do Google Maps
-- [ ] Adicionar marcador do motel no mapa
+- [x] Substituir seção de Localização Suspeita por MAPA INTERATIVO do Google Maps
+- [x] Adicionar marcador do motel no mapa
+- [x] Corrigir as 6 fotos da seção "Mídia Recuperada" que estavam pretas
 - [ ] Remover seção de texto (IP, localização, motel simples)

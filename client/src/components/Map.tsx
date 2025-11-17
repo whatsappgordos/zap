@@ -114,6 +114,11 @@ interface MapViewProps {
   initialCenter?: google.maps.LatLngLiteral;
   initialZoom?: number;
   onMapReady?: (map: google.maps.Map) => void;
+  motelData?: {
+    name: string;
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export function MapView({
@@ -121,6 +126,7 @@ export function MapView({
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,
   onMapReady,
+  motelData,
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
@@ -140,6 +146,20 @@ export function MapView({
       streetViewControl: true,
       mapId: "DEMO_MAP_ID",
     });
+    // Adicionar marcador do motel se os dados forem fornecidos
+    if (motelData && window.google?.maps?.marker?.AdvancedMarkerElement) {
+      const motelPosition = {
+        lat: motelData.latitude,
+        lng: motelData.longitude,
+      };
+      
+      new window.google.maps.marker.AdvancedMarkerElement({
+        map: map.current,
+        position: motelPosition,
+        title: motelData.name,
+      });
+    }
+    
     if (onMapReady) {
       onMapReady(map.current);
     }

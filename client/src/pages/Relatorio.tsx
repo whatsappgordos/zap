@@ -26,6 +26,8 @@ interface MotelData {
   name: string;
   distance: string;
   rating: string;
+  latitude: number;
+  longitude: number;
 }
 
 export default function Relatorio() {
@@ -53,9 +55,9 @@ export default function Relatorio() {
         setLocationData(location);
         
         const motels = [
-          { name: "Motel Paraíso", distance: "2.3 km", rating: "4.5" },
-          { name: "Motel Luxo", distance: "3.1 km", rating: "4.2" },
-          { name: "Motel Discreto", distance: "1.8 km", rating: "4.7" },
+          { name: "Motel Paraíso", distance: "2.3 km", rating: "4.5", latitude: data.latitude + 0.02, longitude: data.longitude + 0.02 },
+          { name: "Motel Luxo", distance: "3.1 km", rating: "4.2", latitude: data.latitude - 0.015, longitude: data.longitude + 0.025 },
+          { name: "Motel Discreto", distance: "1.8 km", rating: "4.7", latitude: data.latitude + 0.01, longitude: data.longitude - 0.015 },
         ];
         
         setMotelData(motels[Math.floor(Math.random() * motels.length)]);
@@ -200,9 +202,9 @@ export default function Relatorio() {
                   <img
                     src={`/media-${i}.png`}
                     alt={`Mídia ${i}`}
-                    className="w-full h-full object-cover opacity-40"
+                    className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
                       <Lock className="w-4 h-4 sm:w-6 sm:h-6 text-white mb-1 mx-auto" />
                       <span className="text-xs font-bold text-white">
@@ -279,6 +281,11 @@ export default function Relatorio() {
                 <MapView
                   initialCenter={{ lat: locationData.latitude, lng: locationData.longitude }}
                   initialZoom={15}
+                  motelData={motelData ? {
+                    name: motelData.name,
+                    latitude: motelData.latitude,
+                    longitude: motelData.longitude,
+                  } : undefined}
                 />
               </div>
             ) : (
