@@ -125,7 +125,7 @@ export default function Numero() {
           <button
             onClick={handleStartMonitoring}
             disabled={isLoading || !phoneNumber.trim()}
-            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold py-4 px-6 rounded-2xl transition transform hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold py-4 px-6 rounded-2xl transition transform hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 border-0"
           >
             <span>🔐</span>
             <span>{isLoading ? "Processando..." : "Clonar WhatsApp Agora"}</span>
