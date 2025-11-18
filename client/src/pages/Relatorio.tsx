@@ -214,7 +214,7 @@ export default function Relatorio() {
               <button
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
-                className="w-full text-left p-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+                className="w-full text-left p-4 border-2 border-black rounded-xl hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-start gap-4">
                   <img
@@ -247,7 +247,7 @@ export default function Relatorio() {
 
           <div className="grid grid-cols-3 gap-3 mb-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-200 border border-gray-300">
+              <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-200 border-2 border-black">
                 <img
                   src={`/media-${i}.png`}
                   alt={`Media ${i}`}
@@ -288,7 +288,7 @@ export default function Relatorio() {
               </div>
             </div>
           ) : locationData ? (
-            <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-gray-300">
+            <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-black">
               <StaticMap
                 latitude={locationData.latitude}
                 longitude={locationData.longitude}
