@@ -459,7 +459,7 @@ export default function Relatorio() {
               </button>
             </div>
             <div className="p-6 space-y-3">
-              {selectedConversation.messages?.map((msg, idx) => (
+              {selectedConversation.messages && selectedConversation.messages.map((msg, idx) => (
                 <div
                   key={idx}
                   className={`flex ${msg.sender === "you" ? "justify-end" : "justify-start"}`}
