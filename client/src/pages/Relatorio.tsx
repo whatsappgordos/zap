@@ -267,12 +267,13 @@ export default function Relatorio() {
 
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key=<div className="relative aspect-square rounded-lg overflow-hidden bg-gray-200">
+              <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-200">
 	                <img
 	                  src={`/media-${i}.png`}
 	                  alt={`Media ${i}`}
 	                  className="w-full h-full object-cover opacity-50"
-	                />                             <div className="absolute inset-0 flex items-center justify-center bg-black bg-bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
+	                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
                   <div className="text-center">
                     <Lock className="w-6 h-6 text-white mb-1" />
                     <p className="text-xs text-white font-semibold">Bloqueado</p>
