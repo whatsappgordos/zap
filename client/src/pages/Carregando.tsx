@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 
 export default function Carregando() {
@@ -9,6 +9,7 @@ export default function Carregando() {
   const [phoneNumber, setPhoneNumber] = useState("(XX) XXXXX-XXXX");
   const [city, setCity] = useState("São Paulo");
   const [profileImage, setProfileImage] = useState(1);
+  const logsInitialized = useRef(false);
 
   // Mapeamento de DDD para cidade
   const dddToCity: Record<string, string> = {
@@ -207,7 +208,6 @@ export default function Carregando() {
               <div className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300">
                 <video
                   autoPlay
-                  muted
                   loop
                   className="w-full h-full object-cover"
                 >
