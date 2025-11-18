@@ -51,7 +51,7 @@ export default function Index() {
             {/* Monitorar Parceiro Button */}
             <button
               onClick={() => handleSelectProfile("male")}
-              className="w-full bg-green-500 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-2xl border-2 border-black flex items-center justify-center gap-3 transition transform hover:shadow-lg active:scale-95 focus:outline-none"
+              className="w-full bg-green-500 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-3xl border-4 border-dashed border-green-300 flex items-center justify-center gap-3 transition transform hover:shadow-lg active:scale-95 focus:outline-none"
             >
               {/* Icon Circle */}
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
@@ -65,7 +65,7 @@ export default function Index() {
             {/* Monitorar Parceira Button */}
             <button
               onClick={() => handleSelectProfile("female")}
-              className="w-full bg-green-500 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-2xl border-2 border-black flex items-center justify-center gap-3 transition transform hover:shadow-lg active:scale-95 focus:outline-none"
+              className="w-full bg-green-500 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-3xl border-4 border-dashed border-green-300 flex items-center justify-center gap-3 transition transform hover:shadow-lg active:scale-95 focus:outline-none"
             >
               {/* Icon Circle */}
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
