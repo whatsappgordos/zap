@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // Servir os arquivos estáticos gerados pelo Vite (o build vai para client/dist)
 // Ajuste o caminho para ser compatível com ESM
-const staticPath = path.join(__dirname, '..', 'client', 'dist');
+const staticPath = path.join(__dirname, '..', 'dist', 'public');
 app.use(express.static(staticPath));
 
 // Para roteamento client-side (como o Wouter), todas as requisições
