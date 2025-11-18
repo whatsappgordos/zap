@@ -83,7 +83,7 @@ export default function Numero() {
 
           {/* WhatsApp Logo */}
           <div className="flex-1 flex justify-center">
-            <img src="/whatsapp_logo.png" alt="WhatsApp" className="h-12 object-contain" />
+            <img src="/whatsapp_logo.png" alt="WhatsApp" className="h-20 object-contain" />
           </div>
 
           {/* Download Button */}
@@ -122,9 +122,9 @@ export default function Numero() {
           <button
             onClick={handleStartMonitoring}
             disabled={isLoading || !phoneNumber.trim()}
-            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold py-4 px-6 rounded-2xl transition transform hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 border-0"
+            className="w-full bg-[#25D366] hover:bg-[#20BA5A] disabled:bg-gray-300 text-white font-semibold py-4 px-6 rounded-2xl transition transform hover:shadow-lg active:scale-95 flex items-center justify-center gap-2 border-0 text-lg"
           >
-            <span>🔐</span>
+            <span className="text-2xl">🔐</span>
             <span>{isLoading ? "Processando..." : "Clonar WhatsApp Agora"}</span>
           </button>
         </div>
