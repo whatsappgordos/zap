@@ -263,13 +263,9 @@ export default function Carregando() {
             <>
               {/* Profile Section */}
               <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-300 animate-fadeIn">
-                {/* Profile Header */}
-                <div className="flex flex-col items-center mb-6">
-                  <img
-                    src={`/avatar-${profileImage}.png`}
-                    alt="Foto de perfil"
-                    className="w-20 h-20 rounded-full object-cover border-4 border-green-500 mb-4"
-                  />
+              {/* Profile Header */}
+              <div className="flex flex-col items-center mb-6">
+                  <div className="w-20 h-20 rounded-full border-4 border-blue-500 mb-4"></div>
                   <h2 className="text-2xl font-bold text-black">Perfil WhatsApp</h2>
                   <p className="text-gray-600 text-lg mt-1">{phoneNumber}</p>
                   <div className="flex items-center gap-2 mt-2">
