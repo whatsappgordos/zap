@@ -106,8 +106,9 @@ export default function Carregando() {
     setProfileImage(imageNum);
   }, []);
 
-  // Log messages com delays
-  const logMessages = [
+  // Log messages com delays - Memoized para evitar recriação
+  const logMessages = useRef([
+
     { text: "Iniciando conexão com servidores WhatsApp...", delay: 1000 },
     { text: "Localizando servidor mais próximo...", delay: 2000 },
     { text: "Servidor localizado! Estabelecendo conexão segura...", delay: 3500, class: "success" },
@@ -122,18 +123,25 @@ export default function Carregando() {
     { text: "Sincronizando mensagens...", delay: 20000 },
     { text: "Sincronização completa!", delay: 22000, class: "success" },
     { text: "Acesso concedido com sucesso!", delay: 24000, class: "success" },
-  ];
+  ]).current;
 
   // Efeito para adicionar logs
   useEffect(() => {
-    logMessages.forEach((msg) => {
+    if (logsInitialized.current) return;
+    logsInitialized.current = true;
+
+    const timers: NodeJS.Timeout[] = [];
+    logMessages.current.forEach((msg) => {
       const timer = setTimeout(() => {
         setLogs((prev) => [...prev, { text: msg.text, class: msg.class }]);
       }, msg.delay);
-
-      return () => clearTimeout(timer);
+      timers.push(timer);
     });
-  }, [city]);
+
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, []);
 
   // Efeito para progresso
   useEffect(() => {
