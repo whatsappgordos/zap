@@ -271,7 +271,7 @@ export default function Relatorio() {
 	                <img
 	                  src={`/media-${i}.png`}
 	                  alt={`Media ${i}`}
-	                  className="w-full h-full object-cover opacity-50"
+	                  className="w-full h-full object-cover"
 	                />
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
                   <div className="text-center">
