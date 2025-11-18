@@ -234,6 +234,11 @@ export default function Relatorio() {
                 className="w-full text-left p-4 border-2 border-red-300 rounded-lg hover:bg-red-50 transition-colors"
               >
                 <div className="flex items-start gap-3">
+	                    <img
+	                      src={`/avatar-${conv.id}.png`}
+	                      alt={`Avatar ${conv.id}`}
+	                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+	                    />
                   <div className="flex-1">
                     <div className="font-semibold text-gray-900">{conv.number}</div>
                     <div className="text-sm text-gray-600 flex items-center gap-1">
@@ -262,13 +267,12 @@ export default function Relatorio() {
 
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-200">
-                <img
-                  src={`/media-${i}.png`}
-                  alt={`Media ${i}`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 hover:bg-opacity-20 transition-all">
+              <div key=<div className="relative aspect-square rounded-lg overflow-hidden bg-gray-200">
+	                <img
+	                  src={`/media-${i}.png`}
+	                  alt={`Media ${i}`}
+	                  className="w-full h-full object-cover opacity-50"
+	                />                             <div className="absolute inset-0 flex items-center justify-center bg-black bg-bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
                   <div className="text-center">
                     <Lock className="w-6 h-6 text-white mb-1" />
                     <p className="text-xs text-white font-semibold">Bloqueado</p>

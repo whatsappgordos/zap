@@ -1,6 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
-import { MessageCircle, CheckCircle2, Phone } from "lucide-react";
+import { MessageCircle, CheckCircle2, Phone, Volume2 } from "lucide-react";
+
+const VideoPlayer = () => {
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLIFrameElement>(null);
+  const videoId = "dQw4w9WgXcQ"; // Placeholder ID - assuming a YouTube video is intended
+
+  const handleUnmute = () => {
+    setIsMuted(false);
+    if (videoRef.current) {
+      videoRef.current.src = videoRef.current.src.replace("&mute=1", "&mute=0");
+    }
+  };
+
+  return (
+    <div className="relative aspect-video rounded-lg overflow-hidden shadow-xl">
+      <iframe ref={videoRef}
+        className="w-full h-full"
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3`}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+      ></iframe>
+      
+      {isMuted && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <button
+            onClick={handleUnmute}
+            className="p-3 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg transition-colors flex items-center gap-2"
+          >
+            <Volume2 className="w-5 h-5" />
+            <span className="font-bold">CLIQUE PARA OUVIR</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function Carregando() {
   const [, setLocation] = useLocation();
@@ -74,22 +112,10 @@ export default function Carregando() {
             </p>
           </div>
 
-          {/* Video/Image Placeholder */}
+          {// Video Component (YouTube Embed) - Substituído por um componente mais robusto para autoplay */}
           <div className="space-y-3 sm:space-y-4">
-            <div className="bg-gray-800 rounded-lg overflow-hidden aspect-video flex items-center justify-center relative">
-              <img
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop"
-                alt="Loading"
-                className="w-full h-full object-cover opacity-50"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center px-2">
-                  <div className="text-white text-xs font-bold mb-2 bg-red-600 px-2 py-1 rounded inline-block">
-                    DESCOBRIU TRAIÇÃO COM O ESPÍAO
-                  </div>
-                </div>
-              </div>
-            </div>
+	            <VideoPlayer />
+
 
             {/* Loading Spinner */}
             <div className="flex justify-center">
