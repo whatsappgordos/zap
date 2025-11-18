@@ -31,7 +31,10 @@ export function StaticMap({ latitude, longitude, motelData }: StaticMapProps) {
         {/* Fallback: Mostrar um placeholder com informações */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-center p-4">
           <div>
-            <div className="text-4xl mb-2">📍</div>
+            <div className="relative">
+	              <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75" style={{ width: '100%', height: '100%' }}></div>
+	              <div className="text-4xl mb-2 relative">📍</div>
+	            </div>
             <p className="text-gray-600 font-semibold">
               Localização do Motel
             </p>

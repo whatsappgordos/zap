@@ -276,9 +276,7 @@ export default function Relatorio() {
         {/* Localização Suspeita */}
         <div className="bg-white border-2 border-black rounded-2xl p-8 mb-12">
           <h2 className="text-2xl font-bold text-black mb-4">📍 Localização Suspeita</h2>
-          <p className="text-gray-700 mb-6">
-            O número esteve neste motel nos últimos 7 dias. Abaixo está a localização mais recente registrada.
-          </p>
+
 
           {loadingLocation ? (
             <div className="w-full h-96 bg-gray-100 rounded-xl mb-6 flex items-center justify-center">
