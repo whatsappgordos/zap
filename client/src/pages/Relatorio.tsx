@@ -273,12 +273,12 @@ export default function Relatorio() {
 	                  alt={`Media ${i}`}
 	                  className="w-full h-full object-cover"
 	                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
-                  <div className="text-center">
-                    <Lock className="w-6 h-6 text-white mb-1" />
-                    <p className="text-xs text-white font-semibold">Bloqueado</p>
-                  </div>
-                </div>
+{/* <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
+	                  <div className="text-center">
+	                    <Lock className="w-6 h-6 text-white mb-1" />
+	                    <p className="text-xs text-white font-semibold">Bloqueado</p>
+	                  </div>
+	                </div> */}
               </div>
             ))}
           </div>
