@@ -1,12 +1,4 @@
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Lock, MessageCircle, Music, Image } from "lucide-react";
 import { StaticMap } from "@/components/StaticMap";
 
 interface Conversation {
@@ -44,7 +36,6 @@ export default function Relatorio() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        // Usar fallback direto - dados padrão
         const defaultLocation = {
           ip: "8.8.8.8",
           city: "Mountain View",
@@ -65,7 +56,6 @@ export default function Relatorio() {
             }
           }
         } catch (e) {
-          console.log('ipapi.co falhou, tentando ip-api.com');
           try {
             const response = await fetch('https://ip-api.com/json/');
             if (response.ok) {
@@ -82,11 +72,10 @@ export default function Relatorio() {
               }
             }
           } catch (e2) {
-            console.log('Ambas APIs falharam, usando fallback');
+            console.log('APIs falharam, usando fallback');
           }
         }
         
-        // Garantir que temos latitude e longitude válidas
         if (!data.latitude || !data.longitude) {
           data = defaultLocation;
         }
@@ -131,7 +120,6 @@ export default function Relatorio() {
           prev.distance < current.distance ? prev : current
         );
         
-        // Sempre ter um valor válido
         const distance = closestMotel?.distance ?? 1.7;
         const distanceStr = typeof distance === 'number' ? distance.toFixed(1) : '1.7';
         
@@ -144,7 +132,6 @@ export default function Relatorio() {
         });
       } catch (error) {
         console.error('Error fetching location:', error);
-        // Usar fallback absoluto
         setMotelData({
           name: "Motel Discreto",
           distance: "1.7 km",
@@ -202,50 +189,46 @@ export default function Relatorio() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
-      <div className="container mx-auto px-4 py-6 sm:py-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold text-black mb-4">
             Relatório de Acesso ao WhatsApp
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base">
+          <p className="text-gray-600 text-lg">
             Confirma abaixo os principais dados recuperados.
           </p>
         </div>
 
         {/* Análise de Conversas */}
-        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <MessageCircle className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Análise de Conversas</h2>
-          </div>
-          <p className="text-gray-700 mb-4">
+        <div className="bg-white border-2 border-black rounded-2xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-black mb-4">Análise de Conversas</h2>
+          <p className="text-gray-700 mb-6">
             <span className="text-red-600 font-bold">148 conversas suspeitas</span> foram encontradas. O sistema conseguiu recuperar{" "}
             <span className="text-orange-500 font-bold">mensagens apagadas</span>.
           </p>
-          <p className="text-gray-600 text-sm mb-4">Toque em uma conversa abaixo para visualizar os detalhes.</p>
 
-          <div className="space-y-3">
+          <div className="space-y-3 mb-6">
             {conversations.map((conv) => (
               <button
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
-                className="w-full text-left p-4 border-2 border-red-300 rounded-lg hover:bg-red-50 transition-colors"
+                className="w-full text-left p-4 border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
               >
-                <div className="flex items-start gap-3">
-	                    <img
-	                      src={`/avatar-${conv.id}.png`}
-	                      alt={`Avatar ${conv.id}`}
-	                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-	                    />
+                <div className="flex items-start gap-4">
+                  <img
+                    src={`/avatar-${conv.id}.png`}
+                    alt={`Avatar ${conv.id}`}
+                    className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                  />
                   <div className="flex-1">
                     <div className="font-semibold text-gray-900">{conv.number}</div>
-                    <div className="text-sm text-gray-600 flex items-center gap-1">
+                    <div className="text-sm text-gray-600">
                       {conv.type === "message" && "📝"}
                       {conv.type === "audio" && "🎵"}
                       {conv.type === "photo" && "📷"}
-                      {conv.title}
+                      {" "}{conv.title}
                     </div>
                   </div>
                   <div className="text-xs text-gray-500">{conv.time}</div>
@@ -256,102 +239,56 @@ export default function Relatorio() {
         </div>
 
         {/* Mídia Recuperada */}
-        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Image className="w-5 h-5 text-green-600" />
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Mídia Recuperada</h2>
-          </div>
-          <p className="text-gray-700 mb-4">
+        <div className="bg-white border-2 border-black rounded-2xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-black mb-4">Mídia Recuperada</h2>
+          <p className="text-gray-700 mb-6">
             <span className="text-red-600 font-bold">3 áudios e 267 fotos apagadas</span> foram encontradas.
           </p>
 
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
+          <div className="grid grid-cols-3 gap-3 mb-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-200">
-	                <img
-	                  src={`/media-${i}.png`}
-	                  alt={`Media ${i}`}
-	                  className="w-full h-full object-cover"
-	                />
-{/* <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 hover:bg-opacity-70 transition-all">
-	                  <div className="text-center">
-	                    <Lock className="w-6 h-6 text-white mb-1" />
-	                    <p className="text-xs text-white font-semibold">Bloqueado</p>
-	                  </div>
-	                </div> */}
+              <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-200 border border-gray-300">
+                <img
+                  src={`/media-${i}.png`}
+                  alt={`Media ${i}`}
+                  className="w-full h-full object-cover"
+                />
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <Button
+          <div className="grid grid-cols-2 gap-3">
+            <button
               onClick={() => handleUnlock("audios")}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-xs sm:text-sm"
+              className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 rounded-xl border-2 border-black transition"
             >
               🔓 DESBLOQUEAR ÁUDIOS
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleUnlock("fotos")}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-xs sm:text-sm"
+              className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 rounded-xl border-2 border-black transition"
             >
               🔓 DESBLOQUEAR FOTOS
-            </Button>
+            </button>
           </div>
-        </div>
-
-        {/* Palavras-chave Suspeitas */}
-        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Palavras-chave Suspeitas</h2>
-          <p className="text-gray-700 mb-4">
-            O sistema escaneou <span className="font-bold">4.327 mensagens</span> e identificou várias palavras-chave suspeitas.
-          </p>
-
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-600 font-semibold">"Gostosa"</div>
-              <div className="text-red-600 text-lg font-bold">13</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-600 font-semibold">"Amor"</div>
-              <div className="text-red-600 text-lg font-bold">9</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-600 font-semibold">"Segredo"</div>
-              <div className="text-red-600 text-lg font-bold">8</div>
-            </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
-              <div className="text-gray-600 font-semibold">"Escondido"</div>
-              <div className="text-red-600 text-lg font-bold">6</div>
-            </div>
-          </div>
-
-          <Button
-            onClick={() => handleUnlock("mensagens")}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm"
-          >
-            🔓 VER TODAS AS MENSAGENS
-          </Button>
         </div>
 
         {/* Localização Suspeita */}
-        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="text-2xl">📍</div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Localização Suspeita</h2>
-          </div>
-          <p className="text-gray-700 mb-4">
+        <div className="bg-white border-2 border-black rounded-2xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-black mb-4">📍 Localização Suspeita</h2>
+          <p className="text-gray-700 mb-6">
             O número esteve neste motel nos últimos 7 dias. Abaixo está a localização mais recente registrada.
           </p>
 
           {loadingLocation ? (
-            <div className="w-full h-80 bg-gray-100 rounded-lg mb-3 sm:mb-4 flex items-center justify-center">
+            <div className="w-full h-96 bg-gray-100 rounded-xl mb-6 flex items-center justify-center">
               <div className="text-center">
-                <div className="animate-spin mb-2">⏳</div>
-                <p className="text-sm">Carregando mapa...</p>
+                <div className="animate-spin mb-2 text-2xl">⏳</div>
+                <p className="text-sm text-gray-600">Carregando mapa...</p>
               </div>
             </div>
           ) : locationData ? (
-            <div className="w-full rounded-lg mb-3 sm:mb-4 overflow-hidden shadow-md border border-gray-200">
+            <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-gray-300">
               <StaticMap
                 latitude={locationData.latitude}
                 longitude={locationData.longitude}
@@ -365,59 +302,67 @@ export default function Relatorio() {
               />
             </div>
           ) : (
-            <div className="w-full h-80 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center text-gray-400">
-              <Lock className="w-6 h-6 sm:w-8 sm:h-8" />
+            <div className="w-full h-96 bg-gray-200 rounded-xl mb-6 flex items-center justify-center text-gray-400">
+              🔒
             </div>
           )}
 
-          <Button
+          <button
             onClick={() => handleUnlock("localizacao")}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm"
+            className="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-3 rounded-xl border-2 border-black transition"
           >
             🔓 VER HISTÓRICO COMPLETO
-          </Button>
+          </button>
         </div>
 
-        {/* CTA Final */}
-        <div className="bg-green-500 rounded-lg shadow-lg p-4 sm:p-6 text-center mb-8">
-          <Button
+        {/* CTA Final - PROMOÇÃO BLACK FRIDAY */}
+        <div className="bg-green-500 border-2 border-black rounded-2xl p-8 text-center mb-12">
+          <button
             onClick={() => handleUnlock("tudo")}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-base sm:text-lg"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-lg transition border-2 border-black"
           >
             🔓 PROMOÇÃO BLACK FRIDAY: DE R$ 27,90 POR APENAS R$ 19,90
-          </Button>
+          </button>
         </div>
       </div>
 
       {/* Dialog para Conversas */}
-      <Dialog open={!!selectedConversation} onOpenChange={() => setSelectedConversation(null)}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{selectedConversation?.number}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {selectedConversation?.messages?.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.sender === "you" ? "justify-end" : "justify-start"}`}
+      {selectedConversation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-md w-full max-h-96 overflow-y-auto border-2 border-black">
+            <div className="p-6 border-b-2 border-gray-200">
+              <h3 className="text-lg font-bold text-black">{selectedConversation.number}</h3>
+              <button
+                onClick={() => setSelectedConversation(null)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
               >
+                ✕
+              </button>
+            </div>
+            <div className="p-6 space-y-3">
+              {selectedConversation.messages?.map((msg, idx) => (
                 <div
-                  className={`max-w-xs px-3 py-2 rounded-lg ${
-                    msg.sender === "you"
-                      ? "bg-green-500 text-white"
-                      : msg.blocked
-                      ? "bg-red-100 text-red-700"
-                      : "bg-gray-200 text-gray-900"
-                  }`}
+                  key={idx}
+                  className={`flex ${msg.sender === "you" ? "justify-end" : "justify-start"}`}
                 >
-                  <p className="text-sm">{msg.text}</p>
-                  <p className="text-xs opacity-70 mt-1">{msg.time}</p>
+                  <div
+                    className={`max-w-xs px-4 py-2 rounded-lg ${
+                      msg.sender === "you"
+                        ? "bg-green-500 text-white"
+                        : msg.blocked
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-200 text-gray-900"
+                    }`}
+                  >
+                    <p className="text-sm">{msg.text}</p>
+                    <p className="text-xs opacity-70 mt-1">{msg.time}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   );
 }
