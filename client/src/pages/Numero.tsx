@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { MessageCircle, ArrowLeft } from "lucide-react";
 
 export default function Numero() {
   const [, setLocation] = useLocation();
@@ -10,14 +8,15 @@ export default function Numero() {
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, "");
     
-    // Format as (XX) XXXXX-XXXX
     if (value.length > 0) {
       if (value.length <= 2) {
-        value = `(${value}`;
-      } else if (value.length <= 7) {
-        value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+        value = `+${value}`;
+      } else if (value.length <= 4) {
+        value = `+${value.slice(0, 2)} (${value.slice(2)}`;
+      } else if (value.length <= 9) {
+        value = `+${value.slice(0, 2)} (${value.slice(2, 4)}) ${value.slice(4)}`;
       } else {
-        value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7, 11)}`;
+        value = `+${value.slice(0, 2)} (${value.slice(2, 4)}) ${value.slice(4, 9)}-${value.slice(9, 13)}`;
       }
     }
     
@@ -26,9 +25,7 @@ export default function Numero() {
 
   const handleStartMonitoring = () => {
     if (phoneNumber.replace(/\D/g, "").length >= 10) {
-      // Store phone number in localStorage
       localStorage.setItem("phoneNumber", phoneNumber);
-      // Navigate to loading page
       setLocation("/carregando");
     }
   };
@@ -38,85 +35,107 @@ export default function Numero() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 py-3 px-3 sm:py-4 sm:px-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <button
+      <header className="bg-gray-50 border-b border-gray-200 py-4 px-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <button 
             onClick={handleBack}
-            className="text-gray-600 hover:text-gray-800 transition p-1"
+            className="p-2 hover:bg-gray-100 rounded transition"
           >
-            <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+            <svg className="w-6 h-6 text-gray-800" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
           </button>
-          <div className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
-            <span className="font-semibold text-gray-800 text-sm sm:text-base">WhatsApp</span>
-          </div>
-          <button className="text-green-500 hover:text-green-600 transition text-lg">
-            ⬇️
+
+          <div className="flex-1"></div>
+
+          <button className="w-12 h-12 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center transition border border-black">
+            <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+            </svg>
           </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-3 py-8 sm:px-4 sm:py-12">
-        <div className="max-w-md w-full space-y-6 sm:space-y-8">
-          {/* Title and Description */}
-          <div className="text-center space-y-2 sm:space-y-3">
-            <h1 className="text-xl sm:text-3xl font-bold text-gray-900">
-              Parabéns, você ganhou 1 acesso gratuito!
-            </h1>
-            <p className="text-gray-600 text-xs sm:text-sm">
-              Insira o número abaixo e inicie o monitoramento silencioso.
-            </p>
-          </div>
+      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          {/* Title */}
+          <h1 className="text-4xl font-bold text-center text-black mb-4">
+            Insira o Número
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-center text-gray-600 text-lg mb-12">
+            Digite o número de telefone que deseja monitorar.
+          </p>
 
           {/* Phone Input */}
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-6">
             <div className="relative">
               <input
                 type="text"
                 value={phoneNumber}
                 onChange={handlePhoneChange}
-                placeholder="(99) 99999-9999"
-                maxLength={15}
-                className="w-full px-3 sm:px-4 py-3 sm:py-4 border-2 border-dashed border-blue-300 rounded-lg focus:outline-none focus:border-blue-500 text-center font-semibold text-gray-700 text-base sm:text-lg"
+                placeholder="+55 (11) 98765-4321"
+                maxLength={25}
+                className="w-full px-6 py-4 border-2 border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-center font-semibold text-gray-700 text-lg bg-white"
               />
-              <span className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-blue-500 text-lg sm:text-xl">
-                📱
-              </span>
             </div>
 
-            <Button
+            <button
               onClick={handleStartMonitoring}
               disabled={phoneNumber.replace(/\D/g, "").length < 10}
-              className="w-full h-12 sm:h-14 bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold rounded-lg transition active:scale-95 text-base sm:text-lg"
+              className="w-full bg-green-500 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-2xl border-2 border-black transition transform hover:shadow-lg active:scale-95 focus:outline-none disabled:cursor-not-allowed text-lg"
             >
-              🔐 Clonar WhatsApp Agora
-            </Button>
+              Iniciar Monitoramento
+            </button>
           </div>
+
+          {/* Info Text */}
+          <p className="text-center text-gray-600 text-sm mt-8">
+            Seu número será processado com segurança e criptografia de ponta a ponta.
+          </p>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-4 px-3 sm:py-6 sm:px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-3 sm:mb-4 text-xs sm:text-sm">
-            <a href="#" className="text-gray-500 hover:text-gray-700 underline">
-              Privacidade
+      <footer className="bg-white border-t border-gray-200 py-6 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-6 mb-4">
+            <a href="#" className="text-gray-500 hover:text-gray-700 text-sm transition">
+              Política de Privacidade
             </a>
-            <a href="#" className="text-gray-500 hover:text-gray-700 underline">
-              Termos
+            <a href="#" className="text-gray-500 hover:text-gray-700 text-sm transition">
+              Termos de Uso
             </a>
-            <a href="#" className="text-gray-500 hover:text-gray-700 underline">
-              Suporte
+            <a href="#" className="text-gray-500 hover:text-gray-700 text-sm transition">
+              Suporte por Email
             </a>
           </div>
-          <p className="text-center text-xs text-gray-500">
-            © 2024 Proteja Seu Relacionamento
+          <p className="text-center text-gray-500 text-xs">
+            © 2024 Proteja Seu Relacionamento. Todos os direitos reservados.
           </p>
         </div>
       </footer>
+
+      {/* Cookie Notice */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 py-4 px-4 flex items-center justify-center gap-4 shadow-lg z-50">
+        <p className="text-gray-700 text-sm flex-1 text-center">
+          Este site utiliza cookies para melhorar sua experiência. Ao continuar, você concorda com nossa política.
+        </p>
+        <button
+          onClick={(e) => {
+            const banner = (e.target as HTMLElement).closest('[data-cookie-banner]');
+            if (banner) banner.remove();
+          }}
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition whitespace-nowrap border border-black"
+          data-cookie-banner
+        >
+          Aceitar
+        </button>
+      </div>
     </div>
   );
 }
