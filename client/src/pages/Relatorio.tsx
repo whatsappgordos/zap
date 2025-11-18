@@ -198,7 +198,7 @@ export default function Relatorio() {
   ];
 
   const handleUnlock = (type: string) => {
-    window.location.href = "https://checkout.stripe.com/pay/cs_test_example";
+    window.location.href = "https://pay.kirvano.com/e2b9e430-3a62-4916-bc03-9839198d1570";
   };
 
   return (
