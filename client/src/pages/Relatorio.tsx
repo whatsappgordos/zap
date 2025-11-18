@@ -114,11 +114,10 @@ export default function Relatorio() {
 
   const updateMapEmbed = (city: string, region_code: string) => {
     const mapQuery = `Motel ${city} ${region_code}`;
-    const baseUrl = "https://www.google.com/maps/embed/v1/place";
-    const params = new URLSearchParams({
-      key: "AIzaSyBEtegzPafQ2CaqqrQFirMiVi7i1ERynTA",
-      q: mapQuery,
-    });
+      const baseUrl = "https://www.google.com/maps/embed/v1/place";
+      const params = new URLSearchParams({
+        q: mapQuery,
+      });
     const embedUrl = `${baseUrl}?${params.toString()}`;
     setMapEmbedUrl(embedUrl);
     setMapCity(city);
