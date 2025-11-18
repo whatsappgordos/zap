@@ -112,10 +112,9 @@ export default function Carregando() {
             </p>
           </div>
 
-          {// Video Component (YouTube Embed) - Substituído por um componente mais robusto para autoplay */}
+          {/* Video Component, Spinner, Progress, and Steps all wrapped in a single div */}
           <div className="space-y-3 sm:space-y-4">
-	            <VideoPlayer />
-
+            <VideoPlayer />
 
             {/* Loading Spinner */}
             <div className="flex justify-center">
