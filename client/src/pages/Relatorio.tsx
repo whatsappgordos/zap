@@ -384,7 +384,7 @@ export default function Relatorio() {
             onClick={() => handleUnlock("tudo")}
             className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg text-base sm:text-lg"
           >
-            🔓 DESBLOQUEAR TUDO POR R$ 27,90
+            🔓 PROMOÇÃO BLACK FRIDAY: DE R$ 27,90 POR APENAS R$ 19,90
           </Button>
         </div>
       </div>
