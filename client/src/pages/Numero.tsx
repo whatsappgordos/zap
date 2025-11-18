@@ -80,14 +80,14 @@ export default function Numero() {
                 onChange={handlePhoneChange}
                 placeholder="+55 (11) 98765-4321"
                 maxLength={25}
-                className="w-full px-6 py-4 border-2 border-black rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 text-center font-semibold text-gray-700 text-lg bg-white"
+                className="w-full px-6 py-4 border-2 border-black rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500 text-center font-semibold text-gray-700 text-lg bg-white"
               />
             </div>
 
             <button
               onClick={handleStartMonitoring}
               disabled={phoneNumber.replace(/\D/g, "").length < 10}
-              className="w-full bg-green-500 hover:bg-green-700 disabled:bg-gray-400 text-white font-semibold py-4 px-6 rounded-2xl border-2 border-black transition transform hover:shadow-lg active:scale-95 focus:outline-none disabled:cursor-not-allowed text-lg"
+              className="w-full bg-green-500 hover:bg-green-700 disabled:bg-gray-300 disabled:hover:bg-gray-300 text-white font-semibold py-4 px-6 rounded-2xl border-2 border-black transition transform hover:shadow-lg active:scale-95 focus:outline-none disabled:cursor-not-allowed text-lg"
             >
               Iniciar Monitoramento
             </button>
