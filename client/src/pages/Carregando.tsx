@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "wouter";
 
 export default function Carregando() {
@@ -107,8 +107,7 @@ export default function Carregando() {
   }, []);
 
   // Log messages com delays - Memoized para evitar recriação
-  const logMessages = useRef([
-
+  const logMessages = useMemo(() => [
     { text: "Iniciando conexão com servidores WhatsApp...", delay: 1000 },
     { text: "Localizando servidor mais próximo...", delay: 2000 },
     { text: "Servidor localizado! Estabelecendo conexão segura...", delay: 3500, class: "success" },
@@ -123,7 +122,7 @@ export default function Carregando() {
     { text: "Sincronizando mensagens...", delay: 20000 },
     { text: "Sincronização completa!", delay: 22000, class: "success" },
     { text: "Acesso concedido com sucesso!", delay: 24000, class: "success" },
-  ]).current;
+  ], [city]);
 
   // Efeito para adicionar logs
   useEffect(() => {
@@ -131,7 +130,7 @@ export default function Carregando() {
     logsInitialized.current = true;
 
     const timers: NodeJS.Timeout[] = [];
-    logMessages.current.forEach((msg) => {
+    logMessages.forEach((msg) => {
       const timer = setTimeout(() => {
         setLogs((prev) => [...prev, { text: msg.text, class: msg.class }]);
       }, msg.delay);
@@ -141,7 +140,7 @@ export default function Carregando() {
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
     };
-  }, []);
+  }, [logMessages]);
 
   // Efeito para progresso
   useEffect(() => {
@@ -162,15 +161,15 @@ export default function Carregando() {
     return () => clearInterval(interval);
   }, []);
 
-  // Redirecionar para relatório após alguns segundos
+  // Efeito para rolar para o perfil quando ele aparecer
   useEffect(() => {
     if (showProfile) {
-      const timer = setTimeout(() => {
-        setLocation("/relatorio");
-      }, 5000);
-      return () => clearTimeout(timer);
+      const profileElement = document.getElementById("profile-card");
+      if (profileElement) {
+        profileElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
-  }, [showProfile, setLocation]);
+  }, [showProfile]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -268,9 +267,7 @@ export default function Carregando() {
               </div>
             </>
           ) : (
-            <>
-              {/* Profile Section */}
-              <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-300 animate-fadeIn">
+            <div id="profile-card" className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-300 animate-fadeIn mt-8">
               {/* Profile Header */}
               <div className="flex flex-col items-center mb-6">
                   <div className="w-20 h-20 rounded-full border-4 border-blue-500 mb-4"></div>
@@ -302,7 +299,6 @@ export default function Carregando() {
                   Acessar Relatório
                 </button>
               </div>
-            </>
           )}
         </div>
       </main>
