@@ -32,6 +32,97 @@ export default function Relatorio() {
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [motelData, setMotelData] = useState<MotelData | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(true);
+  const [mapEmbedUrl, setMapEmbedUrl] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [mapCity, setMapCity] = useState<string>("");
+
+  useEffect(() => {
+    // Recuperar número do localStorage
+    const savedPhone = localStorage.getItem("phoneNumber") || "(XX) XXXXX-XXXX";
+    setPhoneNumber(savedPhone);
+  }, []);
+
+  const dddToCity: Record<string, { city: string; region_code: string }> = {
+    "11": { city: "São Paulo", region_code: "SP" },
+    "12": { city: "São José dos Campos", region_code: "SP" },
+    "13": { city: "Santos", region_code: "SP" },
+    "14": { city: "Bauru", region_code: "SP" },
+    "15": { city: "Sorocaba", region_code: "SP" },
+    "16": { city: "Ribeirão Preto", region_code: "SP" },
+    "17": { city: "São José do Rio Preto", region_code: "SP" },
+    "18": { city: "Presidente Prudente", region_code: "SP" },
+    "19": { city: "Campinas", region_code: "SP" },
+    "21": { city: "Rio de Janeiro", region_code: "RJ" },
+    "22": { city: "Campos dos Goytacazes", region_code: "RJ" },
+    "24": { city: "Volta Redonda", region_code: "RJ" },
+    "27": { city: "Vitória", region_code: "ES" },
+    "28": { city: "Cachoeiro de Itapemirim", region_code: "ES" },
+    "31": { city: "Belo Horizonte", region_code: "MG" },
+    "32": { city: "Juiz de Fora", region_code: "MG" },
+    "33": { city: "Governador Valadares", region_code: "MG" },
+    "34": { city: "Uberlândia", region_code: "MG" },
+    "35": { city: "Poços de Caldas", region_code: "MG" },
+    "37": { city: "Divinópolis", region_code: "MG" },
+    "38": { city: "Montes Claros", region_code: "MG" },
+    "41": { city: "Curitiba", region_code: "PR" },
+    "42": { city: "Ponta Grossa", region_code: "PR" },
+    "43": { city: "Londrina", region_code: "PR" },
+    "44": { city: "Maringá", region_code: "PR" },
+    "45": { city: "Foz do Iguaçu", region_code: "PR" },
+    "46": { city: "Francisco Beltrão", region_code: "PR" },
+    "47": { city: "Joinville", region_code: "SC" },
+    "48": { city: "Florianópolis", region_code: "SC" },
+    "49": { city: "Chapecó", region_code: "SC" },
+    "51": { city: "Porto Alegre", region_code: "RS" },
+    "53": { city: "Pelotas", region_code: "RS" },
+    "54": { city: "Caxias do Sul", region_code: "RS" },
+    "55": { city: "Santa Maria", region_code: "RS" },
+    "61": { city: "Brasília", region_code: "DF" },
+    "62": { city: "Goiânia", region_code: "GO" },
+    "63": { city: "Palmas", region_code: "TO" },
+    "64": { city: "Rio Verde", region_code: "GO" },
+    "65": { city: "Cuiabá", region_code: "MT" },
+    "66": { city: "Rondonópolis", region_code: "MT" },
+    "67": { city: "Campo Grande", region_code: "MS" },
+    "68": { city: "Rio Branco", region_code: "AC" },
+    "69": { city: "Porto Velho", region_code: "RO" },
+    "71": { city: "Salvador", region_code: "BA" },
+    "73": { city: "Ilhéus", region_code: "BA" },
+    "74": { city: "Juazeiro", region_code: "BA" },
+    "75": { city: "Feira de Santana", region_code: "BA" },
+    "77": { city: "Barreiras", region_code: "BA" },
+    "79": { city: "Aracaju", region_code: "SE" },
+    "81": { city: "Recife", region_code: "PE" },
+    "82": { city: "Maceió", region_code: "AL" },
+    "83": { city: "João Pessoa", region_code: "PB" },
+    "84": { city: "Natal", region_code: "RN" },
+    "85": { city: "Fortaleza", region_code: "CE" },
+    "86": { city: "Teresina", region_code: "PI" },
+    "87": { city: "Petrolina", region_code: "PE" },
+    "88": { city: "Juazeiro do Norte", region_code: "CE" },
+    "89": { city: "Picos", region_code: "PI" },
+    "91": { city: "Belém", region_code: "PA" },
+    "92": { city: "Manaus", region_code: "AM" },
+    "93": { city: "Santarém", region_code: "PA" },
+    "94": { city: "Marabá", region_code: "PA" },
+    "95": { city: "Boa Vista", region_code: "RR" },
+    "96": { city: "Macapá", region_code: "AP" },
+    "97": { city: "Tefé", region_code: "AM" },
+    "98": { city: "São Luís", region_code: "MA" },
+    "99": { city: "Imperatriz", region_code: "MA" },
+  };
+
+  const updateMapEmbed = (city: string, region_code: string) => {
+    const mapQuery = `Motel ${city} ${region_code}`;
+    const baseUrl = "https://www.google.com/maps/embed/v1/place";
+    const params = new URLSearchParams({
+      key: "AIzaSyBEtegzPafQ2CaqqrQFirMiVi7i1ERynTA",
+      q: mapQuery,
+    });
+    const embedUrl = `${baseUrl}?${params.toString()}`;
+    setMapEmbedUrl(embedUrl);
+    setMapCity(city);
+  };
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -42,13 +133,13 @@ export default function Relatorio() {
           region: "CA",
           country_name: "United States",
           latitude: 37.4224,
-          longitude: -122.0842
+          longitude: -122.0842,
         };
-        
+
         let data = defaultLocation;
-        
+
         try {
-          const response = await fetch('https://ipapi.co/json/');
+          const response = await fetch("https://ipapi.co/json/");
           if (response.ok) {
             const apiData = await response.json();
             if (apiData && apiData.latitude && apiData.longitude) {
@@ -57,7 +148,7 @@ export default function Relatorio() {
           }
         } catch (e) {
           try {
-            const response = await fetch('https://ip-api.com/json/');
+            const response = await fetch("https://ip-api.com/json/");
             if (response.ok) {
               const apiData = await response.json();
               if (apiData && apiData.lat && apiData.lon) {
@@ -67,19 +158,19 @@ export default function Relatorio() {
                   region: apiData.region || defaultLocation.region,
                   country_name: apiData.country || defaultLocation.country_name,
                   latitude: apiData.lat,
-                  longitude: apiData.lon
+                  longitude: apiData.lon,
                 };
               }
             }
           } catch (e2) {
-            console.log('APIs falharam, usando fallback');
+            console.log("APIs falharam, usando fallback");
           }
         }
-        
+
         if (!data.latitude || !data.longitude) {
           data = defaultLocation;
         }
-        
+
         const location: LocationData = {
           ip: data.ip || defaultLocation.ip,
           city: data.city || defaultLocation.city,
@@ -88,64 +179,94 @@ export default function Relatorio() {
           latitude: Number(data.latitude) || defaultLocation.latitude,
           longitude: Number(data.longitude) || defaultLocation.longitude,
         };
-        
+
         setLocationData(location);
-        
-        const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+
+        // Atualizar mapa com localização por DDD
+        const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
+        const locationInfo = dddToCity[ddd] || dddToCity["11"];
+        updateMapEmbed(locationInfo.city, locationInfo.region_code);
+
+        const calculateDistance = (
+          lat1: number,
+          lon1: number,
+          lat2: number,
+          lon2: number
+        ): number => {
           const R = 6371;
-          const dLat = (lat2 - lat1) * Math.PI / 180;
-          const dLon = (lon2 - lon1) * Math.PI / 180;
-          const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                    Math.sin(dLon/2) * Math.sin(dLon/2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          const dLat = ((lat2 - lat1) * Math.PI) / 180;
+          const dLon = ((lon2 - lon1) * Math.PI) / 180;
+          const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+              Math.cos((lat2 * Math.PI) / 180) *
+              Math.sin(dLon / 2) *
+              Math.sin(dLon / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
           return R * c;
         };
-        
+
         const lat = Number(location.latitude);
         const lon = Number(location.longitude);
-        
+
         const motels = [
-          { name: "Motel Paraíso", latitude: lat + 0.02, longitude: lon + 0.02, rating: "4.5" },
-          { name: "Motel Luxo", latitude: lat - 0.015, longitude: lon + 0.025, rating: "4.2" },
-          { name: "Motel Discreto", latitude: lat + 0.01, longitude: lon - 0.015, rating: "4.7" },
+          {
+            name: "Motel Paraíso",
+            latitude: lat + 0.02,
+            longitude: lon + 0.02,
+            rating: "4.5",
+          },
+          {
+            name: "Motel Luxo",
+            latitude: lat - 0.015,
+            longitude: lon + 0.025,
+            rating: "4.2",
+          },
+          {
+            name: "Motel Discreto",
+            latitude: lat + 0.01,
+            longitude: lon - 0.015,
+            rating: "4.7",
+          },
         ];
-        
-        const motelsWithDistance = motels.map(motel => ({
+
+        const motelsWithDistance = motels.map((motel) => ({
           ...motel,
-          distance: calculateDistance(lat, lon, motel.latitude, motel.longitude)
+          distance: calculateDistance(lat, lon, motel.latitude, motel.longitude),
         }));
-        
-        const closestMotel = motelsWithDistance.reduce((prev, current) => 
+
+        const closestMotel = motelsWithDistance.reduce((prev, current) =>
           prev.distance < current.distance ? prev : current
         );
-        
+
         const distance = closestMotel?.distance ?? 1.7;
-        const distanceStr = typeof distance === 'number' ? distance.toFixed(1) : '1.7';
-        
+        const distanceStr = typeof distance === "number" ? distance.toFixed(1) : "1.7";
+
         setMotelData({
           name: closestMotel?.name || "Motel Discreto",
           distance: distanceStr + " km",
           rating: closestMotel?.rating || "4.7",
           latitude: closestMotel?.latitude || lat,
-          longitude: closestMotel?.longitude || lon
+          longitude: closestMotel?.longitude || lon,
         });
       } catch (error) {
-        console.error('Error fetching location:', error);
+        console.error("Error fetching location:", error);
         setMotelData({
           name: "Motel Discreto",
           distance: "1.7 km",
           rating: "4.7",
           latitude: 37.4224,
-          longitude: -122.0842
+          longitude: -122.0842,
         });
+        // Fallback para mapa
+        updateMapEmbed("São Paulo", "SP");
       } finally {
         setLoadingLocation(false);
       }
     };
-    
+
     fetchLocation();
-  }, []);
+  }, [phoneNumber]);
 
   const conversations: Conversation[] = [
     {
@@ -157,7 +278,7 @@ export default function Relatorio() {
       messages: [
         { text: "Oi, tudo bem?", time: "14:22", sender: "them" },
         { text: "Tudo sim e você?", time: "14:23", sender: "you" },
-        { text: "Conteúdo bloqueado", time: "14:25", sender: "them", blocked: true },
+        { text: "[Bloqueado]", time: "14:25", sender: "them", blocked: true },
       ],
     },
     {
@@ -167,8 +288,9 @@ export default function Relatorio() {
       title: "Áudio suspeito detectado",
       time: "3 dias",
       messages: [
-        { text: "🎵 Áudio (2:34)", time: "10:15", sender: "them" },
-        { text: "Conteúdo bloqueado", time: "10:16", sender: "them", blocked: true },
+        { text: "Eiiii", time: "09:15", sender: "them" },
+        { text: "to aqui amor", time: "09:17", sender: "them" },
+        { text: "[Áudio bloqueado]", time: "09:20", sender: "them", blocked: true },
       ],
     },
     {
@@ -178,27 +300,24 @@ export default function Relatorio() {
       title: "Fotos suspeitas encontradas",
       time: "1 semana",
       messages: [
-        { text: "📷 Foto", time: "08:45", sender: "them" },
-        { text: "Conteúdo bloqueado", time: "08:46", sender: "them", blocked: true },
+        { text: "Cadê você não vai me mandar?", time: "20:05", sender: "them" },
+        { text: "Claro, rsrsrs 😏", time: "20:07", sender: "you" },
+        { text: "[Foto bloqueada]", time: "20:10", sender: "them", blocked: true },
       ],
     },
   ];
 
   const handleUnlock = (type: string) => {
-    window.location.href = "https://pay.kirvano.com/e2b9e430-3a62-4916-bc03-9839198d1570";
+    alert(`Desbloqueando: ${type}`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gray-100 py-12">
+      <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-black mb-4">
-            Relatório de Acesso ao WhatsApp
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Confirma abaixo os principais dados recuperados.
-          </p>
+        <div className="bg-green-500 border-2 border-black rounded-2xl p-8 text-white text-center mb-12">
+          <h1 className="text-4xl font-bold mb-2">Relatório de Acesso ao WhatsApp</h1>
+          <p className="text-lg">Confira abaixo os principais dados recuperados da análise do número informado.</p>
         </div>
 
         {/* Análise de Conversas */}
@@ -277,7 +396,6 @@ export default function Relatorio() {
         <div className="bg-white border-2 border-black rounded-2xl p-8 mb-12">
           <h2 className="text-2xl font-bold text-black mb-4">📍 Localização Suspeita</h2>
 
-
           {loadingLocation ? (
             <div className="w-full h-96 bg-gray-100 rounded-xl mb-6 flex items-center justify-center">
               <div className="text-center">
@@ -285,20 +403,23 @@ export default function Relatorio() {
                 <p className="text-sm text-gray-600">Carregando mapa...</p>
               </div>
             </div>
-          ) : locationData ? (
-            <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-black">
-              <StaticMap
-                latitude={locationData.latitude}
-                longitude={locationData.longitude}
-                motelData={motelData ? {
-                  name: motelData.name,
-                  distance: motelData.distance,
-                  rating: motelData.rating,
-                  latitude: motelData.latitude,
-                  longitude: motelData.longitude,
-                } : undefined}
-              />
-            </div>
+          ) : mapEmbedUrl ? (
+            <>
+              <p className="text-gray-700 mb-4">
+                O número <strong>{phoneNumber}</strong> esteve neste motel em <strong>{mapCity}</strong> nos últimos 7 dias. Abaixo está a localização mais recente registrada.
+              </p>
+              <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-black">
+                <iframe
+                  width="100%"
+                  height="400"
+                  style={{ border: "none", borderRadius: "10px" }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={mapEmbedUrl}
+                ></iframe>
+              </div>
+            </>
           ) : (
             <div className="w-full h-96 bg-gray-200 rounded-xl mb-6 flex items-center justify-center text-gray-400">
               🔒
@@ -328,11 +449,11 @@ export default function Relatorio() {
       {selectedConversation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full max-h-96 overflow-y-auto border-2 border-black">
-            <div className="p-6 border-b-2 border-gray-200">
+            <div className="p-6 border-b-2 border-gray-200 flex justify-between items-center">
               <h3 className="text-lg font-bold text-black">{selectedConversation.number}</h3>
               <button
                 onClick={() => setSelectedConversation(null)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 text-2xl"
               >
                 ✕
               </button>
@@ -348,7 +469,7 @@ export default function Relatorio() {
                       msg.sender === "you"
                         ? "bg-green-500 text-white"
                         : msg.blocked
-                        ? "bg-red-100 text-red-700"
+                        ? "bg-gray-300 text-gray-600"
                         : "bg-gray-200 text-gray-900"
                     }`}
                   >
