@@ -8,6 +8,9 @@ export default function Carregando() {
   const [showProfile, setShowProfile] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("(XX) XXXXX-XXXX");
   const [city, setCity] = useState("São Paulo");
+  const [state, setState] = useState("SP");
+  const [isp, setIsp] = useState("Carregando...");
+  const [ipAddress, setIpAddress] = useState("...");
   const [profileImage, setProfileImage] = useState(1);
   const logsInitialized = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -100,11 +103,53 @@ export default function Carregando() {
     const savedPhone = localStorage.getItem("phoneNumber") || "(XX) XXXXX-XXXX";
     setPhoneNumber(savedPhone);
     
-    const determinedCity = getCityFromDDD(savedPhone);
-    setCity(determinedCity);
-    
     const imageNum = getProfileImageNumber(savedPhone);
     setProfileImage(imageNum);
+
+    // Detectar localização por IP real do visitante
+    const fetchLocationByIP = async () => {
+      try {
+        // Tentar com ipapi.co primeiro (mais completo)
+        const response = await fetch("https://ipapi.co/json/");
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.city) {
+            setCity(data.city || "São Paulo");
+            setState(data.region_code || data.region || "SP");
+            setIsp(data.org || data.asn || "Provedor de Internet");
+            setIpAddress(data.ip || "N/A");
+            return;
+          }
+        }
+      } catch (error) {
+        console.log("ipapi.co falhou, tentando ip-api.com");
+      }
+
+      try {
+        // Fallback para ip-api.com
+        const response = await fetch("https://ip-api.com/json/");
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.city) {
+            setCity(data.city || "São Paulo");
+            setState(data.region || "SP");
+            setIsp(data.isp || "Provedor de Internet");
+            setIpAddress(data.query || "N/A");
+            return;
+          }
+        }
+      } catch (error) {
+        console.log("Todas as APIs de IP falharam, usando fallback");
+      }
+
+      // Fallback final
+      setCity("São Paulo");
+      setState("SP");
+      setIsp("Provedor de Internet");
+      setIpAddress("N/A");
+    };
+
+    fetchLocationByIP();
   }, []);
 
   // Efeito para tentar iniciar o vídeo com áudio após interação do usuário
@@ -315,12 +360,20 @@ export default function Carregando() {
             {/* Profile Details */}
             <div className="border-t border-gray-200 pt-6 space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 font-medium">Cidade de última conexão</span>
-                <span className="text-gray-900 font-bold">{city}</span>
+                <span className="text-gray-600 font-medium">Endereço IP</span>
+                <span className="text-gray-900 font-bold">{ipAddress}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Localização detectada</span>
+                <span className="text-gray-900 font-bold">{city}, {state}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 font-medium">Provedor de Internet</span>
+                <span className="text-gray-900 font-bold text-sm">{isp}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 font-medium">Status do dispositivo</span>
-                <span className="text-gray-900 font-bold">Ativo</span>
+                <span className="text-green-600 font-bold">• Online Agora</span>
               </div>
             </div>
 

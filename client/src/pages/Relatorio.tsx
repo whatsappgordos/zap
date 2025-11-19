@@ -17,6 +17,7 @@ interface LocationData {
   country: string;
   latitude: number;
   longitude: number;
+  isp?: string;
 }
 
 interface MotelData {
@@ -123,6 +124,7 @@ export default function Relatorio() {
           country_name: "United States",
           latitude: 37.4224,
           longitude: -122.0842,
+          org: "Google LLC",
         };
 
         let data = defaultLocation;
@@ -148,6 +150,7 @@ export default function Relatorio() {
                   country_name: apiData.country || defaultLocation.country_name,
                   latitude: apiData.lat,
                   longitude: apiData.lon,
+                  org: apiData.isp || apiData.org || defaultLocation.org,
                 };
               }
             }
@@ -167,6 +170,7 @@ export default function Relatorio() {
           country: data.country_name || defaultLocation.country_name,
           latitude: Number(data.latitude) || defaultLocation.latitude,
           longitude: Number(data.longitude) || defaultLocation.longitude,
+          isp: data.org || data.isp || "Provedor de Internet",
         };
 
         setLocationData(location);
