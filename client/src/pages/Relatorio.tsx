@@ -32,9 +32,7 @@ export default function Relatorio() {
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [motelData, setMotelData] = useState<MotelData | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(true);
-  const [mapEmbedUrl, setMapEmbedUrl] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [mapCity, setMapCity] = useState<string>("");
 
   useEffect(() => {
     // Recuperar número do localStorage
@@ -112,16 +110,7 @@ export default function Relatorio() {
     "99": { city: "Imperatriz", region_code: "MA" },
   };
 
-  const updateMapEmbed = (city: string, region_code: string) => {
-    const mapQuery = `Motel ${city} ${region_code}`;
-      const baseUrl = "https://www.google.com/maps/embed/v1/place";
-      const params = new URLSearchParams({
-        q: mapQuery,
-      });
-    const embedUrl = `${baseUrl}?${params.toString()}`;
-    setMapEmbedUrl(embedUrl);
-    setMapCity(city);
-  };
+
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -184,7 +173,7 @@ export default function Relatorio() {
         // Atualizar mapa com localização por DDD
         const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
         const locationInfo = dddToCity[ddd] || dddToCity["11"];
-        updateMapEmbed(locationInfo.city, locationInfo.region_code);
+        setMapCity(locationInfo.city);
 
         const calculateDistance = (
           lat1: number,
@@ -258,7 +247,7 @@ export default function Relatorio() {
           longitude: -122.0842,
         });
         // Fallback para mapa
-        updateMapEmbed("São Paulo", "SP");
+        setMapCity("São Paulo");
       } finally {
         setLoadingLocation(false);
       }
@@ -307,7 +296,9 @@ export default function Relatorio() {
   ];
 
   const handleUnlock = (type: string) => {
-    alert(`Desbloqueando: ${type}`);
+    // Link de checkout da Kirvano
+    const checkoutLink = "https://pay.kirvano.com/d814283c-184d-4444-9333-808819030222";
+    window.location.href = checkoutLink;
   };
 
   return (
@@ -402,21 +393,17 @@ export default function Relatorio() {
                 <p className="text-sm text-gray-600">Carregando mapa...</p>
               </div>
             </div>
-          ) : mapEmbedUrl ? (
+          ) : motelData ? (
             <>
               <p className="text-gray-700 mb-4">
                 O número <strong>{phoneNumber}</strong> esteve neste motel em <strong>{mapCity}</strong> nos últimos 7 dias. Abaixo está a localização mais recente registrada.
               </p>
               <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-black">
-                <iframe
-                  width="100%"
-                  height="400"
-                  style={{ border: "none", borderRadius: "10px" }}
-                  loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={mapEmbedUrl}
-                ></iframe>
+                <StaticMap
+                  latitude={motelData.latitude}
+                  longitude={motelData.longitude}
+                  zoom={14}
+                />
               </div>
             </>
           ) : (
