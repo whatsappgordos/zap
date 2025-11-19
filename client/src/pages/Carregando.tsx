@@ -331,10 +331,6 @@ export default function Carregando() {
             {/* Profile Details */}
             <div className="border-t border-gray-200 pt-6 space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 font-medium">Endereço IP</span>
-                <span className="text-gray-900 font-bold">{ipAddress}</span>
-              </div>
-              <div className="flex justify-between items-center">
                 <span className="text-gray-600 font-medium">Localização detectada</span>
                 <span className="text-gray-900 font-bold">{city}, {state}</span>
               </div>
