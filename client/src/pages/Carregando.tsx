@@ -250,45 +250,51 @@ export default function Carregando() {
             </div>
           </div>
 
-          {/* Spinner */}
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-6">
-            <div className="w-full bg-gray-300 rounded-full h-2 overflow-hidden">
-              <div
-                className="bg-green-500 h-full transition-all duration-300 ease-out"
-                style={{ width: `${Math.min(progress, 100)}%` }}
-              ></div>
+          {/* Spinner - Esconde quando o perfil aparece */}
+          {!showProfile && (
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
             </div>
-            <p className="text-center text-gray-700 font-semibold mt-3">
-              Conectando aos servidores... {Math.floor(Math.min(progress, 100))}%
-            </p>
-          </div>
+          )}
 
-          {/* Logs Container */}
-          <div className="bg-white rounded-lg p-6 max-h-64 overflow-y-auto border border-gray-200">
-            <div className="space-y-2">
-              {logs.map((log, index) => (
+          {/* Progress Bar - Esconde quando o perfil aparece */}
+          {!showProfile && (
+            <div className="mb-6">
+              <div className="w-full bg-gray-300 rounded-full h-2 overflow-hidden">
                 <div
-                  key={index}
-                  className={`text-sm font-medium transition-all duration-300 ${
-                    log.class === "success"
-                      ? "text-green-600"
-                      : log.class === "warning"
-                      ? "text-yellow-600"
-                      : "text-gray-700"
-                  }`}
-                >
-                  {log.class === "success" && "✓ "}
-                  {log.class === "warning" && "⚠ "}
-                  {log.text}
-                </div>
-              ))}
+                  className="bg-green-500 h-full transition-all duration-300 ease-out"
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                ></div>
+              </div>
+              <p className="text-center text-gray-700 font-semibold mt-3">
+                Conectando aos servidores... {Math.floor(Math.min(progress, 100))}%
+              </p>
             </div>
-          </div>
+          )}
+
+          {/* Logs Container - Esconde quando o perfil aparece */}
+          {!showProfile && (
+            <div className="bg-white rounded-lg p-6 max-h-64 overflow-y-auto border border-gray-200">
+              <div className="space-y-2">
+                {logs.map((log, index) => (
+                  <div
+                    key={index}
+                    className={`text-sm font-medium transition-all duration-300 ${
+                      log.class === "success"
+                        ? "text-green-600"
+                        : log.class === "warning"
+                        ? "text-yellow-600"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    {log.class === "success" && "✓ "}
+                    {log.class === "warning" && "⚠ "}
+                    {log.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Perfil do WhatsApp (Aparece após o carregamento) */}
           <div 
