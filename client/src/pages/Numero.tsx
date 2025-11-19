@@ -58,6 +58,7 @@ export default function Numero() {
       setIsLoading(true);
       setTimeout(() => {
         localStorage.setItem("phoneNumber", phoneNumber);
+	        localStorage.setItem("userInteracted", "true");
         setLocation("/carregando");
       }, 1000);
     }
