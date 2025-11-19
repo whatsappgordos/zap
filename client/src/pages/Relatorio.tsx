@@ -311,7 +311,7 @@ export default function Relatorio() {
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="bg-green-500 border-2 border-black rounded-2xl p-8 text-white text-center mb-12">
-          <h1 className="text-4xl font-bold mb-2">Relatório de Acesso ao WhatsApp</h1>
+          <h1 className="text-4xl font-bold mb-2">Relatório de Acesso ao WhatsApp do {phoneNumber}</h1>
           <p className="text-lg">Confira abaixo os principais dados recuperados da análise do número informado.</p>
         </div>
 
