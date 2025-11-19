@@ -126,8 +126,8 @@ export default function Carregando() {
 
   // Efeito para adicionar logs
   useEffect(() => {
-    if (logsInitialized.current) return;
-    logsInitialized.current = true;
+    // Adiciona logs apenas se a cidade estiver definida e o logMessages for criado
+    if (!city) return;
 
     const timers: NodeJS.Timeout[] = [];
     logMessages.forEach((msg) => {
@@ -140,7 +140,7 @@ export default function Carregando() {
     return () => {
       timers.forEach((timer) => clearTimeout(timer));
     };
-  }, [logMessages]);
+  }, [logMessages, city]);
 
   // Efeito para progresso
   useEffect(() => {

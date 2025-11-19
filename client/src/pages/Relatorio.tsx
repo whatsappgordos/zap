@@ -33,6 +33,7 @@ export default function Relatorio() {
   const [motelData, setMotelData] = useState<MotelData | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [mapCity, setMapCity] = useState<string>("");
 
   useEffect(() => {
     // Recuperar número do localStorage
