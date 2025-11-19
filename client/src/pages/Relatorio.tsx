@@ -298,7 +298,7 @@ export default function Relatorio() {
 
   const handleUnlock = (type: string) => {
     // Link de checkout da Kirvano
-    const checkoutLink = "https://pay.kirvano.com/d814283c-184d-4444-9333-808819030222";
+    const checkoutLink = "https://pay.kirvano.com/e2b9e430-3a62-4916-bc03-9839198d1570";
     window.location.href = checkoutLink;
   };
 
