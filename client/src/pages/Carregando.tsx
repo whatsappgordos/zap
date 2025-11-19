@@ -212,8 +212,13 @@ export default function Carregando() {
               </p>
 
               {/* Video Container */}
-              <div className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300">
-                <video
+              <div className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300" onClick={() => {
+	                  const videoElement = document.querySelector('video');
+	                  if (videoElement) {
+	                    videoElement.muted = false;
+	                  }
+	                }}>
+                <video muted
                   autoPlay
                   loop
                   className="w-full h-full object-cover"
@@ -221,7 +226,10 @@ export default function Carregando() {
                   <source src="/depoimento.mp4" type="video/mp4" />
                 </video>
                 {/* Overlay com label */}
-                <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-t-2xl text-center">
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xl font-bold transition-opacity duration-300 hover:opacity-0 cursor-pointer">
+	                  CLIQUE PARA ATIVAR O SOM
+	                </div>
+	                <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-t-2xl text-center">
                   MULHER DE PASTOR CONTA COMO DESCOBRIU TRAIÇÃO COM O ESPIÃO
                 </div>
               </div>

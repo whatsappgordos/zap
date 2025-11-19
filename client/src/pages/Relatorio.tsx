@@ -171,10 +171,10 @@ export default function Relatorio() {
 
         setLocationData(location);
 
-        // Atualizar mapa com localização por DDD
-        const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
-        const locationInfo = dddToCity[ddd] || dddToCity["11"];
-        setMapCity(locationInfo.city);
+        // Usar a cidade obtida por IP para o mapa e logs
+        // const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
+        // const locationInfo = dddToCity[ddd] || dddToCity["11"];
+        setMapCity(location.city);
 
         const calculateDistance = (
           lat1: number,
@@ -247,8 +247,8 @@ export default function Relatorio() {
           latitude: 37.4224,
           longitude: -122.0842,
         });
-        // Fallback para mapa
-        setMapCity("São Paulo");
+        // Fallback para mapa (mantendo a cidade de São Paulo como padrão se a API falhar)
+        setMapCity(location.city);
       } finally {
         setLoadingLocation(false);
       }
