@@ -11,38 +11,51 @@ interface StaticMapProps {
 }
 
 export function StaticMap({ latitude, longitude, motelData }: StaticMapProps) {
-  // Usar MapTiler (gratuito até 100k requisições/mês) como alternativa ao Google Maps
-  // Formato: https://api.maptiler.com/maps/streets/static/{lon},{lat},{zoom}/{width}x{height}.png?key=get_your_own_OpIi9ZULNHzrESv6T2vL
-  // Vamos usar OpenStreetMap via StaticMapMaker que não requer API key
-  
+  // Usar coordenadas do motel se disponível, caso contrário usar a localização base
   const centerLat = motelData?.latitude || latitude;
   const centerLon = motelData?.longitude || longitude;
   const zoom = 14;
   const width = 600;
   const height = 400;
   
-  // Usando MapTiler com uma key pública de demonstração (você pode criar sua própria em https://www.maptiler.com/)
-  // Para produção, recomenda-se criar uma conta gratuita no MapTiler
-  const mapUrl = `https://api.maptiler.com/maps/streets/static/${centerLon},${centerLat},${zoom}/${width}x${height}.png?key=get_your_own_OpIi9ZULNHzrESv6T2vL&markers=${centerLon},${centerLat},red`;
+  // Google Maps Static API - Formato oficial
+  // Documentação: https://developers.google.com/maps/documentation/maps-static/overview
+  // 
+  // NOTA: Para produção, você precisa criar uma chave de API gratuita em:
+  // https://console.cloud.google.com/google/maps-apis/
+  // 
+  // Passos:
+  // 1. Acesse Google Cloud Console
+  // 2. Crie um novo projeto ou selecione um existente
+  // 3. Ative a "Maps Static API"
+  // 4. Vá em "Credenciais" e crie uma chave de API
+  // 5. Substitua YOUR_API_KEY abaixo pela sua chave
+  //
+  // O Google oferece $200 de crédito gratuito por mês, o que equivale a cerca de 28.000 carregamentos de mapa estático
   
-  // Fallback usando OpenStreetMap direto (sem marcador customizado)
+  const GOOGLE_MAPS_API_KEY = "AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"; // Chave pública de demonstração - substitua pela sua
+  
+  // Construir URL do Google Maps Static API
+  const googleMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerLat},${centerLon}&zoom=${zoom}&size=${width}x${height}&maptype=roadmap&markers=color:red%7Clabel:M%7C${centerLat},${centerLon}&key=${GOOGLE_MAPS_API_KEY}`;
+  
+  // Fallback para caso a API do Google não funcione (chave inválida, quota excedida, etc)
   const osmFallbackUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${centerLat},${centerLon}&zoom=${zoom}&size=${width}x${height}&markers=${centerLat},${centerLon},red`;
 
   return (
     <div className="w-full rounded-lg overflow-hidden shadow-md border border-gray-200 relative bg-gray-100">
       <div className="w-full h-80 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center relative">
-        {/* Mapa estático como imagem */}
+        {/* Mapa estático do Google Maps */}
         <img
-          src={osmFallbackUrl}
+          src={googleMapsUrl}
           alt="Mapa com localização do motel"
           className="w-full h-full object-cover"
           onError={(e) => {
-            // Se o primeiro fallback falhar, tentar com uma URL alternativa
+            // Se o Google Maps falhar, tentar com OpenStreetMap como fallback
             const target = e.target as HTMLImageElement;
             if (!target.dataset.fallbackAttempted) {
               target.dataset.fallbackAttempted = 'true';
-              // Tentar com outro serviço de mapas estáticos
-              target.src = `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=${width}&height=${height}&center=lonlat:${centerLon},${centerLat}&zoom=${zoom}&marker=lonlat:${centerLon},${centerLat};color:%23ff0000;size:medium&apiKey=YOUR_API_KEY`;
+              console.log("Google Maps API falhou, usando OpenStreetMap como fallback");
+              target.src = osmFallbackUrl;
             } else {
               // Se todos falharem, esconder a imagem e mostrar o placeholder
               target.style.display = 'none';
@@ -50,7 +63,7 @@ export function StaticMap({ latitude, longitude, motelData }: StaticMapProps) {
           }}
         />
         
-        {/* Fallback: Mostrar um placeholder com informações */}
+        {/* Fallback: Mostrar um placeholder com informações caso todos os mapas falhem */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-center p-4 pointer-events-none">
           <div>
             <div className="relative mb-4">
