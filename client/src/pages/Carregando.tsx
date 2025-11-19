@@ -202,7 +202,7 @@ export default function Carregando() {
             <img 
               src="/whatsapp_logo_new.png" 
               alt="WhatsApp" 
-              className="h-8 object-contain"
+              className="h-12 object-contain"
             />
           </div>
 
