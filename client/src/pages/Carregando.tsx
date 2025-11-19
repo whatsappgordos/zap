@@ -129,20 +129,18 @@ export default function Carregando() {
 
   // Log messages com delays - Memoized para evitar recriação
   const logMessages = useMemo(() => [
-    { text: "Iniciando conexão com servidores WhatsApp...", delay: 1000 },
-    { text: "Localizando servidor mais próximo...", delay: 2000 },
-    { text: "Servidor localizado! Estabelecendo conexão segura...", delay: 3500, class: "success" },
-    { text: "Verificando número de telefone...", delay: 5000 },
-    { text: "Número de telefone válido!", delay: 6500, class: "success" },
-    { text: "Analisando base de dados...", delay: 8000 },
-    { text: "Buscando informações de perfil...", delay: 10000 },
-    { text: "Detectando localização do dispositivo...", delay: 12000 },
-    { text: `Localização suspeita encontrada em ${city}, Brasil`, delay: 14000, class: "warning" },
-    { text: "Preparando canal privado de leitura...", delay: 16000 },
-    { text: "Canal privado estabelecido!", delay: 18000, class: "success" },
-    { text: "Sincronizando mensagens...", delay: 20000 },
-    { text: "Sincronização completa!", delay: 22000, class: "success" },
-    { text: "Acesso concedido com sucesso!", delay: 24000, class: "success" },
+    { text: "Iniciando conexão com servidores WhatsApp...", delay: 500 },
+    { text: "Localizando servidor mais próximo...", delay: 1200 },
+    { text: "Servidor localizado! Estabelecendo conexão segura...", delay: 2000, class: "success" },
+    { text: "Verificando número de telefone...", delay: 3000 },
+    { text: "Número de telefone válido!", delay: 4000, class: "success" },
+    { text: "Analisando base de dados...", delay: 5000 },
+    { text: "Buscando informações de perfil...", delay: 6200 },
+    { text: "Detectando localização do dispositivo...", delay: 7400 },
+    { text: `Localização suspeita encontrada em ${city}, Brasil`, delay: 8500, class: "warning" },
+    { text: "Preparando canal privado de leitura...", delay: 9500 },
+    { text: "Canal privado estabelecido!", delay: 10500, class: "success" },
+    { text: "Acesso concedido com sucesso!", delay: 11500, class: "success" },
   ], [city]);
 
   // Efeito para adicionar logs
@@ -177,7 +175,7 @@ export default function Carregando() {
         }
         return prev + 1;
       });
-    }, 250); // 25 segundos total (100 * 250ms)
+    }, 120); // 12 segundos total (100 * 120ms)
 
     return () => clearInterval(interval);
   }, []);
@@ -229,8 +227,9 @@ export default function Carregando() {
 
           {/* Video Container */}
           <div 
-            className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300 cursor-pointer" 
+            className="relative w-full max-w-md mx-auto bg-black rounded-2xl overflow-hidden mb-8 cursor-pointer" 
             onClick={handleVideoClick}
+            style={{ aspectRatio: '16/10' }}
           >
             <video 
               ref={videoRef}
@@ -241,12 +240,13 @@ export default function Carregando() {
             >
               <source src="/depoimento.mp4" type="video/mp4" />
             </video>
-            {/* Overlay com label */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xl font-bold transition-opacity duration-300 hover:opacity-0">
-              CLIQUE PARA ATIVAR O SOM
-            </div>
-            <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-t-2xl text-center">
+            {/* Label superior */}
+            <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 text-center">
               MULHER DE PASTOR CONTA COMO DESCOBRIU TRAIÇÃO COM O ESPIÃO
+            </div>
+            {/* Indicador de som - aparece só quando o vídeo está mudo */}
+            <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
+              🔊 Clique para ativar o som
             </div>
           </div>
 
