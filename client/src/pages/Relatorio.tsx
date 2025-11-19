@@ -401,9 +401,9 @@ export default function Relatorio() {
               </p>
               <div className="w-full rounded-xl mb-6 overflow-hidden border-2 border-black">
                 <StaticMap
-                  latitude={motelData.latitude}
-                  longitude={motelData.longitude}
-                  zoom={14}
+                  latitude={locationData?.latitude || motelData.latitude}
+                  longitude={locationData?.longitude || motelData.longitude}
+                  motelData={motelData}
                 />
               </div>
             </>
