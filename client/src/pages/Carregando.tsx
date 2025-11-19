@@ -161,20 +161,7 @@ export default function Carregando() {
     return () => clearInterval(interval);
   }, []);
 
-  // Efeito para tentar desmutar o vídeo se houver interação prévia
-	  useEffect(() => {
-	    const videoElement = document.querySelector('video');
-	    const interacted = localStorage.getItem("userInteracted") === "true";
-	    
-	    if (videoElement && interacted) {
-	      // Tenta desmutar o vídeo
-	      videoElement.muted = false;
-	      // Limpa o sinal de interação para a próxima visita
-	      localStorage.removeItem("userInteracted");
-	    }
-	  }, []);
-	
-	  // Efeito para rolar para o perfil quando ele aparecer
+  // Efeito para rolar para o perfil quando ele aparecer
   useEffect(() => {
     if (showProfile) {
       const profileElement = document.getElementById("profile-card");
@@ -225,16 +212,23 @@ export default function Carregando() {
               </p>
 
               {/* Video Container */}
-              <div className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300">
+              <div className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300" onClick={() => {
+	                  const videoElement = document.querySelector('video');
+	                  if (videoElement) {
+	                    videoElement.muted = false;
+	                  }
+	                }}>
                 <video muted
                   autoPlay
                   loop
                   className="w-full h-full object-cover"
                 >
                   <source src="/depoimento.mp4" type="video/mp4" />
-                </video>
-                {/* Overlay com label */}
-                
+</video>
+	                {/* Overlay com label */}
+	                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xl font-bold transition-opacity duration-300 hover:opacity-0 cursor-pointer">
+	                  CLIQUE PARA ATIVAR O SOM
+	                </div>
 	                <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-t-2xl text-center">
                   MULHER DE PASTOR CONTA COMO DESCOBRIU TRAIÇÃO COM O ESPIÃO
                 </div>
