@@ -161,15 +161,7 @@ export default function Carregando() {
     return () => clearInterval(interval);
   }, []);
 
-  // Efeito para rolar para o perfil quando ele aparecer
-  useEffect(() => {
-    if (showProfile) {
-      const profileElement = document.getElementById("profile-card");
-      if (profileElement) {
-        profileElement.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-  }, [showProfile]);
+// Removido o efeito de rolagem, pois o perfil aparecerá na mesma tela.
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -199,10 +191,117 @@ export default function Carregando() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-2xl">
-          {!showProfile ? (
-            <>
+<main className="flex-1 flex flex-col items-center px-4 py-12">
+	        <div className="w-full max-w-2xl">
+	          {/* Title */}
+	          <h1 className="text-4xl font-bold text-center text-black mb-2">
+	            Processando Acesso ao WhatsApp
+	          </h1>
+	          <p className="text-center text-gray-600 text-lg mb-8">
+	            Aguarde enquanto conectamos aos servidores e preparamos seu acesso.
+	          </p>
+	
+	          {/* Video Container */}
+	          <div className="relative w-full bg-black rounded-2xl overflow-hidden mb-8 aspect-video flex items-center justify-center border-2 border-gray-300" onClick={() => {
+	              const videoElement = document.querySelector('video');
+	              if (videoElement) {
+	                videoElement.muted = false;
+	              }
+	            }}>
+	            <video muted
+	              autoPlay
+	              loop
+	              className="w-full h-full object-cover"
+	            >
+	              <source src="/depoimento.mp4" type="video/mp4" />
+	</video>
+	            {/* Overlay com label */}
+	            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xl font-bold transition-opacity duration-300 hover:opacity-0 cursor-pointer">
+	              CLIQUE PARA ATIVAR O SOM
+	            </div>
+	            <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 rounded-t-2xl text-center">
+	              MULHER DE PASTOR CONTA COMO DESCOBRIU TRAIÇÃO COM O ESPIÃO
+	            </div>
+	          </div>
+	
+	          {/* Spinner */}
+	          <div className="flex justify-center mb-6">
+	            <div className="w-16 h-16 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
+	          </div>
+	
+	          {/* Progress Bar */}
+	          <div className="mb-6">
+	            <div className="w-full bg-gray-300 rounded-full h-2 overflow-hidden">
+	              <div
+	                className="bg-green-500 h-full transition-all duration-300 ease-out"
+	                style={{ width: `${Math.min(progress, 100)}%` }}
+	              ></div>
+	            </div>
+	            <p className="text-center text-gray-700 font-semibold mt-3">
+	              Conectando aos servidores... {Math.floor(Math.min(progress, 100))}%
+	            </p>
+	          </div>
+	
+	          {/* Logs Container */}
+	          <div className="bg-white rounded-lg p-6 max-h-64 overflow-y-auto border border-gray-200">
+	            <div className="space-y-2">
+	              {logs.map((log, index) => (
+	                <div
+	                  key={index}
+	                  className={`text-sm font-medium transition-all duration-300 ${
+	                    log.class === "success"
+	                      ? "text-green-600"
+	                      : log.class === "warning"
+	                      ? "text-yellow-600"
+	                      : "text-gray-700"
+	                  }`}
+	                >
+	                  {log.class === "success" && "✓ "}
+	                  {log.class === "warning" && "⚠ "}
+	                  {log.text}
+	                </div>
+	              ))}
+	            </div>
+	          </div>
+	
+	          {/* Perfil do WhatsApp (Aparece após o carregamento) */}
+	          <div 
+	            id="profile-card" 
+	            className={`bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-300 mt-8 transition-opacity duration-500 ${showProfile ? 'opacity-100 animate-fadeIn' : 'opacity-0 pointer-events-none'}`}
+	          >
+	            {/* Profile Header */}
+	            <div className="flex flex-col items-center mb-6">
+	                <div className="w-20 h-20 rounded-full border-4 border-blue-500 mb-4"></div>
+	                <h2 className="text-2xl font-bold text-black">Perfil WhatsApp</h2>
+	                <p className="text-gray-600 text-lg mt-1">{phoneNumber}</p>
+	                <div className="flex items-center gap-2 mt-2">
+	                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+	                  <p className="text-sm text-green-600 font-medium">Online há poucos minutos</p>
+	                </div>
+	              </div>
+	
+	              {/* Profile Details */}
+	              <div className="border-t border-gray-200 pt-6 space-y-4">
+	                <div className="flex justify-between items-center">
+	                  <span className="text-gray-600 font-medium">Cidade de última conexão</span>
+	                  <span className="text-gray-900 font-bold">{city}</span>
+	                </div>
+	                <div className="flex justify-between items-center">
+	                  <span className="text-gray-600 font-medium">Status do dispositivo</span>
+	                  <span className="text-gray-900 font-bold">Ativo</span>
+	                </div>
+	              </div>
+	
+	              {// Access Button */}
+	              <button
+	                onClick={() => setLocation("/relatorio")}
+	                className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition border-2 border-black"
+	              >
+	                Acessar Relatório
+	              </button>
+	            </div>
+	        </div>
+	      </main>
               {/* Title */}
               <h1 className="text-4xl font-bold text-center text-black mb-2">
                 Processando Acesso ao WhatsApp
@@ -274,42 +373,7 @@ export default function Carregando() {
                 </div>
               </div>
             </>
-          ) : (
-            <div id="profile-card" className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-300 animate-fadeIn mt-8">
-              {/* Profile Header */}
-              <div className="flex flex-col items-center mb-6">
-                  <div className="w-20 h-20 rounded-full border-4 border-blue-500 mb-4"></div>
-                  <h2 className="text-2xl font-bold text-black">Perfil WhatsApp</h2>
-                  <p className="text-gray-600 text-lg mt-1">{phoneNumber}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <p className="text-sm text-green-600 font-medium">Online há poucos minutos</p>
-                  </div>
-                </div>
 
-                {/* Profile Details */}
-                <div className="border-t border-gray-200 pt-6 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Cidade de última conexão</span>
-                    <span className="text-gray-900 font-bold">{city}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 font-medium">Status do dispositivo</span>
-                    <span className="text-gray-900 font-bold">Ativo</span>
-                  </div>
-                </div>
-
-                {/* Access Button */}
-                <button
-                  onClick={() => setLocation("/relatorio")}
-                  className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition border-2 border-black"
-                >
-                  Acessar Relatório
-                </button>
-              </div>
-          )}
-        </div>
-      </main>
 
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-6 px-4 mt-auto">
