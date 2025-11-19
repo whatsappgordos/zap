@@ -342,9 +342,12 @@ export default function Relatorio() {
         {/* Análise de Conversas */}
         <div className="bg-white border-2 border-black rounded-2xl p-8 mb-12">
           <h2 className="text-2xl font-bold text-black mb-4">Análise de Conversas</h2>
-          <p className="text-gray-700 mb-6">
-            <span className="text-red-600 font-bold">148 conversas suspeitas</span> foram encontradas. O sistema conseguiu recuperar{" "}
-            <span className="text-orange-500 font-bold">mensagens apagadas</span>.
+          <p className="text-gray-700 mb-4">
+            <span className="text-red-600 font-bold">148 conversas suspeitas</span> foram encontradas durante a análise. O sistema conseguiu recuperar{" "}
+            <span className="text-orange-500 font-bold">mensagens apagadas</span> e algumas foram classificadas como críticas com base no conteúdo.
+          </p>
+          <p className="text-gray-600 text-sm mb-6">
+            Toque em uma conversa abaixo para visualizar os detalhes.
           </p>
 
           <div className="space-y-3 mb-6">
