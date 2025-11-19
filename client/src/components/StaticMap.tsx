@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 interface StaticMapProps {
   latitude: number;
   longitude: number;
@@ -11,78 +13,75 @@ interface StaticMapProps {
 }
 
 export function StaticMap({ latitude, longitude, motelData }: StaticMapProps) {
+  const [mapError, setMapError] = useState(false);
+  const [fallbackAttempted, setFallbackAttempted] = useState(false);
+  
   // Usar coordenadas do motel se disponível, caso contrário usar a localização base
   const centerLat = motelData?.latitude || latitude;
   const centerLon = motelData?.longitude || longitude;
-  const zoom = 14;
+  const zoom = 15;
   const width = 600;
   const height = 400;
   
-  // Google Maps Static API - Formato oficial
-  // Documentação: https://developers.google.com/maps/documentation/maps-static/overview
-  // 
-  // NOTA: Para produção, você precisa criar uma chave de API gratuita em:
-  // https://console.cloud.google.com/google/maps-apis/
-  // 
-  // Passos:
-  // 1. Acesse Google Cloud Console
-  // 2. Crie um novo projeto ou selecione um existente
-  // 3. Ative a "Maps Static API"
-  // 4. Vá em "Credenciais" e crie uma chave de API
-  // 5. Substitua YOUR_API_KEY abaixo pela sua chave
-  //
-  // O Google oferece $200 de crédito gratuito por mês, o que equivale a cerca de 28.000 carregamentos de mapa estático
+  // Google Maps Static API - Chave pública de demonstração
+  const GOOGLE_MAPS_API_KEY = "AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8";
   
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"; // Chave pública de demonstração - substitua pela sua
-  
-  // Construir URL do Google Maps Static API
+  // Construir URL do Google Maps Static API com estilo roadmap
   const googleMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerLat},${centerLon}&zoom=${zoom}&size=${width}x${height}&maptype=roadmap&markers=color:red%7Clabel:M%7C${centerLat},${centerLon}&key=${GOOGLE_MAPS_API_KEY}`;
   
-  // Fallback para caso a API do Google não funcione (chave inválida, quota excedida, etc)
+  // Fallback para OpenStreetMap
   const osmFallbackUrl = `https://staticmap.openstreetmap.de/staticmap.php?center=${centerLat},${centerLon}&zoom=${zoom}&size=${width}x${height}&markers=${centerLat},${centerLon},red`;
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    
+    if (!fallbackAttempted) {
+      // Primeira tentativa: usar OpenStreetMap
+      console.log("Google Maps falhou, tentando OpenStreetMap...");
+      setFallbackAttempted(true);
+      target.src = osmFallbackUrl;
+    } else {
+      // Segunda tentativa falhou: mostrar placeholder
+      console.log("Todos os mapas falharam, mostrando placeholder");
+      setMapError(true);
+    }
+  };
 
   return (
     <div className="w-full rounded-lg overflow-hidden shadow-md border border-gray-200 relative bg-gray-100">
-      <div className="w-full h-80 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center relative">
-        {/* Mapa estático do Google Maps */}
-        <img
-          src={googleMapsUrl}
-          alt="Mapa com localização do motel"
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            // Se o Google Maps falhar, tentar com OpenStreetMap como fallback
-            const target = e.target as HTMLImageElement;
-            if (!target.dataset.fallbackAttempted) {
-              target.dataset.fallbackAttempted = 'true';
-              console.log("Google Maps API falhou, usando OpenStreetMap como fallback");
-              target.src = osmFallbackUrl;
-            } else {
-              // Se todos falharem, esconder a imagem e mostrar o placeholder
-              target.style.display = 'none';
-            }
-          }}
-        />
+      <div className="w-full h-80 bg-gray-200 flex items-center justify-center relative">
+        {/* Mapa estático */}
+        {!mapError && (
+          <img
+            src={googleMapsUrl}
+            alt="Mapa com localização do motel"
+            className="w-full h-full object-cover"
+            onError={handleImageError}
+          />
+        )}
         
-        {/* Fallback: Mostrar um placeholder com informações caso todos os mapas falhem */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-center p-4 pointer-events-none">
-          <div>
-            <div className="relative mb-4">
-              <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75" style={{ width: '60px', height: '60px', margin: 'auto' }}></div>
-              <div className="text-6xl relative z-10">📍</div>
-            </div>
-            <p className="text-gray-700 font-bold text-lg">
-              Localização Suspeita Detectada
-            </p>
-            {motelData && (
-              <p className="text-red-600 font-semibold mt-2">
-                {motelData.name}
+        {/* Placeholder - só mostra se o mapa falhar */}
+        {mapError && (
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-center p-4">
+            <div>
+              <div className="relative mb-4">
+                <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75" style={{ width: '60px', height: '60px', margin: 'auto' }}></div>
+                <div className="text-6xl relative z-10">📍</div>
+              </div>
+              <p className="text-gray-700 font-bold text-lg">
+                Localização Suspeita Detectada
               </p>
-            )}
-            <p className="text-sm text-gray-500 mt-2">
-              Lat: {centerLat.toFixed(4)}, Lon: {centerLon.toFixed(4)}
-            </p>
+              {motelData && (
+                <p className="text-red-600 font-semibold mt-2">
+                  {motelData.name}
+                </p>
+              )}
+              <p className="text-sm text-gray-500 mt-2">
+                Lat: {centerLat.toFixed(4)}, Lon: {centerLon.toFixed(4)}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Informações do motel */}

@@ -202,21 +202,45 @@ export default function Relatorio() {
         const lat = Number(location.latitude);
         const lon = Number(location.longitude);
 
+        // Gerar nomes de motéis realistas baseados na cidade
+        const generateMotelName = (city: string, index: number): string => {
+          const prefixes = ["Motel", "Pousada", "Hotel"];
+          const suffixes = [
+            city,
+            `${city} Plaza`,
+            `${city} Suites`,
+            "Recanto",
+            "Paraíso",
+            "Encontro",
+            "Amor",
+            "Luxo",
+            "Discreto",
+            "Encanto",
+            "Sonho",
+            "Estrela",
+          ];
+          
+          const prefix = prefixes[index % prefixes.length];
+          const suffix = suffixes[index % suffixes.length];
+          
+          return `${prefix} ${suffix}`;
+        };
+
         const motels = [
           {
-            name: "Motel Paraíso",
+            name: generateMotelName(location.city, 0),
             latitude: lat + 0.02,
             longitude: lon + 0.02,
             rating: "4.5",
           },
           {
-            name: "Motel Luxo",
+            name: generateMotelName(location.city, 1),
             latitude: lat - 0.015,
             longitude: lon + 0.025,
             rating: "4.2",
           },
           {
-            name: "Motel Discreto",
+            name: generateMotelName(location.city, 2),
             latitude: lat + 0.01,
             longitude: lon - 0.015,
             rating: "4.7",
