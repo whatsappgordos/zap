@@ -13,7 +13,6 @@ export default function Carregando() {
   const [ipAddress, setIpAddress] = useState("...");
   const [profileImage, setProfileImage] = useState(1);
   const logsInitialized = useRef(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Mapeamento de DDD para cidade
   const dddToCity: Record<string, string> = {
@@ -152,25 +151,7 @@ export default function Carregando() {
     fetchLocationByIP();
   }, []);
 
-  // Efeito para tentar iniciar o vídeo com áudio após interação do usuário
-  useEffect(() => {
-    const attemptAutoplay = async () => {
-      if (videoRef.current) {
-        try {
-          // Tentar reproduzir com áudio
-          videoRef.current.muted = false;
-          await videoRef.current.play();
-        } catch (error) {
-          // Se falhar, reproduzir sem áudio (fallback)
-          console.log("Autoplay com áudio bloqueado, iniciando sem áudio");
-          videoRef.current.muted = true;
-          await videoRef.current.play();
-        }
-      }
-    };
 
-    attemptAutoplay();
-  }, []);
 
   // Log messages com delays - Memoized para evitar recriação
   const logMessages = useMemo(() => [
@@ -225,12 +206,7 @@ export default function Carregando() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleVideoClick = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-      videoRef.current.play();
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -270,28 +246,23 @@ export default function Carregando() {
             Aguarde enquanto conectamos aos servidores e preparamos seu acesso.
           </p>
 
-          {/* Video Container */}
-          <div 
-            className="relative w-full max-w-md mx-auto bg-black rounded-2xl overflow-hidden mb-8 cursor-pointer" 
-            onClick={handleVideoClick}
-            style={{ aspectRatio: '16/10' }}
-          >
-            <video 
-              ref={videoRef}
-              autoPlay
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-            >
-              <source src="/depoimento.mp4" type="video/mp4" />
-            </video>
+          {/* Video Container - YouTube */}
+          <div className="relative w-full max-w-2xl mx-auto mb-8">
             {/* Label superior */}
-            <div className="absolute top-0 left-0 right-0 bg-red-600 text-white text-xs font-bold py-2 px-3 text-center">
+            <div className="bg-red-600 text-white text-xs sm:text-sm font-bold py-2 px-3 text-center rounded-t-lg">
               MULHER DE PASTOR CONTA COMO DESCOBRIU TRAIÇÃO COM O ESPIÃO
             </div>
-            {/* Indicador de som - aparece só quando o vídeo está mudo */}
-            <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
-              🔊 Clique para ativar o som
+            {/* YouTube iframe */}
+            <div className="relative" style={{ paddingBottom: '56.25%', height: 0 }}>
+              <iframe 
+                className="absolute top-0 left-0 w-full h-full rounded-b-lg"
+                src="https://www.youtube.com/embed/XmHFyoVn7dw?autoplay=1&mute=0&loop=1&playlist=XmHFyoVn7dw" 
+                title="Whatsapp espião" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerPolicy="strict-origin-when-cross-origin" 
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
 
@@ -366,10 +337,6 @@ export default function Carregando() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 font-medium">Localização detectada</span>
                 <span className="text-gray-900 font-bold">{city}, {state}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600 font-medium">Provedor de Internet</span>
-                <span className="text-gray-900 font-bold text-sm">{isp}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600 font-medium">Status do dispositivo</span>
