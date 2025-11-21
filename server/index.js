@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cron from 'node-cron';
+import https from 'https';
 
 // Para usar __dirname e __filename em módulos ES
 const __filename = fileURLToPath(import.meta.url);
@@ -90,4 +92,26 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
+  
+  // Iniciar cron job para self-ping a cada 14 minutos
+  // Isso mantém o servidor ativo no Render (free tier dorme após 15min)
+  cron.schedule('*/14 * * * *', async () => {
+    try {
+      const url = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+      console.log(`[CRON] Self-ping iniciado em ${new Date().toISOString()}`);
+      
+      // Fazer requisição para o próprio servidor
+      const protocol = url.startsWith('https') ? https : require('http');
+      
+      protocol.get(`${url}/keep-alive`, (res) => {
+        console.log(`[CRON] Self-ping bem-sucedido! Status: ${res.statusCode}`);
+      }).on('error', (err) => {
+        console.error(`[CRON] Erro no self-ping:`, err.message);
+      });
+    } catch (error) {
+      console.error(`[CRON] Erro ao executar self-ping:`, error.message);
+    }
+  });
+  
+  console.log('[CRON] Self-ping agendado para executar a cada 14 minutos');
 });
