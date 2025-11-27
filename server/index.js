@@ -93,9 +93,9 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   
-  // Iniciar cron job para self-ping a cada 14 minutos
+  // Iniciar cron job para self-ping a cada 1 minuto
   // Isso mantém o servidor ativo no Render (free tier dorme após 15min)
-  cron.schedule('*/14 * * * *', async () => {
+  cron.schedule('*/1 * * * *', async () => {
     try {
       const url = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
       console.log(`[CRON] Self-ping iniciado em ${new Date().toISOString()}`);
@@ -113,5 +113,5 @@ app.listen(PORT, () => {
     }
   });
   
-  console.log('[CRON] Self-ping agendado para executar a cada 14 minutos');
+  console.log('[CRON] Self-ping agendado para executar a cada 1 minuto');
 });

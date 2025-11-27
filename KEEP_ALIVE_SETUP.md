@@ -13,12 +13,12 @@ O Render (plano gratuito) coloca o servidor em **modo sleep** após **15 minutos
 
 ### **1. Self-Ping Automático com Node-Cron**
 
-O servidor faz **self-ping** (ping em si mesmo) a cada **14 minutos** usando `node-cron`.
+O servidor faz **self-ping** (ping em si mesmo) a cada **1 minuto** usando `node-cron`.
 
 **Como funciona:**
 ```javascript
-// A cada 14 minutos, o servidor faz uma requisição para si mesmo
-cron.schedule('*/14 * * * *', async () => {
+// A cada 1 minuto, o servidor faz uma requisição para si mesmo
+cron.schedule('*/1 * * * *', async () => {
   https.get('https://zap-muny.onrender.com/keep-alive', (res) => {
     console.log('Self-ping bem-sucedido!');
   });
@@ -145,7 +145,7 @@ Acesse: https://zap-muny.onrender.com/monitor
 - **Horas em um mês:** 720 horas (30 dias × 24h)
 - **Sobra:** 30 horas/mês
 
-**Com self-ping a cada 14 minutos:**
+**Com self-ping a cada 1 minuto:**
 - ✅ Servidor fica ativo 24/7
 - ✅ Usa aproximadamente 720 horas/mês
 - ✅ Ainda sobram 30 horas de margem
