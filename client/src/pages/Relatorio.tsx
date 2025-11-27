@@ -147,66 +147,149 @@ export default function Relatorio() {
           org: "Provedor de Internet",
         };
 
-        let data = defaultLocation;
-        let isBrazilian = false;
+        // Sistema de votação por maioria usando 4 APIs
+        interface APIResult {
+          city: string;
+          region: string;
+          country: string;
+          latitude: number;
+          longitude: number;
+          ip?: string;
+          org?: string;
+        }
 
-        // Tentar obter localização real por IP
+        const apiResults: APIResult[] = [];
+
+        // API 1: ipapi.co
         try {
-          const response = await fetch("https://ipapi.co/json/");
+          const response = await fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(3000) });
           if (response.ok) {
             const apiData = await response.json();
-            if (apiData && apiData.latitude && apiData.longitude) {
-              // Verificar se é Brasil
-              isBrazilian = apiData.country_code === "BR" || apiData.country === "Brazil" || apiData.country_name === "Brazil";
-              
-              if (isBrazilian) {
-                data = {
-                  ip: apiData.ip || defaultLocation.ip,
-                  city: apiData.city || defaultLocation.city,
-                  region: apiData.region_code || apiData.region || defaultLocation.region,
-                  country_name: "Brasil",
-                  latitude: apiData.latitude,
-                  longitude: apiData.longitude,
-                  org: apiData.org || "Provedor de Internet",
-                };
-              }
+            if (apiData && apiData.latitude && apiData.longitude && (apiData.country_code === "BR" || apiData.country === "Brazil")) {
+              apiResults.push({
+                city: apiData.city,
+                region: apiData.region_code || apiData.region,
+                country: "Brasil",
+                latitude: apiData.latitude,
+                longitude: apiData.longitude,
+                ip: apiData.ip,
+                org: apiData.org,
+              });
+              console.log("API 1 (ipapi.co):", apiData.city);
             }
           }
         } catch (e) {
-          console.log("ipapi.co falhou, tentando ip-api.com");
+          console.log("API 1 (ipapi.co) falhou");
         }
 
-        // Se não conseguiu localização brasileira, tentar segunda API
-        if (!isBrazilian) {
-          try {
-            const response = await fetch("https://ip-api.com/json/");
-            if (response.ok) {
-              const apiData = await response.json();
-              if (apiData && apiData.lat && apiData.lon) {
-                isBrazilian = apiData.countryCode === "BR" || apiData.country === "Brazil";
-                
-                if (isBrazilian) {
-                  data = {
-                    ip: apiData.query || defaultLocation.ip,
-                    city: apiData.city || defaultLocation.city,
-                    region: apiData.regionName || apiData.region || defaultLocation.region,
-                    country_name: "Brasil",
-                    latitude: apiData.lat,
-                    longitude: apiData.lon,
-                    org: apiData.isp || apiData.org || "Provedor de Internet",
-                  };
-                }
-              }
+        // API 2: ip-api.com
+        try {
+          const response = await fetch("https://ip-api.com/json/", { signal: AbortSignal.timeout(3000) });
+          if (response.ok) {
+            const apiData = await response.json();
+            if (apiData && apiData.lat && apiData.lon && (apiData.countryCode === "BR" || apiData.country === "Brazil")) {
+              apiResults.push({
+                city: apiData.city,
+                region: apiData.regionName || apiData.region,
+                country: "Brasil",
+                latitude: apiData.lat,
+                longitude: apiData.lon,
+                ip: apiData.query,
+                org: apiData.isp || apiData.org,
+              });
+              console.log("API 2 (ip-api.com):", apiData.city);
             }
-          } catch (e2) {
-            console.log("ip-api.com falhou, usando localização baseada em DDD");
           }
+        } catch (e) {
+          console.log("API 2 (ip-api.com) falhou");
         }
 
-        // Se não conseguiu localização brasileira por IP, usar DDD do telefone
-        if (!isBrazilian) {
-          console.log("Usando localização baseada no DDD:", ddd, dddLocation.city);
-          data = defaultLocation;
+        // API 3: ipwhois.app
+        try {
+          const response = await fetch("https://ipwho.is/", { signal: AbortSignal.timeout(3000) });
+          if (response.ok) {
+            const apiData = await response.json();
+            if (apiData && apiData.latitude && apiData.longitude && (apiData.country_code === "BR" || apiData.country === "Brazil")) {
+              apiResults.push({
+                city: apiData.city,
+                region: apiData.region,
+                country: "Brasil",
+                latitude: apiData.latitude,
+                longitude: apiData.longitude,
+                ip: apiData.ip,
+                org: apiData.connection?.isp || "Provedor de Internet",
+              });
+              console.log("API 3 (ipwho.is):", apiData.city);
+            }
+          }
+        } catch (e) {
+          console.log("API 3 (ipwho.is) falhou");
+        }
+
+        // API 4: freeipapi.com
+        try {
+          const response = await fetch("https://freeipapi.com/api/json", { signal: AbortSignal.timeout(3000) });
+          if (response.ok) {
+            const apiData = await response.json();
+            if (apiData && apiData.latitude && apiData.longitude && (apiData.countryCode === "BR" || apiData.countryName === "Brazil")) {
+              apiResults.push({
+                city: apiData.cityName,
+                region: apiData.regionName,
+                country: "Brasil",
+                latitude: apiData.latitude,
+                longitude: apiData.longitude,
+                ip: apiData.ipAddress,
+                org: "Provedor de Internet",
+              });
+              console.log("API 4 (freeipapi.com):", apiData.cityName);
+            }
+          }
+        } catch (e) {
+          console.log("API 4 (freeipapi.com) falhou");
+        }
+
+        // Sistema de votação: contar qual cidade apareceu mais vezes
+        let data = defaultLocation;
+        
+        if (apiResults.length > 0) {
+          const cityVotes: Record<string, { count: number; data: APIResult }> = {};
+          
+          apiResults.forEach((result) => {
+            const city = result.city;
+            if (cityVotes[city]) {
+              cityVotes[city].count++;
+            } else {
+              cityVotes[city] = { count: 1, data: result };
+            }
+          });
+
+          // Encontrar a cidade com mais votos
+          let winnerCity = "";
+          let maxVotes = 0;
+          
+          Object.entries(cityVotes).forEach(([city, info]) => {
+            console.log(`Votação: ${city} = ${info.count} voto(s)`);
+            if (info.count > maxVotes) {
+              maxVotes = info.count;
+              winnerCity = city;
+            }
+          });
+
+          if (winnerCity && cityVotes[winnerCity]) {
+            const winner = cityVotes[winnerCity].data;
+            data = {
+              ip: winner.ip || defaultLocation.ip,
+              city: winner.city,
+              region: winner.region,
+              country_name: "Brasil",
+              latitude: winner.latitude,
+              longitude: winner.longitude,
+              org: winner.org || "Provedor de Internet",
+            };
+            console.log(`✅ Cidade vencedora por maioria: ${winnerCity} (${maxVotes} votos)`);
+          }
+        } else {
+          console.log("⚠️ Nenhuma API retornou dados brasileiros, usando localização baseada no DDD:", ddd, dddLocation.city);
         }
 
         const location: LocationData = {
