@@ -226,26 +226,27 @@ export default function Relatorio() {
           console.log("API 3 (ipwho.is) falhou");
         }
 
-        // API 4: freeipapi.com
+        // API 4: ipinfo.io (alternativa sem CORS)
         try {
-          const response = await fetch("https://freeipapi.com/api/json", { signal: AbortSignal.timeout(3000) });
+          const response = await fetch("https://ipinfo.io/json", { signal: AbortSignal.timeout(3000) });
           if (response.ok) {
             const apiData = await response.json();
-            if (apiData && apiData.latitude && apiData.longitude && (apiData.countryCode === "BR" || apiData.countryName === "Brazil")) {
+            if (apiData && apiData.loc && apiData.country === "BR") {
+              const [lat, lon] = apiData.loc.split(',').map(Number);
               apiResults.push({
-                city: apiData.cityName,
-                region: apiData.regionName,
+                city: apiData.city,
+                region: apiData.region,
                 country: "Brasil",
-                latitude: apiData.latitude,
-                longitude: apiData.longitude,
-                ip: apiData.ipAddress,
-                org: "Provedor de Internet",
+                latitude: lat,
+                longitude: lon,
+                ip: apiData.ip,
+                org: apiData.org || "Provedor de Internet",
               });
-              console.log("API 4 (freeipapi.com):", apiData.cityName);
+              console.log("API 4 (ipinfo.io):", apiData.city);
             }
           }
         } catch (e) {
-          console.log("API 4 (freeipapi.com) falhou");
+          console.log("API 4 (ipinfo.io) falhou");
         }
 
         // Sistema de votação: contar qual cidade apareceu mais vezes

@@ -22,8 +22,8 @@ export function StaticMap({ latitude, longitude, motelData }: StaticMapProps) {
   const width = 800;
   const height = 500;
   
-  // Chave de API do Google Maps (pública de demonstração)
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8";
+  // Chave de API do Google Maps (pública sem restrições)
+  const GOOGLE_MAPS_API_KEY = "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY";
   
   // Google Maps Static API (PRIORIDADE)
   const googleMapsUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${centerLat},${centerLon}&zoom=${zoom}&size=${width}x${height}&maptype=roadmap&markers=color:red%7Clabel:M%7C${centerLat},${centerLon}&key=${GOOGLE_MAPS_API_KEY}&scale=2`;
