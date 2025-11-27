@@ -117,49 +117,95 @@ export default function Relatorio() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
+        // Extrair DDD do número de telefone
+        const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
+        const dddLocation = dddToCity[ddd] || dddToCity["11"];
+        
+        // Coordenadas aproximadas das capitais brasileiras por DDD
+        const dddCoordinates: Record<string, { lat: number; lon: number }> = {
+          "11": { lat: -23.5505, lon: -46.6333 }, // São Paulo
+          "19": { lat: -22.9099, lon: -47.0626 }, // Campinas
+          "21": { lat: -22.9068, lon: -43.1729 }, // Rio de Janeiro
+          "31": { lat: -19.9167, lon: -43.9345 }, // Belo Horizonte
+          "41": { lat: -25.4284, lon: -49.2733 }, // Curitiba
+          "47": { lat: -26.3045, lon: -48.8487 }, // Joinville
+          "48": { lat: -27.5954, lon: -48.5480 }, // Florianópolis
+          "51": { lat: -30.0346, lon: -51.2177 }, // Porto Alegre
+          "61": { lat: -15.8267, lon: -47.9218 }, // Brasília
+          "71": { lat: -12.9714, lon: -38.5014 }, // Salvador
+          "81": { lat: -8.0476, lon: -34.8770 }, // Recife
+          "85": { lat: -3.7172, lon: -38.5433 }, // Fortaleza
+        };
+
         const defaultLocation = {
-          ip: "8.8.8.8",
-          city: "Mountain View",
-          region: "CA",
-          country_name: "United States",
-          latitude: 37.4224,
-          longitude: -122.0842,
-          org: "Google LLC",
+          ip: "Unknown",
+          city: dddLocation.city,
+          region: dddLocation.region_code,
+          country_name: "Brasil",
+          latitude: dddCoordinates[ddd]?.lat || -23.5505,
+          longitude: dddCoordinates[ddd]?.lon || -46.6333,
+          org: "Provedor de Internet",
         };
 
         let data = defaultLocation;
+        let isBrazilian = false;
 
+        // Tentar obter localização real por IP
         try {
           const response = await fetch("https://ipapi.co/json/");
           if (response.ok) {
             const apiData = await response.json();
             if (apiData && apiData.latitude && apiData.longitude) {
-              data = apiData;
+              // Verificar se é Brasil
+              isBrazilian = apiData.country_code === "BR" || apiData.country === "Brazil" || apiData.country_name === "Brazil";
+              
+              if (isBrazilian) {
+                data = {
+                  ip: apiData.ip || defaultLocation.ip,
+                  city: apiData.city || defaultLocation.city,
+                  region: apiData.region_code || apiData.region || defaultLocation.region,
+                  country_name: "Brasil",
+                  latitude: apiData.latitude,
+                  longitude: apiData.longitude,
+                  org: apiData.org || "Provedor de Internet",
+                };
+              }
             }
           }
         } catch (e) {
+          console.log("ipapi.co falhou, tentando ip-api.com");
+        }
+
+        // Se não conseguiu localização brasileira, tentar segunda API
+        if (!isBrazilian) {
           try {
             const response = await fetch("https://ip-api.com/json/");
             if (response.ok) {
               const apiData = await response.json();
               if (apiData && apiData.lat && apiData.lon) {
-                data = {
-                  ip: apiData.query || defaultLocation.ip,
-                  city: apiData.city || defaultLocation.city,
-                  region: apiData.region || defaultLocation.region,
-                  country_name: apiData.country || defaultLocation.country_name,
-                  latitude: apiData.lat,
-                  longitude: apiData.lon,
-                  org: apiData.isp || apiData.org || defaultLocation.org,
-                };
+                isBrazilian = apiData.countryCode === "BR" || apiData.country === "Brazil";
+                
+                if (isBrazilian) {
+                  data = {
+                    ip: apiData.query || defaultLocation.ip,
+                    city: apiData.city || defaultLocation.city,
+                    region: apiData.regionName || apiData.region || defaultLocation.region,
+                    country_name: "Brasil",
+                    latitude: apiData.lat,
+                    longitude: apiData.lon,
+                    org: apiData.isp || apiData.org || "Provedor de Internet",
+                  };
+                }
               }
             }
           } catch (e2) {
-            console.log("APIs falharam, usando fallback");
+            console.log("ip-api.com falhou, usando localização baseada em DDD");
           }
         }
 
-        if (!data.latitude || !data.longitude) {
+        // Se não conseguiu localização brasileira por IP, usar DDD do telefone
+        if (!isBrazilian) {
+          console.log("Usando localização baseada no DDD:", ddd, dddLocation.city);
           data = defaultLocation;
         }
 
@@ -167,17 +213,13 @@ export default function Relatorio() {
           ip: data.ip || defaultLocation.ip,
           city: data.city || defaultLocation.city,
           state: data.region || defaultLocation.region,
-          country: data.country_name || defaultLocation.country_name,
+          country: "Brasil",
           latitude: Number(data.latitude) || defaultLocation.latitude,
           longitude: Number(data.longitude) || defaultLocation.longitude,
-          isp: data.org || data.isp || "Provedor de Internet",
+          isp: data.org || "Provedor de Internet",
         };
 
         setLocationData(location);
-
-        // Usar a cidade obtida por IP para o mapa e logs
-        // const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
-        // const locationInfo = dddToCity[ddd] || dddToCity["11"];
         setMapCity(location.city);
 
         const calculateDistance = (
@@ -275,8 +317,10 @@ export default function Relatorio() {
           latitude: 37.4224,
           longitude: -122.0842,
         });
-        // Fallback para mapa (mantendo a cidade de São Paulo como padrão se a API falhar)
-        setMapCity(location.city);
+        // Fallback para mapa usando DDD
+        const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
+        const dddLocation = dddToCity[ddd] || dddToCity["11"];
+        setMapCity(dddLocation.city);
       } finally {
         setLoadingLocation(false);
       }
