@@ -255,14 +255,14 @@ export default function Carregando() {
             {/* YouTube iframe */}
             <div className="relative" style={{ paddingBottom: '56.25%', height: 0 }}>
               <iframe 
-                className="absolute top-0 left-0 w-full h-full rounded-b-lg"
-                src="https://www.youtube.com/embed/XmHFyoVn7dw?autoplay=1&mute=0&loop=1&playlist=XmHFyoVn7dw" 
+                className="absolute top-0 left-0 w-full h-full rounded-b-lg pointer-events-none"
+                src="https://www.youtube.com/embed/XmHFyoVn7dw?autoplay=1&mute=0&loop=1&playlist=XmHFyoVn7dw&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3" 
                 title="Whatsapp espião" 
                 frameBorder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerPolicy="strict-origin-when-cross-origin" 
-                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
               ></iframe>
+              <div className="absolute inset-0 pointer-events-none"></div>
             </div>
           </div>
 
