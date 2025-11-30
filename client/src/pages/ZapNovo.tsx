@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { detectUserLocation } from "@/services/geolocation";
 
 interface Message {
   id: number;
@@ -6,6 +7,15 @@ interface Message {
   time: string;
   isBot: boolean;
   buttons?: { text: string; value: string }[];
+  images?: string[];
+  showTimer?: boolean;
+}
+
+interface Notification {
+  id: number;
+  name: string;
+  city: string;
+  action: string;
 }
 
 export default function ZapNovo() {
@@ -14,6 +24,10 @@ export default function ZapNovo() {
   const [currentStep, setCurrentStep] = useState(0);
   const [userPhone, setUserPhone] = useState("");
   const [userGender, setUserGender] = useState("");
+  const [userLocation, setUserLocation] = useState({ city: "Campinas", state: "SP" });
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutos em segundos
+  const [showTimer, setShowTimer] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -24,6 +38,57 @@ export default function ZapNovo() {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  // Timer countdown
+  useEffect(() => {
+    if (!showTimer) return;
+    
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [showTimer]);
+
+  // Notificações fake
+  useEffect(() => {
+    const names = ["Maria", "João", "Ana", "Carlos", "Juliana", "Pedro", "Fernanda", "Lucas"];
+    const cities = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Brasília", "Salvador", "Curitiba", "Fortaleza"];
+    const actions = [
+      "acabou de liberar o acesso",
+      "está visualizando agora",
+      "descobriu 23 conversas ocultas",
+      "desbloqueou as fotos",
+      "acessou o relatório completo",
+      "confirmou a traição"
+    ];
+
+    const showNotification = () => {
+      const notification: Notification = {
+        id: Date.now(),
+        name: names[Math.floor(Math.random() * names.length)],
+        city: cities[Math.floor(Math.random() * cities.length)],
+        action: actions[Math.floor(Math.random() * actions.length)],
+      };
+
+      setNotifications((prev) => [...prev, notification]);
+
+      setTimeout(() => {
+        setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
+      }, 5000);
+    };
+
+    const interval = setInterval(showNotification, 8000);
+    showNotification(); // Primeira notificação imediata
+
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     // Primeira mensagem de boas-vindas
     setTimeout(() => {
@@ -32,27 +97,36 @@ export default function ZapNovo() {
 
     setTimeout(() => {
       addBotMessage(
-        "Eu sou o assistente virtual e vou te ajudar a monitorar o WhatsApp de forma discreta e profissional.",
+        "Eu sou o assistente virtual e vou te ajudar a descobrir TUDO sobre o WhatsApp da pessoa que você desconfia.",
         2500
       );
     }, 2000);
 
     setTimeout(() => {
       addBotMessage(
+        "⚠️ ATENÇÃO: Este sistema já ajudou mais de 8.473 pessoas a descobrirem traições!",
+        4000
+      );
+    }, 4500);
+
+    setTimeout(() => {
+      addBotMessage(
         "Para começar, me diga: você deseja monitorar seu parceiro ou parceira?",
-        4000,
+        6000,
         [
           { text: "👨 Parceiro", value: "masculino" },
           { text: "👩 Parceira", value: "feminino" },
         ]
       );
-    }, 4500);
+    }, 6500);
   }, []);
 
   const addBotMessage = (
     text: string,
     delay: number = 0,
-    buttons?: { text: string; value: string }[]
+    buttons?: { text: string; value: string }[],
+    images?: string[],
+    showTimer?: boolean
   ) => {
     setTimeout(() => {
       setIsTyping(true);
@@ -68,8 +142,13 @@ export default function ZapNovo() {
             time,
             isBot: true,
             buttons,
+            images,
+            showTimer,
           },
         ]);
+        if (showTimer) {
+          setShowTimer(true);
+        }
       }, 1500);
     }, delay);
   };
@@ -112,7 +191,7 @@ export default function ZapNovo() {
     }, 3500);
   };
 
-  const handlePhoneSubmit = (phone: string) => {
+  const handlePhoneSubmit = async (phone: string) => {
     if (phone.length < 10) return;
     
     setUserPhone(phone);
@@ -124,85 +203,241 @@ export default function ZapNovo() {
     }, 500);
 
     setTimeout(() => {
-      addBotMessage("🔍 Iniciando análise do dispositivo...", 2000);
+      addBotMessage("🔍 Iniciando varredura profunda no dispositivo...", 2000);
     }, 2000);
 
     setTimeout(() => {
-      addBotMessage("📡 Conectando aos servidores...", 4000);
+      addBotMessage("📡 Conectando aos servidores de rastreamento...", 4000);
     }, 4000);
 
     setTimeout(() => {
-      addBotMessage("🌐 Localizando dispositivo...", 6000);
+      addBotMessage("🌐 Ativando GPS e localizando dispositivo...", 6000);
     }, 6000);
+
+    // Detectar localização real
+    try {
+      const location = await detectUserLocation(phone);
+      setUserLocation({ city: location.city, state: location.state });
+      console.log("📍 Localização detectada:", location.city, location.state);
+    } catch (error) {
+      console.error("Erro ao detectar localização:", error);
+    }
 
     setTimeout(() => {
       addBotMessage("✅ Dispositivo localizado com sucesso!", 8000);
     }, 8000);
 
     setTimeout(() => {
-      addBotMessage(
-        "🎯 **Análise Preliminar Concluída**\n\n" +
-        "📍 Localização: Detectada\n" +
-        "📱 Dispositivo: Online\n" +
-        "💬 Conversas: 47 chats ativos\n" +
-        "📸 Mídia: 234 arquivos\n" +
-        "🕐 Última atividade: Há 3 minutos",
-        10000
-      );
+      addBotMessage("🔓 Desbloqueando conversas criptografadas...", 10000);
     }, 10000);
 
     setTimeout(() => {
+      addBotMessage("📊 Analisando padrões de comportamento suspeito...", 12000);
+    }, 12000);
+
+    setTimeout(() => {
+      const city = userLocation.city;
+      const state = userLocation.state;
       addBotMessage(
-        "⚠️ **IMPORTANTE:**\n\n" +
-        "Para acessar o relatório completo com todas as conversas, fotos, vídeos, áudios e localização em tempo real, você precisa ativar o acesso premium.",
-        13000
+        `🎯 **ANÁLISE PRELIMINAR CONCLUÍDA**\n\n` +
+        `📍 Localização Atual: ${city}, ${state}\n` +
+        `📱 Status do Dispositivo: Online agora\n` +
+        `💬 Conversas Ativas: 47 chats detectados\n` +
+        `🔥 Conversas Suspeitas: 12 com a mesma pessoa\n` +
+        `📸 Arquivos de Mídia: 234 fotos/vídeos\n` +
+        `🕐 Última Atividade: Há 3 minutos\n` +
+        `⚠️ Conversas Apagadas: 18 recuperadas`,
+        14000
       );
-    }, 13000);
+    }, 14000);
+
+    setTimeout(() => {
+      const city = userLocation.city;
+      addBotMessage(
+        `🚨 **ALERTA DE LOCALIZAÇÃO SUSPEITA!**\n\n` +
+        `📍 Detectamos que ${userGender === "masculino" ? "ela" : "ele"} esteve em:\n` +
+        `🏨 **Motel ${city} Suítes de Luxo**\n\n` +
+        `⏰ Última visita: Ontem às 14:37\n` +
+        `📊 Frequência: 3x por semana no mesmo local\n` +
+        `⚠️ Permanência média: 2h 15min`,
+        17000
+      );
+    }, 17000);
 
     setTimeout(() => {
       addBotMessage(
-        "🔓 Deseja liberar o acesso completo agora?",
-        15500,
+        `💔 **DESCOBRIMOS MAIS INFORMAÇÕES CRÍTICAS:**\n\n` +
+        `📱 12 conversas com número não salvo nos contatos\n` +
+        `🔥 Mensagens enviadas durante horário de "trabalho"\n` +
+        `📸 6 mídias íntimas ocultas/apagadas detectadas\n` +
+        `🎙️ 8 áudios de 15+ minutos para pessoa desconhecida\n` +
+        `🗑️ Histórico de exclusão: 23:45 (todas as noites)\n` +
+        `⚠️ Localização desativada em momentos suspeitos`,
+        20000
+      );
+    }, 20000);
+
+    setTimeout(() => {
+      const images = userGender === "masculino" 
+        ? [
+            "/blocked-media/female-1.png",
+            "/blocked-media/female-2.png",
+            "/blocked-media/female-3.png",
+            "/blocked-media/female-4.png",
+            "/blocked-media/female-5.png",
+            "/blocked-media/female-6.png",
+          ]
+        : [
+            "/blocked-media/male-1.png",
+            "/blocked-media/male-2.png",
+            "/blocked-media/male-3.png",
+            "/blocked-media/male-4.png",
+            "/blocked-media/male-5.png",
+            "/blocked-media/male-6.png",
+          ];
+      
+      addBotMessage(
+        `📸 **MÍDIAS OCULTAS/APAGADAS ENCONTRADAS:**\n\n` +
+        `Encontramos 6 fotos e vídeos íntimos que ${userGender === "masculino" ? "ela" : "ele"} tentou esconder de você.\n\n` +
+        `⬇️ Visualize abaixo (conteúdo bloqueado):`,
+        23000,
+        undefined,
+        images
+      );
+    }, 23000);
+
+    setTimeout(() => {
+      addBotMessage(
+        `⚠️ **ATENÇÃO: INFORMAÇÃO CRÍTICA!**\n\n` +
+        `O que você acabou de ver é apenas uma PEQUENA AMOSTRA.\n\n` +
+        `No relatório completo você terá acesso a:\n\n` +
+        `✅ Todas as 47 conversas completas (incluindo apagadas)\n` +
+        `✅ 234 fotos e vídeos SEM CENSURA\n` +
+        `✅ Todos os áudios e chamadas gravadas\n` +
+        `✅ Localização em TEMPO REAL 24/7\n` +
+        `✅ Histórico completo do motel (datas e horários)\n` +
+        `✅ Lista de contatos ocultos\n` +
+        `✅ Conversas de WhatsApp, Instagram e Telegram\n` +
+        `✅ Acesso VITALÍCIO + Atualizações automáticas`,
+        26000
+      );
+    }, 26000);
+
+    setTimeout(() => {
+      addBotMessage(
+        `🔥 **OFERTA ESPECIAL - APENAS HOJE!**\n\n` +
+        `⚠️ ATENÇÃO: Apenas 3 vagas disponíveis!\n\n` +
+        `De ~~R$ 79,90~~ por apenas:\n` +
+        `💰 **R$ 19,90** (75% OFF)\n\n` +
+        `⏰ Esta oferta expira em 10 MINUTOS!\n\n` +
+        `🚨 Depois desse tempo, o preço volta para R$ 79,90\n\n` +
+        `⚡ ${userGender === "masculino" ? "Ela" : "Ele"} pode apagar TUDO a qualquer momento!\n` +
+        `💔 Não perca a chance de descobrir a VERDADE!`,
+        29000,
+        undefined,
+        undefined,
+        true
+      );
+    }, 29000);
+
+    setTimeout(() => {
+      addBotMessage(
+        `🔓 Deseja liberar o acesso completo AGORA e descobrir toda a verdade?`,
+        32000,
         [
-          { text: "✅ Sim, liberar acesso", value: "checkout" },
-          { text: "❌ Não, agora não", value: "cancel" },
+          { text: "✅ SIM! QUERO DESCOBRIR TUDO", value: "checkout" },
+          { text: "❌ Não, deixar pra depois", value: "cancel" },
         ]
       );
-    }, 15500);
+    }, 32000);
   };
 
   const handleCheckout = (action: string) => {
     if (action === "checkout") {
-      addUserMessage("✅ Sim, liberar acesso");
+      addUserMessage("✅ SIM! QUERO DESCOBRIR TUDO");
       
       setTimeout(() => {
-        addBotMessage("Perfeito! Redirecionando para pagamento seguro... 🔒", 500);
+        addBotMessage("🎉 Perfeito! Você tomou a decisão certa!", 500);
       }, 500);
 
       setTimeout(() => {
+        addBotMessage("🔒 Redirecionando para pagamento 100% seguro...", 2000);
+      }, 2000);
+
+      setTimeout(() => {
+        addBotMessage("✅ Após a confirmação, você terá acesso IMEDIATO a tudo!", 3500);
+      }, 3500);
+
+      setTimeout(() => {
         window.location.href = "https://pay.kirvano.com/e2b9e430-3a62-4916-bc03-9839198d1570";
-      }, 2500);
+      }, 5000);
     } else {
-      addUserMessage("❌ Não, agora não");
+      addUserMessage("❌ Não, deixar pra depois");
       
       setTimeout(() => {
         addBotMessage(
-          "Sem problemas! Quando quiser acessar o relatório completo, é só voltar aqui. 😊",
+          "😔 Entendo sua hesitação...",
           500
         );
       }, 500);
 
       setTimeout(() => {
         addBotMessage(
-          "Lembre-se: quanto mais rápido você agir, mais informações poderá descobrir! ⏰",
-          3000
+          `⚠️ MAS LEMBRE-SE:\n\n` +
+          `💔 A cada minuto que passa, ${userGender === "masculino" ? "ela" : "ele"} pode apagar mais provas\n` +
+          `🗑️ Conversas são deletadas PERMANENTEMENTE\n` +
+          `📸 Fotos e vídeos somem para sempre\n` +
+          `⏰ Você pode NUNCA mais descobrir a verdade\n\n` +
+          `🔥 Esta oferta de R$ 19,90 expira em minutos!\n` +
+          `💰 Depois volta para R$ 79,90\n\n` +
+          `Tem certeza que quer arriscar?`,
+          2500
         );
-      }, 3000);
+      }, 2500);
+
+      setTimeout(() => {
+        addBotMessage(
+          `🔓 Última chance! Deseja garantir seu acesso agora?`,
+          6000,
+          [
+            { text: "✅ SIM! LIBERAR AGORA", value: "checkout" },
+            { text: "❌ Não quero saber a verdade", value: "final_no" },
+          ]
+        );
+      }, 6000);
     }
   };
 
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
   return (
-    <div className="h-screen flex flex-col bg-[#e5ddd5]">
+    <div className="h-screen flex flex-col bg-[#e5ddd5] relative">
+      {/* Notificações Flutuantes */}
+      <div className="fixed top-20 right-4 z-50 space-y-2">
+        {notifications.map((notif) => (
+          <div
+            key={notif.id}
+            className="bg-white rounded-lg shadow-lg p-4 min-w-[300px] animate-slide-in-right border-l-4 border-green-500"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
+                {notif.name[0]}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-800">
+                  {notif.name} de {notif.city}
+                </p>
+                <p className="text-xs text-gray-600">{notif.action}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Header */}
       <header className="bg-[#008069] h-[60px] flex items-center px-4 shadow-md">
         <button className="mr-4 text-white hover:bg-[#017561] p-2 rounded-full transition">
@@ -218,7 +453,7 @@ export default function ZapNovo() {
             className="w-10 h-10 rounded-full mr-3"
           />
           <div className="flex-1">
-            <h1 className="text-white font-semibold text-lg">WhatSpy</h1>
+            <h1 className="text-white font-semibold text-lg">WhatSpy Pro</h1>
             {isTyping && <p className="text-white text-xs opacity-80">digitando...</p>}
           </div>
         </div>
@@ -242,8 +477,8 @@ export default function ZapNovo() {
         <svg className="w-5 h-5 text-[#008069] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
         </svg>
-        <p className="text-[#008069] text-sm">
-          Esta é uma conta comercial e não recebe ligações
+        <p className="text-[#008069] text-sm font-semibold">
+          🔒 Sistema de Rastreamento Profissional - 100% Seguro e Anônimo
         </p>
       </div>
 
@@ -257,7 +492,7 @@ export default function ZapNovo() {
         <div className="max-w-4xl mx-auto">
           {messages.map((msg) => (
             <div key={msg.id} className={`flex mb-4 ${msg.isBot ? "" : "justify-end"}`}>
-              <div className={`flex items-start max-w-[70%] ${msg.isBot ? "" : "flex-row-reverse"}`}>
+              <div className={`flex items-start max-w-[85%] ${msg.isBot ? "" : "flex-row-reverse"}`}>
                 {msg.isBot && (
                   <img
                     src="https://ui-avatars.com/api/?name=WhatSpy&background=25D366&color=fff&bold=true"
@@ -276,6 +511,39 @@ export default function ZapNovo() {
                     <p className="text-gray-800 text-[15px] leading-relaxed whitespace-pre-wrap">
                       {msg.text}
                     </p>
+                    
+                    {/* Timer de Promoção */}
+                    {msg.showTimer && showTimer && (
+                      <div className="mt-4 p-4 bg-red-50 border-2 border-red-500 rounded-lg">
+                        <div className="text-center">
+                          <p className="text-red-600 font-bold text-sm mb-2">⏰ OFERTA EXPIRA EM:</p>
+                          <div className={`text-4xl font-bold ${timeLeft <= 60 ? 'text-red-600 animate-pulse' : 'text-red-500'}`}>
+                            {formatTime(timeLeft)}
+                          </div>
+                          {timeLeft <= 0 && (
+                            <p className="text-red-600 font-semibold mt-2">
+                              ❌ Oferta expirada! Preço voltou para R$ 79,90
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Grid de Imagens Bloqueadas */}
+                    {msg.images && (
+                      <div className="grid grid-cols-3 gap-2 mt-3">
+                        {msg.images.map((img, idx) => (
+                          <div key={idx} className="relative aspect-square">
+                            <img
+                              src={img}
+                              alt={`Bloqueado ${idx + 1}`}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
                     <div className="flex items-center justify-end gap-1 mt-1">
                       <span className="text-[11px] text-gray-500">{msg.time}</span>
                       {!msg.isBot && (
@@ -298,7 +566,7 @@ export default function ZapNovo() {
                               handleCheckout(btn.value);
                             }
                           }}
-                          className="bg-white hover:bg-gray-50 text-[#008069] font-semibold py-2 px-4 rounded-lg shadow-sm transition border border-gray-200"
+                          className="bg-white hover:bg-gray-50 text-[#008069] font-semibold py-3 px-4 rounded-lg shadow-sm transition border-2 border-[#008069] hover:scale-105"
                         >
                           {btn.text}
                         </button>
