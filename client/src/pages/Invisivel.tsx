@@ -29,8 +29,8 @@ export default function Invisivel() {
         </h1>
 
         {/* Vídeo */}
-        <div className="mb-12">
-          <div 
+        <div className="mb-8">
+          <vturb-smartplayer 
             id="vid-691cfcf549412e64e11b14a6" 
             style={{ 
               display: "block", 
@@ -39,6 +39,19 @@ export default function Invisivel() {
               maxWidth: "1000px"
             }}
           />
+        </div>
+
+        {/* Botão de Checkout abaixo do vídeo */}
+        <div className="text-center mb-16">
+          <button
+            onClick={handleCheckout}
+            className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl px-12 py-5 rounded-full shadow-lg transform transition hover:scale-105 animate-pulse"
+          >
+            QUERO TER ACESSO AGORA
+          </button>
+          <p className="text-gray-500 text-sm mt-4">
+            ✅ Acesso imediato após a compra
+          </p>
         </div>
 
         {/* Cards de Benefícios */}
