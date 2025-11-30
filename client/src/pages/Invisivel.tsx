@@ -30,6 +30,15 @@ export default function Invisivel() {
 
         {/* Vídeo */}
         <div className="mb-8">
+          <style dangerouslySetInnerHTML={{__html: `
+            /* Esconder headline duplicado do SmartPlayer */
+            vturb-smartplayer [data-smartplayer-headline],
+            vturb-smartplayer .smartplayer-headline,
+            vturb-smartplayer h1,
+            vturb-smartplayer h2 {
+              display: none !important;
+            }
+          `}} />
           <vturb-smartplayer 
             id="vid-691cfcf549412e64e11b14a6" 
             style={{ 
