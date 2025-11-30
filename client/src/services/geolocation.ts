@@ -2,10 +2,11 @@
  * Serviço Centralizado de Geolocalização
  * 
  * Este serviço detecta a localização do usuário usando:
- * 1. Sistema de votação com 4 APIs de geolocalização por IP
- * 2. Validação de país (apenas Brasil)
- * 3. Fallback inteligente usando DDD do número de telefone
- * 4. Cache no localStorage para evitar múltiplas chamadas
+ * 1. GPS do navegador (prioridade máxima - mais preciso)
+ * 2. Sistema de votação com 6 APIs de geolocalização por IP (fallback)
+ * 3. Validação de país (apenas Brasil)
+ * 4. Fallback inteligente usando DDD do número de telefone
+ * 5. Cache no localStorage para evitar múltiplas chamadas
  */
 
 export interface LocationData {
@@ -366,6 +367,124 @@ function calculateGeoDistance(
 }
 
 /**
+ * Obtém localização via GPS do navegador
+ */
+async function getGPSLocation(): Promise<LocationData | null> {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      console.log("❌ GPS não suportado pelo navegador");
+      resolve(null);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log(`📍 Coordenadas GPS: ${latitude}, ${longitude}`);
+
+        const cityData = await reverseGeocode(latitude, longitude);
+        
+        if (cityData) {
+          resolve({
+            ip: "GPS",
+            city: cityData.city,
+            state: cityData.state,
+            country: "Brasil",
+            latitude,
+            longitude,
+            isp: "Geolocalização GPS",
+          });
+        } else {
+          resolve(null);
+        }
+      },
+      (error) => {
+        console.log(`❌ Erro GPS: ${error.message}`);
+        resolve(null);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  });
+}
+
+/**
+ * Reverse geocoding: Converte coordenadas em cidade/estado
+ */
+async function reverseGeocode(
+  lat: number,
+  lon: number
+): Promise<{ city: string; state: string } | null> {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`,
+      {
+        headers: { "User-Agent": "WhatsAppSpySimulator/1.0" },
+        signal: AbortSignal.timeout(5000),
+      }
+    );
+    
+    if (response.ok) {
+      const data = await response.json();
+      const address = data.address;
+      
+      if (address) {
+        const city = address.city || address.town || address.village || address.municipality;
+        const state = address.state;
+        
+        if (city && state) {
+          const stateCode = getStateCode(state);
+          console.log(`🏛️ Reverse geocoding: ${city}, ${stateCode}`);
+          return { city, state: stateCode };
+        }
+      }
+    }
+  } catch (error) {
+    console.log("⚠️ Reverse geocoding falhou");
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=pt`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    
+    if (response.ok) {
+      const data = await response.json();
+      if (data.city && data.principalSubdivision) {
+        const stateCode = getStateCode(data.principalSubdivision);
+        console.log(`🏛️ Reverse geocoding (fallback): ${data.city}, ${stateCode}`);
+        return { city: data.city, state: stateCode };
+      }
+    }
+  } catch (error) {
+    console.log("⚠️ Reverse geocoding fallback falhou");
+  }
+
+  return null;
+}
+
+/**
+ * Converte nome completo do estado para sigla
+ */
+function getStateCode(stateName: string): string {
+  const stateMap: Record<string, string> = {
+    "Acre": "AC", "Alagoas": "AL", "Amapá": "AP", "Amazonas": "AM",
+    "Bahia": "BA", "Ceará": "CE", "Distrito Federal": "DF", "Espírito Santo": "ES",
+    "Goiás": "GO", "Maranhão": "MA", "Mato Grosso": "MT", "Mato Grosso do Sul": "MS",
+    "Minas Gerais": "MG", "Pará": "PA", "Paraíba": "PB", "Paraná": "PR",
+    "Pernambuco": "PE", "Piauí": "PI", "Rio de Janeiro": "RJ", "Rio Grande do Norte": "RN",
+    "Rio Grande do Sul": "RS", "Rondônia": "RO", "Roraima": "RR", "Santa Catarina": "SC",
+    "São Paulo": "SP", "Sergipe": "SE", "Tocantins": "TO",
+  };
+  if (stateName.length === 2) return stateName.toUpperCase();
+  return stateMap[stateName] || "SP";
+}
+
+/**
  * Detecta a localização do usuário usando sistema de votação ponderada com 6 APIs
  * @param phoneNumber - Número de telefone para fallback por DDD (opcional)
  * @param forceRefresh - Força nova detecção ignorando cache
@@ -381,6 +500,22 @@ export async function detectUserLocation(
   }
 
   console.log("🌍 Iniciando detecção de localização...");
+
+  // PRIORIDADE 1: Tentar GPS do navegador primeiro
+  try {
+    console.log("📡 Tentando GPS do navegador...");
+    const gpsLocation = await getGPSLocation();
+    if (gpsLocation) {
+      console.log("✅ GPS obtido com sucesso!", gpsLocation.city);
+      saveLocationToCache(gpsLocation);
+      return gpsLocation;
+    }
+  } catch (error) {
+    console.log("⚠️ GPS não disponível, usando fallback de APIs");
+  }
+
+  // PRIORIDADE 2: Fallback para APIs de IP
+  console.log("🌐 Usando APIs de IP como fallback...");
 
   // Extrair DDD do número de telefone para fallback
   const ddd = phoneNumber ? phoneNumber.replace(/\D/g, "").substring(0, 2) : "11";
