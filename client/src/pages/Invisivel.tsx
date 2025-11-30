@@ -71,8 +71,7 @@ export default function Invisivel() {
             </p>
           </div>
 
-          {/* Contador Regressivo */}
-          <CountdownTimer />
+          {/* Contador removido do topo - agora está no final */
 
           {/* Vídeo */}
           <div className="mb-8 bg-white/5 backdrop-blur-lg rounded-3xl p-4 border border-white/10 shadow-2xl">
@@ -294,6 +293,9 @@ export default function Invisivel() {
               <p className="text-gray-300 mb-6">
                 Garanta seu acesso agora e descubra a verdade sobre seu relacionamento
               </p>
+              
+              {/* Contador Regressivo */}
+              <CountdownTimer />
               <button
                 onClick={handleCheckout}
                 className="group relative bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white font-bold text-xl md:text-2xl px-12 py-6 rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-green-500/50 animate-pulse"
