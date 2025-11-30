@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { StaticMap } from "@/components/StaticMap";
+import { detectUserLocation, type LocationData as GeoLocationData } from "@/services/geolocation";
 
 interface Conversation {
   id: string;
@@ -117,190 +118,17 @@ export default function Relatorio() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        // Extrair DDD do número de telefone
-        const ddd = phoneNumber.replace(/\D/g, "").substring(0, 2);
-        const dddLocation = dddToCity[ddd] || dddToCity["11"];
+        // Usar serviço centralizado de geolocalização
+        const geoLocation = await detectUserLocation(phoneNumber);
         
-        // Coordenadas aproximadas das capitais brasileiras por DDD
-        const dddCoordinates: Record<string, { lat: number; lon: number }> = {
-          "11": { lat: -23.5505, lon: -46.6333 }, // São Paulo
-          "19": { lat: -22.9099, lon: -47.0626 }, // Campinas
-          "21": { lat: -22.9068, lon: -43.1729 }, // Rio de Janeiro
-          "31": { lat: -19.9167, lon: -43.9345 }, // Belo Horizonte
-          "41": { lat: -25.4284, lon: -49.2733 }, // Curitiba
-          "47": { lat: -26.3045, lon: -48.8487 }, // Joinville
-          "48": { lat: -27.5954, lon: -48.5480 }, // Florianópolis
-          "51": { lat: -30.0346, lon: -51.2177 }, // Porto Alegre
-          "61": { lat: -15.8267, lon: -47.9218 }, // Brasília
-          "71": { lat: -12.9714, lon: -38.5014 }, // Salvador
-          "81": { lat: -8.0476, lon: -34.8770 }, // Recife
-          "85": { lat: -3.7172, lon: -38.5433 }, // Fortaleza
-        };
-
-        const defaultLocation = {
-          ip: "Unknown",
-          city: dddLocation.city,
-          region: dddLocation.region_code,
-          country_name: "Brasil",
-          latitude: dddCoordinates[ddd]?.lat || -23.5505,
-          longitude: dddCoordinates[ddd]?.lon || -46.6333,
-          org: "Provedor de Internet",
-        };
-
-        // Sistema de votação por maioria usando 4 APIs
-        interface APIResult {
-          city: string;
-          region: string;
-          country: string;
-          latitude: number;
-          longitude: number;
-          ip?: string;
-          org?: string;
-        }
-
-        const apiResults: APIResult[] = [];
-
-        // API 1: ipapi.co
-        try {
-          const response = await fetch("https://ipapi.co/json/", { signal: AbortSignal.timeout(3000) });
-          if (response.ok) {
-            const apiData = await response.json();
-            if (apiData && apiData.latitude && apiData.longitude && (apiData.country_code === "BR" || apiData.country === "Brazil")) {
-              apiResults.push({
-                city: apiData.city,
-                region: apiData.region_code || apiData.region,
-                country: "Brasil",
-                latitude: apiData.latitude,
-                longitude: apiData.longitude,
-                ip: apiData.ip,
-                org: apiData.org,
-              });
-              console.log("API 1 (ipapi.co):", apiData.city);
-            }
-          }
-        } catch (e) {
-          console.log("API 1 (ipapi.co) falhou");
-        }
-
-        // API 2: ip-api.com
-        try {
-          const response = await fetch("https://ip-api.com/json/", { signal: AbortSignal.timeout(3000) });
-          if (response.ok) {
-            const apiData = await response.json();
-            if (apiData && apiData.lat && apiData.lon && (apiData.countryCode === "BR" || apiData.country === "Brazil")) {
-              apiResults.push({
-                city: apiData.city,
-                region: apiData.regionName || apiData.region,
-                country: "Brasil",
-                latitude: apiData.lat,
-                longitude: apiData.lon,
-                ip: apiData.query,
-                org: apiData.isp || apiData.org,
-              });
-              console.log("API 2 (ip-api.com):", apiData.city);
-            }
-          }
-        } catch (e) {
-          console.log("API 2 (ip-api.com) falhou");
-        }
-
-        // API 3: ipwhois.app
-        try {
-          const response = await fetch("https://ipwho.is/", { signal: AbortSignal.timeout(3000) });
-          if (response.ok) {
-            const apiData = await response.json();
-            if (apiData && apiData.latitude && apiData.longitude && (apiData.country_code === "BR" || apiData.country === "Brazil")) {
-              apiResults.push({
-                city: apiData.city,
-                region: apiData.region,
-                country: "Brasil",
-                latitude: apiData.latitude,
-                longitude: apiData.longitude,
-                ip: apiData.ip,
-                org: apiData.connection?.isp || "Provedor de Internet",
-              });
-              console.log("API 3 (ipwho.is):", apiData.city);
-            }
-          }
-        } catch (e) {
-          console.log("API 3 (ipwho.is) falhou");
-        }
-
-        // API 4: ipinfo.io (alternativa sem CORS)
-        try {
-          const response = await fetch("https://ipinfo.io/json", { signal: AbortSignal.timeout(3000) });
-          if (response.ok) {
-            const apiData = await response.json();
-            if (apiData && apiData.loc && apiData.country === "BR") {
-              const [lat, lon] = apiData.loc.split(',').map(Number);
-              apiResults.push({
-                city: apiData.city,
-                region: apiData.region,
-                country: "Brasil",
-                latitude: lat,
-                longitude: lon,
-                ip: apiData.ip,
-                org: apiData.org || "Provedor de Internet",
-              });
-              console.log("API 4 (ipinfo.io):", apiData.city);
-            }
-          }
-        } catch (e) {
-          console.log("API 4 (ipinfo.io) falhou");
-        }
-
-        // Sistema de votação: contar qual cidade apareceu mais vezes
-        let data = defaultLocation;
-        
-        if (apiResults.length > 0) {
-          const cityVotes: Record<string, { count: number; data: APIResult }> = {};
-          
-          apiResults.forEach((result) => {
-            const city = result.city;
-            if (cityVotes[city]) {
-              cityVotes[city].count++;
-            } else {
-              cityVotes[city] = { count: 1, data: result };
-            }
-          });
-
-          // Encontrar a cidade com mais votos
-          let winnerCity = "";
-          let maxVotes = 0;
-          
-          Object.entries(cityVotes).forEach(([city, info]) => {
-            console.log(`Votação: ${city} = ${info.count} voto(s)`);
-            if (info.count > maxVotes) {
-              maxVotes = info.count;
-              winnerCity = city;
-            }
-          });
-
-          if (winnerCity && cityVotes[winnerCity]) {
-            const winner = cityVotes[winnerCity].data;
-            data = {
-              ip: winner.ip || defaultLocation.ip,
-              city: winner.city,
-              region: winner.region,
-              country_name: "Brasil",
-              latitude: winner.latitude,
-              longitude: winner.longitude,
-              org: winner.org || "Provedor de Internet",
-            };
-            console.log(`✅ Cidade vencedora por maioria: ${winnerCity} (${maxVotes} votos)`);
-          }
-        } else {
-          console.log("⚠️ Nenhuma API retornou dados brasileiros, usando localização baseada no DDD:", ddd, dddLocation.city);
-        }
-
         const location: LocationData = {
-          ip: data.ip || defaultLocation.ip,
-          city: data.city || defaultLocation.city,
-          state: data.region || defaultLocation.region,
-          country: "Brasil",
-          latitude: Number(data.latitude) || defaultLocation.latitude,
-          longitude: Number(data.longitude) || defaultLocation.longitude,
-          isp: data.org || "Provedor de Internet",
+          ip: geoLocation.ip,
+          city: geoLocation.city,
+          state: geoLocation.state,
+          country: geoLocation.country,
+          latitude: geoLocation.latitude,
+          longitude: geoLocation.longitude,
+          isp: geoLocation.isp,
         };
 
         setLocationData(location);

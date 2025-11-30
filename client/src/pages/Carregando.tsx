@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useLocation } from "wouter";
+import { detectUserLocation } from "@/services/geolocation";
 
 export default function Carregando() {
   const [, setLocation] = useLocation();
@@ -7,89 +8,12 @@ export default function Carregando() {
   const [logs, setLogs] = useState<Array<{ text: string; class?: string }>>([]);
   const [showProfile, setShowProfile] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("(XX) XXXXX-XXXX");
-  const [city, setCity] = useState("São Paulo");
-  const [state, setState] = useState("SP");
+  const [city, setCity] = useState("Detectando...");
+  const [state, setState] = useState("...");
   const [isp, setIsp] = useState("Carregando...");
   const [ipAddress, setIpAddress] = useState("...");
   const [profileImage, setProfileImage] = useState(1);
   const logsInitialized = useRef(false);
-
-  // Mapeamento de DDD para cidade
-  const dddToCity: Record<string, string> = {
-    "11": "São Paulo",
-    "12": "São José dos Campos",
-    "13": "Santos",
-    "14": "Bauru",
-    "15": "Sorocaba",
-    "16": "Ribeirão Preto",
-    "17": "São José do Rio Preto",
-    "18": "Presidente Prudente",
-    "19": "Campinas",
-    "21": "Rio de Janeiro",
-    "22": "Campos dos Goytacazes",
-    "24": "Volta Redonda",
-    "27": "Vitória",
-    "28": "Cachoeiro de Itapemirim",
-    "31": "Belo Horizonte",
-    "32": "Juiz de Fora",
-    "33": "Governador Valadares",
-    "34": "Uberlândia",
-    "35": "Poços de Caldas",
-    "37": "Divinópolis",
-    "38": "Montes Claros",
-    "41": "Curitiba",
-    "42": "Ponta Grossa",
-    "43": "Londrina",
-    "44": "Maringá",
-    "45": "Foz do Iguaçu",
-    "46": "Francisco Beltrão",
-    "47": "Joinville",
-    "48": "Florianópolis",
-    "49": "Chapecó",
-    "51": "Porto Alegre",
-    "53": "Pelotas",
-    "54": "Caxias do Sul",
-    "55": "Santa Maria",
-    "61": "Brasília",
-    "62": "Goiânia",
-    "63": "Palmas",
-    "64": "Rio Verde",
-    "65": "Cuiabá",
-    "66": "Rondonópolis",
-    "67": "Campo Grande",
-    "68": "Rio Branco",
-    "69": "Porto Velho",
-    "71": "Salvador",
-    "73": "Ilhéus",
-    "74": "Juazeiro",
-    "75": "Feira de Santana",
-    "77": "Barreiras",
-    "79": "Aracaju",
-    "81": "Recife",
-    "82": "Maceió",
-    "83": "João Pessoa",
-    "84": "Natal",
-    "85": "Fortaleza",
-    "86": "Teresina",
-    "87": "Petrolina",
-    "88": "Juazeiro do Norte",
-    "89": "Picos",
-    "91": "Belém",
-    "92": "Manaus",
-    "93": "Santarém",
-    "94": "Marabá",
-    "95": "Boa Vista",
-    "96": "Macapá",
-    "97": "Tefé",
-    "98": "São Luís",
-    "99": "Imperatriz",
-  };
-
-  const getCityFromDDD = (phone: string) => {
-    const cleanNumber = (phone || "").replace(/\D/g, "");
-    const ddd = cleanNumber.substring(0, 2);
-    return dddToCity[ddd] || "São Paulo";
-  };
 
   const getProfileImageNumber = (phone: string) => {
     const cleanNumber = (phone || "").replace(/\D/g, "");
@@ -105,50 +29,25 @@ export default function Carregando() {
     const imageNum = getProfileImageNumber(savedPhone);
     setProfileImage(imageNum);
 
-    // Detectar localização por IP real do visitante
-    const fetchLocationByIP = async () => {
+    // Detectar localização usando serviço centralizado
+    const fetchLocation = async () => {
       try {
-        // Tentar com ipapi.co primeiro (mais completo)
-        const response = await fetch("https://ipapi.co/json/");
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.city) {
-            setCity(data.city || "São Paulo");
-            setState(data.region_code || data.region || "SP");
-            setIsp(data.org || data.asn || "Provedor de Internet");
-            setIpAddress(data.ip || "N/A");
-            return;
-          }
-        }
+        const location = await detectUserLocation(savedPhone);
+        setCity(location.city);
+        setState(location.state);
+        setIsp(location.isp || "Provedor de Internet");
+        setIpAddress(location.ip);
       } catch (error) {
-        console.log("ipapi.co falhou, tentando ip-api.com");
+        console.error("Erro ao detectar localização:", error);
+        // Fallback em caso de erro
+        setCity("São Paulo");
+        setState("SP");
+        setIsp("Provedor de Internet");
+        setIpAddress("N/A");
       }
-
-      try {
-        // Fallback para ip-api.com
-        const response = await fetch("https://ip-api.com/json/");
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.city) {
-            setCity(data.city || "São Paulo");
-            setState(data.region || "SP");
-            setIsp(data.isp || "Provedor de Internet");
-            setIpAddress(data.query || "N/A");
-            return;
-          }
-        }
-      } catch (error) {
-        console.log("Todas as APIs de IP falharam, usando fallback");
-      }
-
-      // Fallback final
-      setCity("São Paulo");
-      setState("SP");
-      setIsp("Provedor de Internet");
-      setIpAddress("N/A");
     };
 
-    fetchLocationByIP();
+    fetchLocation();
   }, []);
 
 
