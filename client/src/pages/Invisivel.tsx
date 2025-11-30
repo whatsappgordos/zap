@@ -80,8 +80,23 @@ export default function Invisivel() {
               vturb-smartplayer [data-smartplayer-headline],
               vturb-smartplayer .smartplayer-headline,
               vturb-smartplayer h1,
-              vturb-smartplayer h2 {
+              vturb-smartplayer h2,
+              vturb-smartplayer h3,
+              vturb-smartplayer [class*="headline"],
+              vturb-smartplayer [class*="title"],
+              vturb-smartplayer [id*="headline"],
+              vturb-smartplayer [id*="title"],
+              vturb-smartplayer div[style*="font-size"][style*="font-weight"],
+              #vid-691cfcf549412e64e11b14a6 h1,
+              #vid-691cfcf549412e64e11b14a6 h2,
+              #vid-691cfcf549412e64e11b14a6 h3,
+              #vid-691cfcf549412e64e11b14a6 [class*="headline"],
+              #vid-691cfcf549412e64e11b14a6 [class*="title"] {
                 display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
               }
             `}} />
             <vturb-smartplayer 
