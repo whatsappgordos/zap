@@ -26,6 +26,54 @@ interface APIResult {
   longitude: number;
   ip?: string;
   org?: string;
+  apiName?: string;
+  weight?: number;
+}
+
+// Pesos de confiabilidade das APIs (quanto maior, mais confiável)
+const API_WEIGHTS: Record<string, number> = {
+  "ipinfo.io": 3,      // Mais confiável
+  "ipapi.co": 3,       // Mais confiável
+  "ip-api.com": 2,     // Confiável
+  "ipwho.is": 2,       // Confiável
+  "ipgeolocation.io": 1, // Menos confiável (free tier)
+  "ipapi.com": 1,      // Menos confiável
+};
+
+/**
+ * Extrai o DDD de um número de telefone brasileiro
+ */
+function extractDDD(phoneNumber: string): string {
+  const cleaned = phoneNumber.replace(/\D/g, "");
+  return cleaned.substring(0, 2);
+}
+
+/**
+ * Verifica se uma cidade pertence a um determinado DDD
+ */
+function cityBelongsToDDD(city: string, ddd: string): boolean {
+  const dddInfo = dddToCity[ddd];
+  if (!dddInfo) return false;
+  
+  // Verifica se é a cidade principal do DDD
+  if (city === dddInfo.city) return true;
+  
+  // Verifica se está na lista de cidades do DDD
+  const citiesList = dddCities[ddd];
+  if (citiesList) {
+    // Normalizar para comparação (remover acentos e maiúsculas)
+    const normalizedCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const found = citiesList.some(c => 
+      c.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() === normalizedCity
+    );
+    if (found) return true;
+  }
+  
+  // Verifica se é uma cidade da região metropolitana
+  const metropolitanList = metropolitanCities[ddd];
+  if (metropolitanList && metropolitanList.includes(city)) return true;
+  
+  return false;
 }
 
 // Mapeamento de DDD para cidade (fallback)
@@ -160,8 +208,109 @@ function saveLocationToCache(location: LocationData): void {
   }
 }
 
+// Cidades da região metropolitana de SÃO PAULO (DDD 11) que devem ser normalizadas para "São Paulo"
+const metropolitanCities: Record<string, string[]> = {
+  "11": [
+    "Francisco Morato", "Guarulhos", "Osasco", "Carapicuíba", "Barueri", 
+    "Cotia", "Itaquaquecetuba", "Taboão da Serra", "Embu das Artes", 
+    "Diadema", "Mauá", "Santo André", "São Bernardo do Campo", 
+    "São Caetano do Sul", "Suzano", "Mogi das Cruzes", "Ferraz de Vasconcelos",
+    "Poá", "Itapevi", "Jandira", "Franco da Rocha", "Caieiras", "Mairiporã"
+  ],
+};
+
+// Todas as cidades que pertencem a cada DDD (para validação)
+const dddCities: Record<string, string[]> = {
+  "11": [
+    "São Paulo", "Guarulhos", "Osasco", "Santo André", "São Bernardo do Campo",
+    "São Caetano do Sul", "Diadema", "Mauá", "Suzano", "Mogi das Cruzes",
+    "Taboao da Serra", "Embu das Artes", "Cotia", "Itaquaquecetuba", "Barueri",
+    "Carapicuíba", "Francisco Morato", "Franco da Rocha", "Caieiras", "Mairiporã"
+  ],
+  "12": [
+    "São José dos Campos", "Jacareí", "Taubaté", "Guaratinguetá", "Pindamonhangaba",
+    "Caraguatatuba", "São Sebastião", "Campos do Jordão", "Ubatuba"
+  ],
+  "13": [
+    "Santos", "São Vicente", "Guarujá", "Praia Grande", "Cubatão",
+    "Itanhaém", "Peruibe", "Mongaguá"
+  ],
+  "14": [
+    "Bauru", "Jaú", "Lençóis Paulista", "Botucatu", "Avaré",
+    "Ourinhos", "Marília"
+  ],
+  "15": [
+    "Sorocaba", "Itapetininga", "Tatuí", "Itu", "Salto",
+    "Votorantim", "Araçoiaba da Serra"
+  ],
+  "16": [
+    "Ribeirão Preto", "Franca", "Araraquara", "São Carlos",
+    "Sertãozinho", "Bebedouro", "Jaboticabal"
+  ],
+  "17": [
+    "São José do Rio Preto", "Catanduva", "Votuporanga", "Fernandópolis",
+    "Jales", "Birigui"
+  ],
+  "18": [
+    "Presidente Prudente", "Araçatuba", "Birigui", "Andradina",
+    "Dracena", "Adamantina"
+  ],
+  "19": [
+    "Campinas", "Piracicaba", "Limeira", "Americana", "Rio Claro",
+    "Sumaré", "Hortolândia", "Indaiatuba", "Paulínia", "Valinhos",
+    "Vinhedo", "Santa Bárbara d'Oeste", "Mogi Guaçu", "Mogi Mirim",
+    "São João da Boa Vista", "Araras", "Leme", "Pirassununga",
+    "Porto Ferreira", "Capivari", "Itatiba", "Jaguariúna", "Pedreira",
+    "Amparo", "Socorro", "Braganca Paulista", "Atibaia", "Jundiai"
+  ],
+  "21": [
+    "Rio de Janeiro", "Niterói", "São Gonçalo", "Duque de Caxias",
+    "Nova Iguaçu", "Belford Roxo", "São João de Meriti", "Nilopólis",
+    "Mesquita", "Queimados", "Magé"
+  ],
+  "31": [
+    "Belo Horizonte", "Contagem", "Betim", "Ribeirão das Neves",
+    "Santa Luzia", "Sabará", "Vespasiano", "Nova Lima"
+  ],
+};
+
 /**
- * Detecta a localização do usuário usando sistema de votação com 4 APIs
+ * Normaliza o nome da cidade, substituindo cidades da região metropolitana pela capital
+ */
+function normalizeCityName(city: string, ddd: string): string {
+  const metropolitanList = metropolitanCities[ddd];
+  if (metropolitanList && metropolitanList.includes(city)) {
+    const capital = dddToCity[ddd];
+    console.log(`🔄 Normalizando: ${city} → ${capital.city} (região metropolitana DDD ${ddd})`);
+    return capital.city;
+  }
+  return city;
+}
+
+/**
+ * Calcula a distância entre dois pontos geográficos (em km)
+ */
+function calculateGeoDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371; // Raio da Terra em km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+/**
+ * Detecta a localização do usuário usando sistema de votação ponderada com 6 APIs
  * @param phoneNumber - Número de telefone para fallback por DDD (opcional)
  * @param forceRefresh - Força nova detecção ignorando cache
  */
@@ -214,8 +363,10 @@ export async function detectUserLocation(
           longitude: apiData.longitude,
           ip: apiData.ip,
           org: apiData.org,
+          apiName: "ipapi.co",
+          weight: API_WEIGHTS["ipapi.co"],
         });
-        console.log("✅ API 1 (ipapi.co):", apiData.city);
+        console.log("✅ API 1 (ipapi.co):", apiData.city, `[peso: ${API_WEIGHTS["ipapi.co"]}]`);
       }
     }
   } catch (e) {
@@ -243,8 +394,10 @@ export async function detectUserLocation(
           longitude: apiData.lon,
           ip: apiData.query,
           org: apiData.isp || apiData.org,
+          apiName: "ip-api.com",
+          weight: API_WEIGHTS["ip-api.com"],
         });
-        console.log("✅ API 2 (ip-api.com):", apiData.city);
+        console.log("✅ API 2 (ip-api.com):", apiData.city, `[peso: ${API_WEIGHTS["ip-api.com"]}]`);
       }
     }
   } catch (e) {
@@ -272,8 +425,10 @@ export async function detectUserLocation(
           longitude: apiData.longitude,
           ip: apiData.ip,
           org: apiData.connection?.isp || "Provedor de Internet",
+          apiName: "ipwho.is",
+          weight: API_WEIGHTS["ipwho.is"],
         });
-        console.log("✅ API 3 (ipwho.is):", apiData.city);
+        console.log("✅ API 3 (ipwho.is):", apiData.city, `[peso: ${API_WEIGHTS["ipwho.is"]}]`);
       }
     }
   } catch (e) {
@@ -297,43 +452,131 @@ export async function detectUserLocation(
           longitude: lon,
           ip: apiData.ip,
           org: apiData.org || "Provedor de Internet",
+          apiName: "ipinfo.io",
+          weight: API_WEIGHTS["ipinfo.io"],
         });
-        console.log("✅ API 4 (ipinfo.io):", apiData.city);
+        console.log("✅ API 4 (ipinfo.io):", apiData.city, `[peso: ${API_WEIGHTS["ipinfo.io"]}]`);
       }
     }
   } catch (e) {
     console.log("❌ API 4 (ipinfo.io) falhou");
   }
 
-  // Sistema de votação: contar qual cidade apareceu mais vezes
+  // API 5: ipgeolocation.io (gratuita)
+  try {
+    const response = await fetch("https://api.ipgeolocation.io/ipgeo?apiKey=free", {
+      signal: AbortSignal.timeout(3000),
+    });
+    if (response.ok) {
+      const apiData = await response.json();
+      if (
+        apiData &&
+        apiData.latitude &&
+        apiData.longitude &&
+        (apiData.country_code2 === "BR" || apiData.country_name === "Brazil")
+      ) {
+        apiResults.push({
+          city: apiData.city,
+          region: apiData.state_prov,
+          country: "Brasil",
+          latitude: parseFloat(apiData.latitude),
+          longitude: parseFloat(apiData.longitude),
+          ip: apiData.ip,
+          org: apiData.isp || "Provedor de Internet",
+          apiName: "ipgeolocation.io",
+          weight: API_WEIGHTS["ipgeolocation.io"],
+        });
+        console.log("✅ API 5 (ipgeolocation.io):", apiData.city, `[peso: ${API_WEIGHTS["ipgeolocation.io"]}]`);
+      }
+    }
+  } catch (e) {
+    console.log("❌ API 5 (ipgeolocation.io) falhou");
+  }
+
+  // API 6: ipapi.com (diferente de ip-api.com)
+  try {
+    const response = await fetch("https://ipapi.com/ip_api.php?ip=", {
+      signal: AbortSignal.timeout(3000),
+    });
+    if (response.ok) {
+      const apiData = await response.json();
+      if (
+        apiData &&
+        apiData.latitude &&
+        apiData.longitude &&
+        (apiData.country_code === "BR" || apiData.country === "Brazil")
+      ) {
+        apiResults.push({
+          city: apiData.city,
+          region: apiData.region,
+          country: "Brasil",
+          latitude: apiData.latitude,
+          longitude: apiData.longitude,
+          ip: apiData.ip,
+          org: apiData.asn?.org || "Provedor de Internet",
+          apiName: "ipapi.com",
+          weight: API_WEIGHTS["ipapi.com"],
+        });
+        console.log("✅ API 6 (ipapi.com):", apiData.city, `[peso: ${API_WEIGHTS["ipapi.com"]}]`);
+      }
+    }
+  } catch (e) {
+    console.log("❌ API 6 (ipapi.com) falhou");
+  }
+
+  // Sistema de votação PONDERADA: cada API tem um peso diferente
   let finalData = defaultLocation;
 
   if (apiResults.length > 0) {
-    const cityVotes: Record<string, { count: number; data: APIResult }> = {};
+    console.log(`🔍 Analisando ${apiResults.length} resultado(s) das APIs...`);
+    
+    // Votação ponderada: cada voto vale o peso da API
+    const cityScores: Record<string, { 
+      score: number; 
+      count: number;
+      data: APIResult;
+      apis: string[];
+    }> = {};
 
     apiResults.forEach((result) => {
-      const city = result.city;
-      if (cityVotes[city]) {
-        cityVotes[city].count++;
+      // Normalizar nome da cidade (apenas para região metropolitana de SP)
+      const normalizedCity = normalizeCityName(result.city, ddd);
+      const weight = result.weight || 1;
+      const apiName = result.apiName || "unknown";
+      
+      if (cityScores[normalizedCity]) {
+        cityScores[normalizedCity].score += weight;
+        cityScores[normalizedCity].count++;
+        cityScores[normalizedCity].apis.push(apiName);
       } else {
-        cityVotes[city] = { count: 1, data: result };
+        cityScores[normalizedCity] = { 
+          score: weight,
+          count: 1,
+          data: { ...result, city: normalizedCity },
+          apis: [apiName]
+        };
       }
     });
 
-    // Encontrar a cidade com mais votos
+    // Encontrar a cidade com maior pontuação
     let winnerCity = "";
-    let maxVotes = 0;
+    let maxScore = 0;
+    let winnerCount = 0;
 
-    Object.entries(cityVotes).forEach(([city, info]) => {
-      console.log(`🗳️ Votação: ${city} = ${info.count} voto(s)`);
-      if (info.count > maxVotes) {
-        maxVotes = info.count;
+    Object.entries(cityScores).forEach(([city, info]) => {
+      console.log(
+        `🗳️ ${city}: ${info.count} voto(s), pontuação = ${info.score} [${info.apis.join(", ")}]`
+      );
+      if (info.score > maxScore) {
+        maxScore = info.score;
         winnerCity = city;
+        winnerCount = info.count;
       }
     });
 
-    if (winnerCity && cityVotes[winnerCity]) {
-      const winner = cityVotes[winnerCity].data;
+    // Usar a cidade vencedora da votação ponderada
+    if (winnerCity && cityScores[winnerCity]) {
+      const winner = cityScores[winnerCity].data;
       finalData = {
         ip: winner.ip || defaultLocation.ip,
         city: winner.city,
@@ -344,7 +587,25 @@ export async function detectUserLocation(
         isp: winner.org || "Provedor de Internet",
       };
       console.log(
-        `🏆 Cidade vencedora por maioria: ${winnerCity} (${maxVotes} votos)`
+        `🏆 Cidade vencedora: ${winnerCity} (${winnerCount} APIs, pontuação: ${maxScore})`
+      );
+      
+      // Validar se a cidade pertence ao DDD correto
+      if (!cityBelongsToDDD(winnerCity, ddd)) {
+        console.log(
+          `⚠️ Cidade ${winnerCity} não pertence ao DDD ${ddd}, usando fallback: ${dddLocation.city}`
+        );
+        finalData = {
+          ...finalData,
+          city: dddLocation.city,
+          state: dddLocation.region_code,
+          latitude: dddCoordinates[ddd]?.lat || defaultLocation.latitude,
+          longitude: dddCoordinates[ddd]?.lon || defaultLocation.longitude,
+        };
+      }
+    } else {
+      console.log(
+        `⚠️ Nenhuma cidade vencedora, usando fallback: ${dddLocation.city}`
       );
     }
   } else {

@@ -158,7 +158,7 @@ export default function Relatorio() {
 
         // Gerar nomes de motéis realistas baseados na cidade
         const generateMotelName = (city: string, index: number): string => {
-          const prefixes = ["Motel", "Pousada", "Hotel"];
+          const prefixes = ["Motel", "Motel", "Motel"];
           const suffixes = [
             city,
             `${city} Plaza`,
