@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Numero from "./pages/Numero";
 import Carregando from "./pages/Carregando";
 import Relatorio from "./pages/Relatorio";
+import RelatorioFeminino from "./pages/RelatorioFeminino";
 import { Monitor } from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
 
@@ -18,6 +19,7 @@ function Router() {
       <Route path={"/numero"} component={Numero} />
       <Route path={"/carregando"} component={Carregando} />
       <Route path={"/relatorio"} component={Relatorio} />
+      <Route path={"/relatorio-feminino"} component={RelatorioFeminino} />
       <Route path={"/monitor"} component={Monitor} />
       <Route path={"/invisivel"} component={Invisivel} />
       <Route path={"/404"} component={NotFound} />

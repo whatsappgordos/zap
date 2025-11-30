@@ -241,7 +241,14 @@ export default function Carregando() {
 
             {/* Access Button */}
             <button
-              onClick={() => setLocation("/relatorio")}
+              onClick={() => {
+                const selectedProfile = localStorage.getItem("selectedProfile");
+                if (selectedProfile === "female") {
+                  setLocation("/relatorio-feminino");
+                } else {
+                  setLocation("/relatorio");
+                }
+              }}
               className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition border-2 border-black"
             >
               Acessar Relatório
