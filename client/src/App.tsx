@@ -9,6 +9,7 @@ import Numero from "./pages/Numero";
 import Carregando from "./pages/Carregando";
 import Relatorio from "./pages/Relatorio";
 import { Monitor } from "./pages/Monitor";
+import Invisivel from "./pages/Invisivel";
 
 function Router() {
   return (
@@ -18,6 +19,7 @@ function Router() {
       <Route path={"/carregando"} component={Carregando} />
       <Route path={"/relatorio"} component={Relatorio} />
       <Route path={"/monitor"} component={Monitor} />
+      <Route path={"/invisivel"} component={Invisivel} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
