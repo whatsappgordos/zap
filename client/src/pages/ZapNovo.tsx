@@ -40,6 +40,49 @@ export default function ZapNovo() {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  // Carregar pixels Utmify
+  useEffect(() => {
+    const loadPixels = () => {
+      // Pixel 1
+      window.pixelId = "67fc2ba806eb140157116830";
+      const pixel1 = document.createElement("script");
+      pixel1.setAttribute("async", "");
+      pixel1.setAttribute("defer", "");
+      pixel1.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(pixel1);
+
+      // UTMs 1
+      const utms1 = document.createElement("script");
+      utms1.setAttribute("src", "https://cdn.utmify.com.br/scripts/utms/latest.js");
+      utms1.setAttribute("data-utmify-prevent-xcod-sck", "");
+      utms1.setAttribute("data-utmify-prevent-subids", "");
+      utms1.setAttribute("async", "");
+      utms1.setAttribute("defer", "");
+      document.head.appendChild(utms1);
+
+      // Pixel 2
+      setTimeout(() => {
+        window.pixelId = "692b7dfa7ea9d3ffa76a2269";
+        const pixel2 = document.createElement("script");
+        pixel2.setAttribute("async", "");
+        pixel2.setAttribute("defer", "");
+        pixel2.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+        document.head.appendChild(pixel2);
+      }, 100);
+
+      // UTMs 2
+      const utms2 = document.createElement("script");
+      utms2.setAttribute("src", "https://cdn.utmify.com.br/scripts/utms/latest.js");
+      utms2.setAttribute("data-utmify-prevent-xcod-sck", "");
+      utms2.setAttribute("data-utmify-prevent-subids", "");
+      utms2.setAttribute("async", "");
+      utms2.setAttribute("defer", "");
+      document.head.appendChild(utms2);
+    };
+
+    loadPixels();
+  }, []);
+
   // Auto-play videos quando aparecem
   useEffect(() => {
     messages.forEach((msg) => {
