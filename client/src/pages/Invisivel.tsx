@@ -71,27 +71,23 @@ export default function Invisivel() {
             </p>
           </div>
 
-          {/* Contador removido do topo - agora está no final */
-
-          {/* Vídeo */}
           <div className="mb-8 bg-white/5 backdrop-blur-lg rounded-3xl p-4 border border-white/10 shadow-2xl">
             <style dangerouslySetInnerHTML={{__html: `
-              /* Esconder headline duplicado do SmartPlayer */
               vturb-smartplayer [data-smartplayer-headline],
               vturb-smartplayer .smartplayer-headline,
               vturb-smartplayer h1,
               vturb-smartplayer h2,
               vturb-smartplayer h3,
-              vturb-smartplayer [class*="headline"],
-              vturb-smartplayer [class*="title"],
-              vturb-smartplayer [id*="headline"],
-              vturb-smartplayer [id*="title"],
-              vturb-smartplayer div[style*="font-size"][style*="font-weight"],
+              vturb-smartplayer [class*=headline],
+              vturb-smartplayer [class*=title],
+              vturb-smartplayer [id*=headline],
+              vturb-smartplayer [id*=title],
+              vturb-smartplayer div[style*=font-size][style*=font-weight],
               #vid-691cfcf549412e64e11b14a6 h1,
               #vid-691cfcf549412e64e11b14a6 h2,
               #vid-691cfcf549412e64e11b14a6 h3,
-              #vid-691cfcf549412e64e11b14a6 [class*="headline"],
-              #vid-691cfcf549412e64e11b14a6 [class*="title"] {
+              #vid-691cfcf549412e64e11b14a6 [class*=headline],
+              #vid-691cfcf549412e64e11b14a6 [class*=title] {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
