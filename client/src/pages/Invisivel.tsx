@@ -1,6 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import FakeNotifications from "../components/FakeNotifications";
+import CountdownTimer from "../components/CountdownTimer";
 
 export default function Invisivel() {
+  const [viewersCount, setViewersCount] = useState(47);
+
   useEffect(() => {
     // Carregar o script do SmartPlayer
     const script = document.createElement("script");
@@ -8,11 +12,20 @@ export default function Invisivel() {
     script.async = true;
     document.head.appendChild(script);
 
+    // Variar o número de visualizadores
+    const interval = setInterval(() => {
+      setViewersCount((prev) => {
+        const change = Math.random() > 0.5 ? 1 : -1;
+        const newCount = prev + change;
+        return Math.max(35, Math.min(65, newCount)); // Entre 35 e 65
+      });
+    }, 3000);
+
     return () => {
-      // Cleanup: remover o script quando o componente for desmontado
       if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
+      clearInterval(interval);
     };
   }, []);
 
@@ -21,155 +34,295 @@ export default function Invisivel() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Título Principal */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-8">
-          Descubra se está sendo <span className="bg-yellow-300 px-2">traído(a)</span> com um app 100% invisível
-        </h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+      {/* Notificações Fake */}
+      <FakeNotifications />
 
-        {/* Vídeo */}
-        <div className="mb-8">
-          <style dangerouslySetInnerHTML={{__html: `
-            /* Esconder headline duplicado do SmartPlayer */
-            vturb-smartplayer [data-smartplayer-headline],
-            vturb-smartplayer .smartplayer-headline,
-            vturb-smartplayer h1,
-            vturb-smartplayer h2 {
-              display: none !important;
-            }
-          `}} />
-          <vturb-smartplayer 
-            id="vid-691cfcf549412e64e11b14a6" 
-            style={{ 
-              display: "block", 
-              margin: "0 auto", 
-              width: "100%",
-              maxWidth: "1000px"
-            }}
-          />
-        </div>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzAtOS45NC04LjA2LTE4LTE4LTE4UzAgOC4wNiAwIDE4czguMDYgMTggMTggMTggMTgtOC4wNiAxOC0xOHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30"></div>
 
-        {/* Botão de Checkout abaixo do vídeo */}
-        <div className="text-center mb-16">
-          <button
-            onClick={handleCheckout}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl px-12 py-5 rounded-full shadow-lg transform transition hover:scale-105 animate-pulse"
-          >
-            QUERO TER ACESSO AGORA
-          </button>
-          <p className="text-gray-500 text-sm mt-4">
-            ✅ Acesso imediato após a compra
-          </p>
-        </div>
-
-        {/* Cards de Benefícios */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {/* Card 1 */}
-          <div className="bg-gray-50 rounded-lg p-6 text-center">
-            <h3 className="text-xl font-bold text-green-600 mb-4">
-              Monitoramento Discreto
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Veja conversas e ligações sem deixar rastros e sem levantar suspeitas.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-gray-50 rounded-lg p-6 text-center">
-            <h3 className="text-xl font-bold text-green-600 mb-4">
-              Localização em Tempo Real
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Saiba exatamente onde seu parceiro(a) está agora mesmo com poucos cliques.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-gray-50 rounded-lg p-6 text-center">
-            <h3 className="text-xl font-bold text-green-600 mb-4">
-              Provas Claras e Concretas
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Tenha evidências suficientes antes de qualquer confrontação, evitando desculpas ou manipulações.
-            </p>
+      <div className="relative z-10">
+        {/* Header com Badge */}
+        <div className="text-center pt-8 pb-4">
+          <div className="inline-flex items-center gap-2 bg-green-500/20 backdrop-blur-md border border-green-500/30 rounded-full px-6 py-2 mb-4">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span className="text-green-300 text-sm font-semibold">
+              {viewersCount} pessoas visualizando agora
+            </span>
           </div>
         </div>
 
-        {/* Seção Eduardo Furtado */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 items-center">
-          {/* Imagem */}
-          <div className="flex justify-center">
-            <img 
-              src="https://static-media.hotmart.com/0FSDawAjHiwnoXmcwlLo-3e-yzk=/filters:quality(100):format(webp)/klickart-prod/uploads/media/file/4723172/photo_2022-03-14_09-49-33.jpg"
-              alt="Eduardo Furtado"
-              className="rounded-lg shadow-lg w-full max-w-md"
+        {/* Container Principal */}
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          {/* Título Principal com Glassmorphism */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-white/20 shadow-2xl">
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-center text-white mb-4 leading-tight">
+              Descubra se está sendo{" "}
+              <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-transparent bg-clip-text">
+                traído(a)
+              </span>{" "}
+              com um app 100% invisível
+            </h1>
+            <p className="text-center text-gray-300 text-lg max-w-3xl mx-auto">
+              Método comprovado por mais de 2 mil pessoas que recuperaram sua paz de espírito
+            </p>
+          </div>
+
+          {/* Contador Regressivo */}
+          <CountdownTimer />
+
+          {/* Vídeo */}
+          <div className="mb-8 bg-white/5 backdrop-blur-lg rounded-3xl p-4 border border-white/10 shadow-2xl">
+            <style dangerouslySetInnerHTML={{__html: `
+              /* Esconder headline duplicado do SmartPlayer */
+              vturb-smartplayer [data-smartplayer-headline],
+              vturb-smartplayer .smartplayer-headline,
+              vturb-smartplayer h1,
+              vturb-smartplayer h2 {
+                display: none !important;
+              }
+            `}} />
+            <vturb-smartplayer 
+              id="vid-691cfcf549412e64e11b14a6" 
+              style={{ 
+                display: "block", 
+                margin: "0 auto", 
+                width: "100%",
+                maxWidth: "1000px",
+                borderRadius: "1rem"
+              }}
             />
           </div>
 
-          {/* Texto */}
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-700 mb-4">
-              Quem é<br />Eduardo Furtado?
-            </h2>
-            
-            <div className="inline-flex items-center gap-2 bg-red-50 border-2 border-red-500 rounded-full px-4 py-2 mb-6">
-              <i className="far fa-star text-red-500"></i>
-              <span className="text-sm font-semibold text-red-600">
-                Criador do Método Espião Invisível
+          {/* Botão de Checkout Principal */}
+          <div className="text-center mb-12">
+            <button
+              onClick={handleCheckout}
+              className="group relative bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white font-bold text-xl md:text-2xl px-12 py-6 rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-green-500/50"
+            >
+              <span className="relative z-10">🔓 QUERO TER ACESSO AGORA</span>
+              <div className="absolute inset-0 bg-white/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+            </button>
+            <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-300">
+              <span className="flex items-center gap-2">
+                ✅ Acesso imediato
+              </span>
+              <span className="flex items-center gap-2">
+                🔒 Pagamento seguro
+              </span>
+              <span className="flex items-center gap-2">
+                ✨ Garantia 7 dias
               </span>
             </div>
+          </div>
 
-            <div className="space-y-4 text-gray-600 leading-relaxed">
-              <p>
-                Eduardo Furtado é técnico especialista em celulares, com mais de 9 anos de experiência no ramo. 
-                Ao longo de sua carreira, percebeu que muitos clientes não o procuravam apenas para consertos comuns, 
-                mas sim para resolver uma dor muito mais profunda: descobrir se estavam sendo traídos pelos parceiros.
+          {/* Cards de Benefícios com Glassmorphism */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            {/* Card 1 */}
+            <div className="group bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center border border-white/20 hover:border-green-500/50 transition-all duration-300 hover:transform hover:scale-105 shadow-xl">
+              <div className="text-5xl mb-4">🕵️</div>
+              <h3 className="text-xl font-bold text-green-400 mb-4">
+                Monitoramento Discreto
+              </h3>
+              <p className="text-gray-300 leading-relaxed">
+                Veja conversas e ligações sem deixar rastros e sem levantar suspeitas.
               </p>
+            </div>
 
-              <p>
-                Sensibilizado pela situação, Eduardo dedicou-se a encontrar uma solução eficiente, discreta e segura 
-                para ajudar essas pessoas. Após muita pesquisa e testes rigorosos, desenvolveu o método "Espião Invisível", 
-                que já ajudou mais de 2 mil pessoas a encontrarem respostas definitivas sobre seus relacionamentos, 
-                sem correr riscos ou levantar suspeitas.
+            {/* Card 2 */}
+            <div className="group bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center border border-white/20 hover:border-green-500/50 transition-all duration-300 hover:transform hover:scale-105 shadow-xl">
+              <div className="text-5xl mb-4">📍</div>
+              <h3 className="text-xl font-bold text-green-400 mb-4">
+                Localização em Tempo Real
+              </h3>
+              <p className="text-gray-300 leading-relaxed">
+                Saiba exatamente onde seu parceiro(a) está agora mesmo com poucos cliques.
               </p>
+            </div>
 
-              <p>
-                Hoje, Eduardo Furtado é referência na área de monitoramento digital e ajuda diariamente pessoas a 
-                recuperarem sua paz de espírito, autoestima e controle sobre suas vidas amorosas.
+            {/* Card 3 */}
+            <div className="group bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center border border-white/20 hover:border-green-500/50 transition-all duration-300 hover:transform hover:scale-105 shadow-xl">
+              <div className="text-5xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold text-green-400 mb-4">
+                Provas Claras e Concretas
+              </h3>
+              <p className="text-gray-300 leading-relaxed">
+                Tenha evidências suficientes antes de qualquer confrontação, evitando desculpas ou manipulações.
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Botão de Checkout */}
-        <div className="text-center mb-12">
-          <button
-            onClick={handleCheckout}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl px-12 py-5 rounded-full shadow-lg transform transition hover:scale-105 animate-pulse"
-          >
-            QUERO TER ACESSO AGORA
-          </button>
-          <p className="text-gray-500 text-sm mt-4">
-            ✅ Acesso imediato após a compra
-          </p>
-        </div>
+          {/* Badges de Garantia */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 text-center border border-white/20">
+              <div className="text-3xl mb-2">🔒</div>
+              <p className="text-xs text-gray-300 font-semibold">100% Seguro</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 text-center border border-white/20">
+              <div className="text-3xl mb-2">⚡</div>
+              <p className="text-xs text-gray-300 font-semibold">Acesso Instantâneo</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 text-center border border-white/20">
+              <div className="text-3xl mb-2">🛡️</div>
+              <p className="text-xs text-gray-300 font-semibold">Garantia 7 Dias</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 text-center border border-white/20">
+              <div className="text-3xl mb-2">👥</div>
+              <p className="text-xs text-gray-300 font-semibold">+2 Mil Usuários</p>
+            </div>
+          </div>
 
-        {/* Footer */}
-        <div className="text-center py-8 border-t border-gray-200">
-          <a 
-            href="https://hotmart.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 transition"
-          >
-            <span className="text-sm">Feito com</span>
-            <img 
-              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCA5NiAxOSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzJfMTEzNDcpIj4KPHBhdGggZD0iTTYzLjE5NzMgNi40OTgyOUg2Ni43MzIyQzY3LjY2MDUgNi40OTgyOSA2OC4zNzQ2IDYuNzEyNTEgNjguOTEgNy4xNzY2N0M2OS40MTAxIDcuNjQwODQgNjkuNjk1OCA4LjI4MzUzIDY5LjY5NTggOS4xMDQ3NUM2OS42OTU4IDkuOTI1OTcgNjkuNDQ1NyAxMC41Njg3IDY4LjkxIDExLjAzMjhDNjguMzc0NiAxMS40OTcgNjcuNjYwNSAxMS43MTEyIDY2LjczMjIgMTEuNzExMkg2NC4yMzI3VjE1LjM1MzFINjMuMTk3M1Y2LjQ5ODI5Wk02Ni42MjUgMTAuODlDNjcuOTgxNyAxMC44OSA2OC42NjAzIDEwLjI4MyA2OC42NjAzIDkuMTA0NzVDNjguNjYwMyA3LjkyNjQ4IDY3Ljk4MTcgNy4zNTUyIDY2LjYyNSA3LjM1NTJINjQuMjMyN1YxMC44OUg2Ni42MjVaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNzUuMDUxMSA5LjY3NjMxQzc1LjQ0NCAxMC4wNjkxIDc1LjYyMjQgMTAuNjc2MSA3NS42MjI0IDExLjQ5NzNWMTUuMzUzNEg3NC42MjI2VjE0LjMxOEM3NC40Nzk3IDE0LjY3NSA3NC4yMyAxNC45NjA3IDczLjkwODcgMTUuMTM5MkM3My41ODcxIDE1LjM1MzQgNzMuMTk0NiAxNS40MjQ4IDcyLjc2NjEgMTUuNDI0OEM3Mi4zNzMyIDE1LjQyNDggNzIuMDE2MyAxNS4zNTM0IDcxLjY1OSAxNS4xNzQ5QzcxLjMzNzcgMTUuMDMyMSA3MS4wNTIgMTQuNzgyMiA3MC44NzM2IDE0LjQ5NjVDNzAuNjk1MSAxNC4yMTA5IDcwLjU4NzkgMTMuODg5NSA3MC41ODc5IDEzLjU2ODJDNzAuNTg3OSAxMy4xMDQgNzAuNjk1MSAxMi43NDcgNzAuOTQ1MiAxMi40OTdDNzEuMTk0OSAxMi4yNDcxIDcxLjU1MjEgMTIuMDY4NSA3Mi4xMjM1IDExLjkyNTdDNzIuNjU4OCAxMS44MTg2IDczLjQwODYgMTEuNzQ3MiA3NC4zNzI5IDExLjc0NzJINzQuNjU4NVYxMS4zMTg3Qzc0LjY1ODUgMTAuODE4OSA3NC41NTEzIDEwLjQyNjEgNzQuMzM2OSAxMC4yMTE5Qzc0LjEyMjggOS45OTc2NyA3My44MDE1IDkuODU0ODQgNzMuMzAxOCA5Ljg1NDg0QzcyLjU4NzYgOS44NTQ4NCA3MS45MDkgMTAuMDY5MSA3MS4xOTQ5IDEwLjQ5NzVMNzAuODM3OSA5Ljc0NzczQEM3MS4xNTkyIDkuNTMzNTEgNzEuNTUyMSA5LjM1NDk4IDcxLjk4MDYgOS4yMTIxNEM3Mi40NDQ4IDkuMDY5MzQgNzIuODczMyA4Ljk5NzkyIDczLjMwMTggOC45OTc5MkM3NC4wODcyIDkuMTA1MDMgNzQuNjU4NSA5LjI4MzU2IDc1LjA1MTEgOS42NzYzMVpNNzQuMTU4NCAxNC4xMzk1Qzc0LjQ3OTcgMTMuNzgyNCA3NC42NTg1IDEzLjM1MzkgNzQuNjU4NSAxMi44MTg0VjEyLjQ2MTNINzQuNDQ0MUM3My42OTQzIDEyLjQ2MTMgNzMuMTIzIDEyLjQ5NyA3Mi43NjYxIDEyLjU2ODRDNzIuMzczMiAxMi42Mzk5IDcyLjA4NzUgMTIuNzQ3IDcxLjk0NDcgMTIuODg5OEM3MS43NjYyIDEzLjAzMjYgNzEuNjk1IDEzLjI0NjggNzEuNjk1IDEzLjUzMjVDNzEuNjk1IDEzLjg1MzggNzEuODAxOCAxNC4xMzk1IDcyLjA1MTkgMTQuMzUzN0M3Mi4zMDE5IDE0LjU2NzkgNzIuNTg3NiAxNC42NzUgNzIuOTQ0NSAxNC42NzVDNzMuNDA4NiAxNC42NzUgNzMuODM3MSAxNC40OTY1IDc0LjE1ODQgMTQuMTM5NVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik04My4wMTQxIDkuMjQ3ODZWMTQuOTYwN0M4My4wMTQxIDE1Ljg4OSA4Mi43NjQxIDE2LjU2NzQgODIuMyAxNy4wMzE2QzgxLjgzNTggMTcuNDk1OCA4MS4xMjE2IDE3Ljc0NTcgODAuMTkzNCAxNy43NDU3Qzc5LjEyMjMgMTcuNzQ1NyA3OC4yMjk2IDE3LjQ2IDc3LjQ3OTggMTYuOTI0NEw3Ny44MzY4IDE2LjE3NDZDNzguMjY1MyAxNi40NjAzIDc4LjYyMjIgMTYuNjM4OCA3OS4wMTUxIDE2Ljc0NTlDNzkuMzcyIDE2Ljg1MzEgNzkuNzY0OSAxNi45MjQ0IDgwLjIyOSAxNi45MjQ0QzgwLjgwMDQgMTYuOTI0NCA4MS4yNjQ1IDE2Ljc4MTYgODEuNTUwMiAxNi40NjAzQzgxLjgzNTggMTYuMTM5IDgyLjAxNDMgMTUuNjc0OCA4Mi4wMTQzIDE1LjA2NzhWMTMuOTk2N0M4MS44MzU4IDE0LjM4OTQgODEuNTUwMSAxNC43MTA3IDgxLjE5MjkgMTQuODg5M0M4MC44MzYgMTUuMTAzNSA4MC40MDc1IDE1LjIxMDYgNzkuOTA3NyAxNS4yMTA2Qzc5LjM3MiAxNS4yMTA2IDc4LjkwNzkgMTUuMDY3OCA3OC40NzkzIDE0LjgxNzlDNzguMDUwOCAxNC41Njc5IDc3LjcyOTUgMTQuMjEwOSA3Ny41MTU1IDEzLjc0NjdDNzcuMzAxIDEzLjI4MjUgNzcuMTU4MiAxMi43NDcgNzcuMTU4MiAxMi4xNEM3Ny4xNTgyIDExLjUzMyA3Ny4yNjU0IDEwLjk5NzQgNzcuNTE1NSAxMC41MzMyQzc3LjcyOTUgMTAuMDY5MSA3OC4wODY4IDkuNzEyMDMgNzguNDc5MyA5LjQ2MjEyQzc4LjkwNzkgOS4yMTIxNyA3OS4zNzIgOS4wNjkzNCA3OS45MDc3IDkuMDY5MzRDODAuNDA3NSA5LjA2OTM0IDgwLjgzNiA5LjE3NjQ4IDgxLjE5MjkgOS4zOTA3QzgxLjU1MDEgOS42MDQ5MiA4MS44MzU4IDkuODkwNTYgODIuMDE0MyAxMC4yODMzVjkuMjEyMTdIODMuMDE0MVY5LjI0Nzg2Wk04MS40Nzg2IDEzLjc0NjdDODEuNzk5OCAxMy4zNTQgODEuOTc4NyAxMi44MTg0IDgxLjk3ODcgMTIuMTRDODEuOTc4NyAxMS40NjE2IDgxLjc5OTggMTAuOTI2IDgxLjQ3ODYgMTAuNTMzMkM4MS4xNTczIDEwLjE0MDUgODAuNjkzMSA5Ljk2MTk3IDgwLjA4NjIgOS45NjE5N0M3OS40NzkyIDkuOTYxOTcgNzkuMDE1MSAxMC4xNDA1IDc4LjY5MzggMTAuNTMzMkM3OC4zMzY1IDEwLjkyNiA3OC4xOTM3IDExLjQ2MTYgNzguMTkzNyAxMi4xNEM3OC4xOTM3IDEyLjgxODQgNzguMzcyNSAxMy4zNTQgNzguNjkzOCAxMy43NDY3Qzc5LjA1MDcgMTQuMTM5NSA3OS41MTQ4IDE0LjMxOCA4MC4wODYyIDE0LjMxOEM4MC42NTc1IDE0LjM1MzcgODEuMTIxNiAxNC4xMzk1IDgxLjQ3ODYgMTMuNzQ2N1oiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05MC4wNDkxIDEyLjQ2MTRIODUuNTUwM0M4NS41ODU5IDEzLjE3NTUgODUuNzY0NyAxMy43MTExIDg2LjEyMTYgMTQuMDY4MUM4Ni40Nzg1IDE0LjQyNTIgODYuOTc4NiAxNC42MDM3IDg3LjYyMTIgMTQuNjAzN0M4OC4zMzU0IDE0LjYwMzcgODguOTc4IDE0LjM1MzggODkuNTg1IDEzLjg1MzlMODkuOTQyMiAxNC42MDM3Qzg5LjY1NjYgMTQuODUzNiA4OS4zMzUzIDE1LjA2NzkgODguOTA2OCAxNS4yMTA3Qzg4LjQ3ODIgMTUuMzUzNSA4OC4wNDk3IDE1LjQyNDkgODcuNjIxMiAxNS40MjQ5Qzg2LjY1NzMgMTUuNDI0OSA4NS45MDc1IDE1LjEzOTIgODUuMzcxOCAxNC41NjhDODQuODM2MSAxMy45OTY3IDg0LjU1MDggMTMuMjExMiA4NC41NTA4IDEyLjI0NzJDODQuNTUwOCAxMS42MDQ1IDg0LjY1NzYgMTEuMDY4OSA4NC45MDc3IDEwLjU2OUM4NS4xNTc3IDEwLjA2OTIgODUuNDc5IDkuNzEyMTEgODUuOTQzMiA5LjQyNjQ3Qzg2LjM3MTcgOS4xNDA4IDg2Ljg3MTQgOS4wMzM2OSA4Ny40NDI4IDkuMDMzNjlDODguMjYzOCA5LjAzMzY5IDg4LjkwNjggOS4yODM2NCA4OS4zNzA5IDkuODE5MjJDODkuODM1IDEwLjM1NDggOTAuMDQ5MSAxMS4xMDQ2IDkwLjA0OTEgMTIuMDMyOVYxMi40NjE0Wk04Ni4xNTcyIDEwLjM5MDVDODUuODM1OSAxMC43MTE4IDg1LjY1NzUgMTEuMjExNyA4NS41ODU5IDExLjgxODdIODkuMTU2NEM4OS4xNTY0IDExLjIxMTcgODguOTc4IDEwLjcxMTggODguNjkyMyAxMC4zOTA1Qzg4LjQwNjYgMTAuMDY5MiA4Ny45NzgxIDkuODkwNjQgODcuNDQyOCA5Ljg5MDY0Qzg2LjkwNyA5Ljg5MDY0IDg2LjQ3ODUgMTAuMDY5MiA4Ni4xNTcyIDEwLjM5MDVaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOTEuMTU2MiAxNC42NzVMOTEuNTEzMiAxMy45MjUyQzkxLjgzNDggMTQuMTc1MiA5Mi4xOTE3IDE0LjM4OTQgOTIuNTEzIDE0LjQ5NjVDOTIuODY5OSAxNC42MDM2IDkzLjIyNzIgMTQuNjc1IDkzLjY1NTcgMTQuNjc1Qzk0LjExOTggMTQuNjc1IDk0LjQ0MTEgMTQuNjAzNiA5NC42OTEyIDE0LjQyNTFDOTQuOTQwOSAxNC4yODIzIDk1LjA0ODEgMTQuMDMyMyA5NS4wNDgxIDEzLjc0NjdDOTUuMDQ4MSAxMy40OTY4IDk0Ljk3NjggMTMuMzE4MiA5NC43OTggMTMuMTc1NEM5NC42NTUyIDEzLjAzMjYgOTQuMzY5NSAxMi45MjU1IDk0LjAxMjYgMTIuODE4NEw5Mi45NzcxIDEyLjU2ODRDOTIuNDQxOCAxMi40NjEzIDkyLjA0ODkgMTIuMjQ3MSA5MS43NjMyIDExLjk2MTVDOTEuNDc3NSAxMS42NzU4IDkxLjMzNDcgMTEuMzE4OCA5MS4zMzQ3IDEwLjg5MDNDOTEuMzM0NyAxMC4zNTQ3IDkxLjU0OTEgOS44OTA1NiA5MS45NzczIDkuNTY5MjNDOTIuNDA1OCA5LjI0Nzg2IDkyLjk3NzEgOS4wNjkzNCA5My42OTEzIDkuMDY5MzRDOTQuMTE5OCA5LjA2OTM0IDk0LjUxMjQgOS4xNDA3NSA5NC45MDUzIDkuMjgzNTlDOTUuMjk4MSA5LjQyNjM5IDk1LjYxOTQgOS42MDQ5MiA5NS44Njk1IDkuODkwNTZMOTUuNTEyMiAxMC42NDA0Qzk0Ljk0MDkgMTAuMTc2MiA5NC4zMzM5IDkuOTI2MjggOTMuNjU1NyA5LjkyNjI4QzkzLjIyNzIgOS45MjYyOCA5Mi45MDU5IDkuOTk3NyA5Mi42NTU4IDEwLjE3NjJDOTIuNDA1OCAxMC4zNTQ3IDkyLjI5ODkgMTAuNTY5IDkyLjI5ODkgMTAuODU0NkM5Mi4yOTg5IDExLjEwNDUgOTIuMzcwMiAxMS4yODMgOTIuNTEzIDExLjQyNTlDOTIuNjU1OSAxMS41Njg3IDkyLjkwNTkgMTEuNjc1OCA5My4yMjcyIDExLjc0NzJMOTQuMjYyNyAxMS45OTcyQzk0LjgzNCAxMi4xNCA5NS4yNjIyIDEyLjMxODUgOTUuNTQ3OCAxMi42MDQyQzk1LjgzMzUgMTIuODg5OCA5NS45NzY0IDEzLjI0NjkgOTUuOTc2NCAxMy42NzUzQzk1Ljk3NjQgMTQuMjEwOSA5NS43NjIzIDE0LjYzOTMgOTUuMzMzOCAxNC45NjA3Qzk0LjkwNTMgMTUuMjgyIDk0LjI5ODMgMTUuNDI0OCA5My41NDg1IDE1LjQyNDhDOTIuNTg0NiAxNS40NjA2IDkxLjc2MzIgMTUuMjEwNiA5MS4xNTYyIDE0LjY3NVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yMC4zMTY2IDkuMTQwMjNDMTkuNjAyNSA5LjE0MDIzIDE4Ljk1OTggOS4zOTAxOCAxOC41MzEzIDkuOTI1NzZIMTguNDk1NlY2LjkyNjUyQzE4LjQ5NTYgNi44OTA4MyAxOC40NTk5IDYuODU1MSAxOC40MjQyIDYuODU1MUgxNi44MTc1QzE2Ljc4MTggNi44NTUxIDE2Ljc0NjEgNi44OTA4MyAxNi43NDYxIDYuOTI2NTJWMTUuMzE3MkMxNi43NDYxIDE1LjM1MjkgMTYuNzgxOCAxNS4zODg2IDE2LjgxNzUgMTUuMzg4NkgxOC40MjQyQzE4LjQ1OTkgMTUuMzg4NiAxOC40OTU2IDE1LjM1MjkgMTguNDk1NiAxNS4zMTcyVjExLjQyNTRDMTguNDk1NiAxMC44MTg0IDE5LjA2NjkgMTAuNjA0MSAxOS4zODgyIDEwLjYwNDFDMTkuNzA5NiAxMC42MDQxIDIwLjIwOTUgMTAuNzQ3IDIwLjIwOTUgMTEuMjExMVYxNS4yODE1QzIwLjIwOTUgMTUuMzE3MiAyMC4yNDUyIDE1LjM1MjkgMjAuMjgwOSAxNS4zNTI5SDIxLjg4NzZDMjEuOTIzMyAxNS4zNTI5IDIxLjk1OSAxNS4zMTcyIDIxLjk1OSAxNS4yODE1VjExLjA2ODNDMjEuOTk0NyA5Ljk5NzE1IDIxLjU2NjMgOS4xNDAyMyAyMC4zMTY2IDkuMTQwMjNaTTI1LjYzNjYgOS4xNDAyM0MyMy40OTQzIDkuMTQwMjMgMjIuNzQ0NSAxMC4zODk5IDIyLjc0NDUgMTIuMzE4QzIyLjc0NDUgMTQuMjgxOCAyMy40OTQzIDE1LjQ5NTcgMjUuNjM2NiAxNS40OTU3QzI3Ljc3ODkgMTUuNDk1NyAyOC41NjQ1IDE0LjI4MTggMjguNTY0NSAxMi4zMThDMjguNTY0NSAxMC4zODk5IDI3LjgxNDcgOS4xNDAyMyAyNS42MzY2IDkuMTQwMjNaTTI1LjYzNjYgMTQuMDMxOEMyNC43Nzk3IDE0LjAzMTggMjQuNjM2OSAxMy4zODkxIDI0LjYzNjkgMTIuMzUzN0MyNC42MzY5IDExLjMxODMgMjQuNzc5NyAxMC42NzU2IDI1LjYzNjYgMTAuNjc1NkMyNi40OTM2IDEwLjY3NTYgMjYuNjM2NCAxMS4zMTgzIDI2LjYzNjQgMTIuMzUzN0MyNi42MzY0IDEzLjM4OTEgMjYuNDkzNiAxNC4wMzE4IDI1LjYzNjYgMTQuMDMxOFpNMzIuNjcwNSA5LjI4MzA3SDMxLjM4NTFWNy42NDA2M0MzMS4zODUxIDcuNjA0OTQgMzEuMzQ5NCA3LjU2OTIxIDMxLjMxMzcgNy41NjkyMUgzMC40NTY4QzMwLjQyMTEgNy41NjkyMSAzMC4zODU0IDcuNjA0OTQgMzAuMzg1NCA3LjYwNDk0QzMwLjM4NTQgNy42NDA2MyAyOS44NDk4IDkuMjQ3MzQgMjkuODQ5OCA5LjI0NzM0QzI5Ljg0OTggOS4yNDczNCAyOC44ODU4IDkuNTMyOTggMjguODUwMSA5LjUzMjk4QzI4LjgxNDQgOS41MzI5OCAyOC44MTQ0IDkuNTY4NzEgMjguODE0NCA5LjYwNDRWMTAuNjM5OEMyOC44MTQ0IDEwLjY3NTYgMjguODUwMSAxMC43MTEzIDI4Ljg4NTggMTAuNzExM0gyOS42MzU2VjEzLjYwMzRDMjkuNjM1NiAxNC42NzQ1IDMwLjE3MTIgMTUuNDYgMzEuNDkyMyAxNS40NkMzMi4wMjc4IDE1LjQ2IDMyLjI3NzggMTUuMzUyOSAzMi43NDE5IDE1LjE3NDRDMzIuNzQxOSAxNS4xNzQ0IDMyLjc3NzYgMTUuMTM4NyAzMi43Nzc2IDE1LjEwM1YxMy45MjQ3QzMyLjc3NzYgMTMuODg5IDMyLjc0MTkgMTMuODUzMyAzMi43MDYyIDEzLjg1MzNIMzEuOTU2NUMzMS41NjM3IDEzLjg1MzMgMzEuNDIwOSAxMy42NzQ4IDMxLjQyMDkgMTMuMzg5MVYxMC42NzU2SDMyLjcwNjJDMzIuNzQxOSAxMC42NzU2IDMyLjc3NzYgMTAuNjM5OCAzMi43Nzc2IDEwLjYwNDFWOS4yODMwN0MzMi43NDE5IDkuMzE4NzYgMzIuNzA2MyA5LjI4MzA3IDMyLjY3MDUgOS4yODMwN1pNNTcuODc4MSAxMC43NDdDNTcuOTE0MSAxMC43NDcgNTcuOTQ5NyAxMC43MTEzIDU3Ljk0OTcgMTAuNjc1NlY5LjM1NDQ5QzU3Ljk0OTcgOS4zMTg3NiA1Ny45MTQxIDkuMjgzMDcgNTcuODc4MSA5LjI4MzA3SDU2LjU5MjlWNy42NDA2M0M1Ni41OTI5IDcuNjA0OTQgNTYuNTU3MyA3LjU2OTIxIDU2LjUyMTMgNy41NjkyMUg1NS42NjQ3QzU1LjYyODcgNy41NjkyMSA1NS41OTMxIDcuNjA0OTQgNTUuNTkzMSA3LjYwNDk0QzU1LjU5MzEgNy42NDA2MyA1NS4wNTc3IDkuMjQ3MzQgNTUuMDU3NyA5LjI0NzM0QzU1LjA1NzcgOS4yNDczNCA1NC4wOTM1IDkuNTMyOTggNTQuMDU3OSA5LjUzMjk4QzU0LjAyMjIgOS41MzI5OCA1NC4wMjIyIDkuNTY4NzEgNTQuMDIyMiA5LjYwNDRWMTAuNjM5OEM1NC4wMjIyIDEwLjY3NTYgNTQuMDU3OSAxMC43MTEzIDU0LjA5MzUgMTAuNzExM0g1NC44NDMzVjEzLjYwMzRDNTQuODQzMyAxNC42NzQ1IDU1LjM3OSAxNS40NiA1Ni43MDAyIDE1LjQ2QzU3LjIzNTUgMTUuNDYgNTcuNDg1NiAxNS4zNTI5IDU3Ljk0OTcgMTUuMTc0NEM1Ny45NDk3IDE1LjE3NDQgNTcuOTg1MyAxNS4xMzg3IDU3Ljk4NTMgMTUuMTAzVjEzLjkyNDdDNTcuOTg1MyAxMy44ODkgNTcuOTQ5NyAxMy44NTMzIDU3LjkxNDEgMTMuODUzM0g1Ny4xNjQzQzU2Ljc3MTQgMTMuODUzMyA1Ni42Mjg2IDEzLjY3NDggNTYuNjI4NiAxMy4zODkxVjEwLjY3NTZINTcuODc4MVYxMC43NDdaTTUzLjE2NTIgOS4xNzU5NkM1Mi40ODY3IDkuMjExNjUgNTEuNjY1NiA5LjQ5NzI5IDUxLjI3MjcgMTAuMjgyOEM1MS4yNzI3IDEwLjI4MjggNTEuMDk0MyA5LjM5MDE4IDUxLjA5NDMgOS4zNTQ0OUM1MS4wOTQzIDkuMzE4NzYgNTEuMDU4NyA5LjI4MzA3IDUxLjAyMyA5LjI4MzA3SDQ5LjU5NDdDNDkuNTU5IDkuMjgzMDcgNDkuNTIzNCA5LjMxODc2IDQ5LjUyMzQgOS4zNTQ0OVYxNS4zMTcyQzQ5LjUyMzQgMTUuMzUyOSA0OS41NTkgMTUuMzg4NiA0OS41OTQ3IDE1LjM4ODZINTEuMjAxNUM1MS4yMzcxIDE1LjM4ODYgNTEuMjcyNyAxNS4zNTI5IDUxLjI3MjcgMTUuMzE3MlYxMS45NjA5QzUxLjI3MjcgMTEuNDI1NCA1MS42NjU2IDEwLjk2MTIgNTIuNzcyMyAxMC45NjEySDUzLjIwMDhDNTMuMjM2NSAxMC45NjEyIDUzLjI3MjQgMTAuOTI1NSA1My4yNzI0IDEwLjg4OThWOS4yNDczNEM1My4yNzI0IDkuMTc1OTYgNTMuMjM2NSA5LjE0MDIzIDUzLjE2NTIgOS4xNzU5NlpNNDYuMDI0MSA5LjE0MDIzQzQ1LjI3NDMgOS4xNDAyMyA0NC41MjQ1IDkuMjQ3MzQgNDMuNjY3OSA5LjQyNTg3QzQzLjYzMTkgOS40MjU4NyA0My41OTYzIDkuNDYxNiA0My41OTYzIDkuNDk3MjlWMTAuNjA0MUM0My41OTYzIDEwLjYzOTggNDMuNjMxOSAxMC42NzU2IDQzLjY2NzkgMTAuNjc1NkM0My43MDM1IDEwLjY3NTYgNDQuMzQ2MSAxMC42Mzk4IDQ0Ljk1MyAxMC42Mzk4QzQ2LjM4MTQgMTAuNjM5OCA0Ni43MzgzIDEwLjc0NyA0Ni43MzgzIDExLjI0NjhWMTEuNjM5Nkg0NS4yMzg3QzQ0LjM4MTcgMTEuNjM5NiA0My4yMDM0IDExLjk2MDkgNDMuMjAzNCAxMy41MzJDNDMuMjAzNCAxNC41Njc0IDQzLjgxMDMgMTUuNDYgNDQuOTUzIDE1LjQ2QzQ1LjYzMTYgMTUuNDYgNDYuMjAyNiAxNS4yODE1IDQ2LjYzMTEgMTQuNzQ1OUM0Ni42NjcxIDE0Ljg4ODcgNDYuNzczOSAxNS4yNDU4IDQ2Ljc3MzkgMTUuMjgxNUM0Ni43NzM5IDE1LjMxNzIgNDYuODA5NSAxNS4zNTI5IDQ2Ljg0NTUgMTUuMzUyOUg0OC4zODA3QzQ4LjQxNjQgMTUuMzUyOSA0OC40NTIgMTUuMzE3MiA0OC40NTIgMTUuMjgxNVYxMS4yMTExQzQ4LjQ4OCA5LjUzMjk4IDQ3LjU1OTMgOS4xNDAyMyA0Ni4wMjQxIDkuMTQwMjNaTTQ2LjczODMgMTMuMjEwNkM0Ni43MzgzIDEzLjk2MDQgNDYuMTMxMyAxNC4yMTA0IDQ1LjczODQgMTQuMjEwNEM0NS4zNDU5IDE0LjIxMDQgNDQuOTE3NCAxNC4wNjc1IDQ0LjkxNzQgMTMuNDk2MkM0NC45MTc0IDEyLjk2MDcgNDUuMjM4NyAxMi43NDY0IDQ1Ljc3NDQgMTIuNzQ2NEg0Ni43MzgzVjEzLjIxMDZaTTQwLjg0NzEgOS4xNDAyM0M0MC4xMzI5IDkuMTQwMjMgMzkuMzgzMSA5LjM5MDE4IDM4LjkxOSAxMC4xNEgzOC44ODM0QzM4LjY2ODkgOS41MzI5OCAzOC4yNDA0IDkuMTQwMjMgMzcuMzgzNCA5LjE0MDIzQzM2LjY2OTYgOS4xNDAyMyAzNi4wMjY2IDkuMzkwMTggMzUuNTk4NSA5LjkyNTc2SDM1LjU2MjVDMzUuNTYyNSA5LjkyNTc2IDM1LjM4NDEgOS4zNTQ0OSAzNS4zODQxIDkuMzE4NzZDMzUuMzg0MSA5LjI4MzA3IDM1LjM0ODQgOS4yODMwNyAzNS4zMTI4IDkuMjgzMDdIMzMuODQ4OEMzMy44MTMxIDkuMjgzMDcgMzMuNzc3NCA5LjMxODc2IDMzLjc3NzQgOS4zNTQ0OVYxNS4zMTcyQzMzLjc3NzQgMTUuMzUyOSAzMy44MTMxIDE1LjM4ODYgMzMuODQ4OCAxNS4zODg2SDM1LjQ1NTdDMzUuNDkxMyAxNS4zODg2IDM1LjUyNjkgMTUuMzUyOSAzNS41MjY5IDE1LjMxNzJWMTEuNDYxMUMzNS41MjY5IDEwLjg1NDEgMzYuMDk4MiAxMC42MDQxIDM2LjQxOTUgMTAuNjA0MUMzNi43NzY0IDEwLjYwNDEgMzcuMjQwOSAxMC43ODI3IDM3LjI0MDkgMTEuMjQ2OFYxNS4yODE1QzM3LjI0MDkgMTUuMzE3MiAzNy4yNzY1IDE1LjM1MjkgMzcuMzEyMiAxNS4zNTI5SDM4LjkxOUMzOC45NTQ2IDE1LjM1MjkgMzguOTkwMiAxNS4zMTcyIDM4Ljk5MDIgMTUuMjgxNVYxMS4zNTM5QzM5LjAyNTkgMTAuODE4NCAzOS41NjE2IDEwLjU2ODUgMzkuOTE4NSAxMC41Njg1QzQwLjI0MDEgMTAuNTY4NSA0MC42NjgzIDEwLjc0NyA0MC42NjgzIDExLjIxMTFWMTUuMjQ1OEM0MC42NjgzIDE1LjI4MTUgNDAuNzA0MyAxNS4zMTcyIDQwLjczOTkgMTUuMzE3Mkg0Mi4zNDY3QzQyLjM4MjMgMTUuMzE3MiA0Mi40MTc5IDE1LjI4MTUgNDIuNDE3OSAxNS4yNDU4VjExLjA2ODNDNDIuNTI1MiA5Ljk5NzE1IDQyLjA5NjcgOS4xNDAyMyA0MC44NDcxIDkuMTQwMjNaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTMuMzg5NCAxMS43MTEzQzEzLjQ2MDggMTAuMDY4OCAxMi44ODk1IDcuMzkwOTQgMTEuNDYxMyA1LjE3NzIzQzExLjQyNTYgNS4xMDU4MSAxMS4zNTQyIDUuMTQxNTQgMTEuMzg5OSA1LjIxMjkyQzExLjQ5NyA1LjUzNDI4IDExLjQ5NyA2LjE0MTI1IDEwLjk2MTUgNi4xMDU1NkMxMC4wMzMxIDYuMDM0MTQgMTAuOTYxNCA0LjAzNDY4IDguODkwNTQgMi42NDIxN0M4Ljg1NDg1IDIuNjA2NDcgOC43ODM0NCAyLjY0MjE3IDguODE5MTMgMi43MTM1OEM4Ljk2MTk2IDIuOTk5MjIgOS4wNjkwNyAzLjgyMDQzIDguNzEyMDIgNC4xMDYwNkM4LjQ2MjA3IDQuMzU2MDEgNy45NjIyMiA0LjI4NDU5IDcuNDk4MDUgMy41MzQ3OUM2LjcxMjU2IDIuMjg1MTIgNi45OTgyIDAuOTI4MzI5IDcuNDk4MDUgMC4wNzE0MDk2QzcuNTMzNzQgLTQuMTIwMjFlLTA3IDcuNDk4MDUgMCA3LjQyNjYzIDBDNC41NzAyNiAwLjk2NDAzNSA0LjAzNDY4IDQuMzIwMzIgMy40Mjc2OCA1LjU2OTk4QzMuMzIwNTcgNS43ODQyMyAzLjI0OTE2IDUuODkxMzQgMy4wNzA2NCA1Ljg5MTM0QzIuNTM1MDYgNS44NTU2MSAyLjkyNzgyIDQuNzQ4NzYgMy4xMDYzNCA0LjM1NjAxQzMuMTQyMDUgNC4yODQ1OSAzLjA3MDYzIDQuMjg0NTkgMy4wMzQ5MyA0LjMyMDMyQzEuNTcxMDIgNS44NTU2MSAwLjI4NTY0MiA4LjQ5NzggMC4wMzU3MDczIDEwLjkyNTdDMC4wMzU3MDczIDEwLjg1NDMgMC4wNzE0MTQ1IDEwLjgxODYgMC4wNzE0MTQ1IDEwLjc0NzJDMC4wMzU3MDk0IDEwLjkyNTcgMC4wMzU3MDUyIDExLjEwNDMgMCAxMS4zMTg1QzAgMTEuMzg5OSAwIDExLjQ2MTMgMCAxMS41MzI3QzAgMTEuNjA0MSAwIDExLjcxMTMgMCAxMS44MTg0QzAgMTUuNDk2IDIuOTk5MjIgMTguNDk1MiA2LjY3NjgzIDE4LjQ5NTJDMTAuMzU0NSAxOC40OTUyIDEzLjM1MzcgMTUuNDk2IDEzLjM1MzcgMTEuODE4NEMxMy4zODk0IDExLjc0NyAxMy4zODk0IDExLjc0NyAxMy4zODk0IDExLjcxMTNaTTYuNzEyNTYgMTQuODg5QzQuOTk4NyAxNC44ODkgMy42MDYyMSAxMy40OTY1IDMuNjA2MjEgMTEuNzgyNkMzLjYwNjIxIDEwLjA2ODggNC45OTg3IDguNjc2MzMgNi43MTI1NiA4LjY3NjMzQzguNDI2MzggOC42NzYzMyA5LjgxODg3IDEwLjA2ODggOS44MTg4NyAxMS43ODI2QzkuNzgzMTggMTMuNDk2NSA4LjQyNjM4IDE0Ljg4OSA2LjcxMjU2IDE0Ljg4OVoiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMl8xMTM0NyI+CjxyZWN0IHdpZHRoPSI5NiIgaGVpZ2h0PSIxOC41MTU4IiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo="
-              alt="Hotmart Pages Logo"
-              className="h-5"
-            />
-          </a>
+          {/* Seção Eduardo Furtado */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 mb-16 border border-white/20 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              {/* Imagem */}
+              <div className="flex justify-center">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-purple-500 rounded-2xl blur-xl opacity-50"></div>
+                  <img 
+                    src="https://static-media.hotmart.com/0FSDawAjHiwnoXmcwlLo-3e-yzk=/filters:quality(100):format(webp)/klickart-prod/uploads/media/file/4723172/photo_2022-03-14_09-49-33.jpg"
+                    alt="Eduardo Furtado"
+                    className="relative rounded-2xl shadow-2xl w-full max-w-md border-4 border-white/20"
+                  />
+                </div>
+              </div>
+
+              {/* Texto */}
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  Quem é<br />Eduardo Furtado?
+                </h2>
+                
+                <div className="inline-flex items-center gap-2 bg-red-500/20 backdrop-blur-md border-2 border-red-500/50 rounded-full px-4 py-2 mb-6">
+                  <span className="text-2xl">⭐</span>
+                  <span className="text-sm font-semibold text-red-300">
+                    Criador do Método Espião Invisível
+                  </span>
+                </div>
+
+                <div className="space-y-4 text-gray-300 leading-relaxed">
+                  <p>
+                    Eduardo Furtado é técnico especialista em celulares, com mais de 9 anos de experiência no ramo. 
+                    Ao longo de sua carreira, percebeu que muitos clientes não o procuravam apenas para consertos comuns, 
+                    mas sim para resolver uma dor muito mais profunda: descobrir se estavam sendo traídos pelos parceiros.
+                  </p>
+
+                  <p>
+                    Sensibilizado pela situação, Eduardo dedicou-se a encontrar uma solução eficiente, discreta e segura 
+                    para ajudar essas pessoas. Após muita pesquisa e testes rigorosos, desenvolveu o método "Espião Invisível", 
+                    que já ajudou mais de 2 mil pessoas a encontrarem respostas definitivas sobre seus relacionamentos, 
+                    sem correr riscos ou levantar suspeitas.
+                  </p>
+
+                  <p>
+                    Hoje, Eduardo Furtado é referência na área de monitoramento digital e ajuda diariamente pessoas a 
+                    recuperarem sua paz de espírito, autoestima e controle sobre suas vidas amorosas.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Moderno */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 mb-12 border border-white/20 shadow-2xl">
+            <h2 className="text-3xl font-bold text-white text-center mb-8">
+              ❓ Perguntas Frequentes
+            </h2>
+            
+            <div className="space-y-4">
+              {/* FAQ 1 */}
+              <details className="group bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                <summary className="cursor-pointer p-6 font-semibold text-white hover:bg-white/10 transition-colors">
+                  É realmente invisível? A pessoa não vai descobrir?
+                </summary>
+                <div className="p-6 pt-0 text-gray-300">
+                  Sim, o método é 100% invisível. A pessoa monitorada não receberá nenhuma notificação e não terá como descobrir que está sendo monitorada.
+                </div>
+              </details>
+
+              {/* FAQ 2 */}
+              <details className="group bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                <summary className="cursor-pointer p-6 font-semibold text-white hover:bg-white/10 transition-colors">
+                  Funciona em qualquer celular?
+                </summary>
+                <div className="p-6 pt-0 text-gray-300">
+                  Sim, o método funciona tanto em Android quanto em iPhone (iOS). O Eduardo ensina o passo a passo para ambos os sistemas.
+                </div>
+              </details>
+
+              {/* FAQ 3 */}
+              <details className="group bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                <summary className="cursor-pointer p-6 font-semibold text-white hover:bg-white/10 transition-colors">
+                  Preciso ter acesso físico ao celular?
+                </summary>
+                <div className="p-6 pt-0 text-gray-300">
+                  Sim, você precisará de acesso físico ao celular por alguns minutos para configurar o método. Depois disso, tudo funciona remotamente.
+                </div>
+              </details>
+
+              {/* FAQ 4 */}
+              <details className="group bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                <summary className="cursor-pointer p-6 font-semibold text-white hover:bg-white/10 transition-colors">
+                  Tem garantia?
+                </summary>
+                <div className="p-6 pt-0 text-gray-300">
+                  Sim! Você tem 7 dias de garantia incondicional. Se não gostar ou não funcionar para você, devolvemos 100% do seu dinheiro.
+                </div>
+              </details>
+
+              {/* FAQ 5 */}
+              <details className="group bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+                <summary className="cursor-pointer p-6 font-semibold text-white hover:bg-white/10 transition-colors">
+                  É difícil de configurar?
+                </summary>
+                <div className="p-6 pt-0 text-gray-300">
+                  Não! O Eduardo ensina tudo passo a passo em vídeo, de forma simples e didática. Qualquer pessoa consegue seguir as instruções.
+                </div>
+              </details>
+            </div>
+          </div>
+
+          {/* Botão de Checkout Final */}
+          <div className="text-center mb-12">
+            <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-lg rounded-3xl p-8 border border-yellow-500/30 mb-6">
+              <p className="text-yellow-300 font-bold text-2xl mb-4">
+                🎁 OFERTA ESPECIAL POR TEMPO LIMITADO
+              </p>
+              <p className="text-gray-300 mb-6">
+                Garanta seu acesso agora e descubra a verdade sobre seu relacionamento
+              </p>
+              <button
+                onClick={handleCheckout}
+                className="group relative bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white font-bold text-xl md:text-2xl px-12 py-6 rounded-full shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-green-500/50 animate-pulse"
+              >
+                <span className="relative z-10">🔓 QUERO TER ACESSO AGORA</span>
+                <div className="absolute inset-0 bg-white/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+              </button>
+              <p className="text-gray-400 text-sm mt-4">
+                ✅ Acesso imediato após a compra • 🔒 Pagamento 100% seguro • 🛡️ Garantia de 7 dias
+              </p>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center py-8 border-t border-white/10">
+            <a 
+              href="https://hotmart.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-gray-300 transition"
+            >
+              <span className="text-sm">Feito com</span>
+              <img 
+                src="https://static.hotmart.com/img/hotmart-logo-white.svg"
+                alt="Hotmart"
+                className="h-5"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </div>
