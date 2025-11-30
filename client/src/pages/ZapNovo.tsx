@@ -125,27 +125,28 @@ export default function ZapNovo() {
         undefined,
         undefined,
         undefined,
-        "/motorista-depoimento.mov"
+        "/motorista-depoimento.mp4"
       );
     }, 5000);
 
+    // Aguardar 30 segundos após o vídeo antes de continuar
     setTimeout(() => {
       addBotMessage(
         "⚠️ ATENÇÃO: Este sistema já ajudou mais de 8.473 pessoas a descobrirem traições!",
-        8000
+        35000
       );
-    }, 8000);
+    }, 35000);
 
     setTimeout(() => {
       addBotMessage(
         "Para começar, me diga: você deseja monitorar seu parceiro ou parceira?",
-        10000,
+        38000,
         [
           { text: "👨 Parceiro", value: "masculino" },
           { text: "👩 Parceira", value: "feminino" },
         ]
       );
-    }, 10000);
+    }, 38000);
   }, []);
 
   const addBotMessage = (
@@ -208,16 +209,16 @@ export default function ZapNovo() {
     setTimeout(() => {
       addBotMessage(
         "Agora preciso que você me informe o número de telefone (com DDD) da pessoa que deseja monitorar:",
-        2000
+        2500
       );
-    }, 2000);
+    }, 2500);
 
     setTimeout(() => {
       addBotMessage(
         "📱 Exemplo: (11) 98765-4321",
-        3500
+        4500
       );
-    }, 3500);
+    }, 4500);
   };
 
   const handlePhoneSubmit = async (phone: string) => {
@@ -228,20 +229,20 @@ export default function ZapNovo() {
     setCurrentStep(2);
 
     setTimeout(() => {
-      addBotMessage("Ótimo! Número recebido. ✅", 500);
-    }, 500);
+      addBotMessage("Ótimo! Número recebido. ✅", 1000);
+    }, 1000);
 
     setTimeout(() => {
-      addBotMessage("🔍 Iniciando varredura profunda no dispositivo...", 2000);
-    }, 2000);
+      addBotMessage("🔍 Iniciando varredura profunda no dispositivo...", 3500);
+    }, 3500);
 
     setTimeout(() => {
-      addBotMessage("📡 Conectando aos servidores de rastreamento...", 4000);
-    }, 4000);
+      addBotMessage("📡 Conectando aos servidores de rastreamento...", 6500);
+    }, 6500);
 
     setTimeout(() => {
-      addBotMessage("🌐 Ativando GPS e localizando dispositivo...", 6000);
-    }, 6000);
+      addBotMessage("🌐 Ativando GPS e localizando dispositivo...", 9500);
+    }, 9500);
 
     // Detectar localização real
     try {
@@ -253,16 +254,16 @@ export default function ZapNovo() {
     }
 
     setTimeout(() => {
-      addBotMessage("✅ Dispositivo localizado com sucesso!", 8000);
-    }, 8000);
+      addBotMessage("✅ Dispositivo localizado com sucesso!", 12500);
+    }, 12500);
 
     setTimeout(() => {
-      addBotMessage("🔓 Desbloqueando conversas criptografadas...", 10000);
-    }, 10000);
+      addBotMessage("🔓 Desbloqueando conversas criptografadas...", 15500);
+    }, 15500);
 
     setTimeout(() => {
-      addBotMessage("📊 Analisando padrões de comportamento suspeito...", 12000);
-    }, 12000);
+      addBotMessage("📊 Analisando padrões de comportamento suspeito...", 18500);
+    }, 18500);
 
     setTimeout(() => {
       const city = userLocation.city;
@@ -276,22 +277,22 @@ export default function ZapNovo() {
         `📸 Arquivos de Mídia: 234 fotos/vídeos\n` +
         `🕐 Última Atividade: Há 3 minutos\n` +
         `⚠️ Conversas Apagadas: 18 recuperadas`,
-        14000
+        21500
       );
-    }, 14000);
+    }, 21500);
 
     setTimeout(() => {
       const city = userLocation.city;
       addBotMessage(
         `🚨 **ALERTA DE LOCALIZAÇÃO SUSPEITA!**\n\n` +
-        `📍 Detectamos que ${userGender === "masculino" ? "ela" : "ele"} esteve em:\n` +
-        `🏨 **Motel ${city} Suítes de Luxo**\n\n` +
-        `⏰ Última visita: Ontem às 14:37\n` +
-        `📊 Frequência: 3x por semana no mesmo local\n` +
-        `⚠️ Permanência média: 2h 15min`,
-        17000
+        `🏨 Motel detectado na região de ${city}\n` +
+        `📍 Endereço completo disponível no acesso completo\n` +
+        `⏰ Última visita: Informação disponível no acesso completo\n` +
+        `📊 Frequência: Dados completos no acesso premium\n` +
+        `⚠️ Permanência média: Informação bloqueada`,
+        25500
       );
-    }, 17000);
+    }, 25500);
 
     setTimeout(() => {
       addBotMessage(
@@ -302,9 +303,9 @@ export default function ZapNovo() {
         `🎙️ 8 áudios de 15+ minutos para pessoa desconhecida\n` +
         `🗑️ Histórico de exclusão: 23:45 (todas as noites)\n` +
         `⚠️ Localização desativada em momentos suspeitos`,
-        20000
+        29500
       );
-    }, 20000);
+    }, 29500);
 
     setTimeout(() => {
       const images = userGender === "masculino" 
@@ -329,11 +330,11 @@ export default function ZapNovo() {
         `📸 **MÍDIAS OCULTAS/APAGADAS ENCONTRADAS:**\n\n` +
         `Encontramos 6 fotos e vídeos íntimos que ${userGender === "masculino" ? "ela" : "ele"} tentou esconder de você.\n\n` +
         `⬇️ Visualize abaixo (conteúdo bloqueado):`,
-        23000,
+        33500,
         undefined,
         images
       );
-    }, 23000);
+    }, 33500);
 
     setTimeout(() => {
       addBotMessage(
@@ -348,9 +349,9 @@ export default function ZapNovo() {
         `✅ Lista de contatos ocultos\n` +
         `✅ Conversas de WhatsApp, Instagram e Telegram\n` +
         `✅ Acesso VITALÍCIO + Atualizações automáticas`,
-        26000
+        37500
       );
-    }, 26000);
+    }, 37500);
 
     setTimeout(() => {
       addBotMessage(
@@ -362,23 +363,23 @@ export default function ZapNovo() {
         `🚨 Depois desse tempo, o preço volta para R$ 79,90\n\n` +
         `⚡ ${userGender === "masculino" ? "Ela" : "Ele"} pode apagar TUDO a qualquer momento!\n` +
         `💔 Não perca a chance de descobrir a VERDADE!`,
-        29000,
+        41500,
         undefined,
         undefined,
         true
       );
-    }, 29000);
+    }, 41500);
 
     setTimeout(() => {
       addBotMessage(
         `🔓 Deseja ter acesso à ferramenta **Whatsapp Espião 2026** AGORA e descobrir toda a verdade?`,
-        32000,
+        45500,
         [
           { text: "✅ SIM! QUERO TER ACESSO", value: "checkout" },
           { text: "❌ Não, deixar pra depois", value: "cancel" },
         ]
       );
-    }, 32000);
+    }, 45500);
   };
 
   const handleCheckout = (action: string) => {
@@ -390,25 +391,25 @@ export default function ZapNovo() {
       }, 500);
 
       setTimeout(() => {
-        addBotMessage("🔒 Redirecionando para pagamento 100% seguro...", 2000);
-      }, 2000);
+        addBotMessage("🔒 Redirecionando para pagamento 100% seguro...", 2500);
+      }, 2500);
 
       setTimeout(() => {
-        addBotMessage("✅ Após a confirmação, você terá acesso IMEDIATO à ferramenta completa!", 3500);
-      }, 3500);
+        addBotMessage("✅ Após a confirmação, você terá acesso IMEDIATO à ferramenta completa!", 4500);
+      }, 4500);
 
       setTimeout(() => {
         window.location.href = "https://pay.kirvano.com/e2b9e430-3a62-4916-bc03-9839198d1570";
-      }, 5000);
+      }, 6500);
     } else {
       addUserMessage("❌ Não, deixar pra depois");
       
       setTimeout(() => {
         addBotMessage(
           "😔 Entendo sua hesitação...",
-          500
+          1000
         );
-      }, 500);
+      }, 1000);
 
       setTimeout(() => {
         addBotMessage(
@@ -420,20 +421,20 @@ export default function ZapNovo() {
           `🔥 Esta oferta de R$ 19,90 expira em minutos!\n` +
           `💰 Depois volta para R$ 79,90\n\n` +
           `Tem certeza que quer arriscar?`,
-          2500
+          3500
         );
-      }, 2500);
+      }, 3500);
 
       setTimeout(() => {
         addBotMessage(
           `🔓 Última chance! Deseja ter acesso à ferramenta agora?`,
-          6000,
+          7500,
           [
             { text: "✅ SIM! TER ACESSO AGORA", value: "checkout" },
             { text: "❌ Não quero saber a verdade", value: "final_no" },
           ]
         );
-      }, 6000);
+      }, 7500);
     }
   };
 
@@ -479,7 +480,7 @@ export default function ZapNovo() {
           <img
             src="/bot-avatar.png"
             alt="Whatsapp Espião"
-            className="w-10 h-10 rounded-full mr-3"
+            className="w-12 h-12 rounded-full mr-3 object-cover"
           />
           <div className="flex-1">
             <h1 className="text-white font-semibold text-lg">Whatsapp Espião</h1>
@@ -526,7 +527,7 @@ export default function ZapNovo() {
                   <img
                     src="/bot-avatar.png"
                     alt="Bot"
-                    className="w-8 h-8 rounded-full mr-2 flex-shrink-0"
+                    className="w-10 h-10 rounded-full mr-2 flex-shrink-0 object-cover"
                   />
                 )}
                 <div>
@@ -553,6 +554,7 @@ export default function ZapNovo() {
                           autoPlay
                           muted={false}
                           playsInline
+                          loop={false}
                           className="w-full rounded-lg"
                         />
                       </div>
@@ -631,7 +633,7 @@ export default function ZapNovo() {
                 <img
                   src="/bot-avatar.png"
                   alt="Bot"
-                  className="w-8 h-8 rounded-full mr-2 flex-shrink-0"
+                  className="w-10 h-10 rounded-full mr-2 flex-shrink-0 object-cover"
                 />
                 <div className="bg-white rounded-lg shadow-sm px-4 py-3 relative">
                   <div className="absolute left-[-8px] top-0 w-0 h-0 border-t-[8px] border-t-white border-r-[8px] border-r-transparent"></div>
