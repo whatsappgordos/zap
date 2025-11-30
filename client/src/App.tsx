@@ -11,6 +11,7 @@ import Relatorio from "./pages/Relatorio";
 import RelatorioFeminino from "./pages/RelatorioFeminino";
 import { Monitor } from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
+import ZapNovo from "./pages/ZapNovo";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       <Route path={"/relatorio-feminino"} component={RelatorioFeminino} />
       <Route path={"/monitor"} component={Monitor} />
       <Route path={"/invisivel"} component={Invisivel} />
+      <Route path={"/zapnovo"} component={ZapNovo} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
