@@ -9,6 +9,7 @@ interface Message {
   buttons?: { text: string; value: string }[];
   images?: string[];
   showTimer?: boolean;
+  video?: string;
 }
 
 interface Notification {
@@ -29,6 +30,7 @@ export default function ZapNovo() {
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutos em segundos
   const [showTimer, setShowTimer] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,6 +39,20 @@ export default function ZapNovo() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  // Auto-play videos quando aparecem
+  useEffect(() => {
+    messages.forEach((msg) => {
+      if (msg.video && videoRefs.current[msg.id]) {
+        const video = videoRefs.current[msg.id];
+        if (video) {
+          video.play().catch((error) => {
+            console.log("Autoplay bloqueado:", error);
+          });
+        }
+      }
+    });
+  }, [messages]);
 
   // Timer countdown
   useEffect(() => {
@@ -60,12 +76,12 @@ export default function ZapNovo() {
     const names = ["Maria", "João", "Ana", "Carlos", "Juliana", "Pedro", "Fernanda", "Lucas"];
     const cities = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Brasília", "Salvador", "Curitiba", "Fortaleza"];
     const actions = [
-      "acabou de liberar o acesso",
-      "está visualizando agora",
+      "acabou de ter acesso à ferramenta",
+      "está usando agora",
       "descobriu 23 conversas ocultas",
-      "desbloqueou as fotos",
-      "acessou o relatório completo",
-      "confirmou a traição"
+      "confirmou a traição",
+      "acessou o sistema completo",
+      "desbloqueou todas as conversas"
     ];
 
     const showNotification = () => {
@@ -92,33 +108,44 @@ export default function ZapNovo() {
   useEffect(() => {
     // Primeira mensagem de boas-vindas
     setTimeout(() => {
-      addBotMessage("Olá! Seja bem-vindo(a) ao Sistema WhatSpy 🔎🔧", 1000);
+      addBotMessage("Olá! Seja bem-vindo à ferramenta **Whatsapp Espião 2026** 🔎🔧", 1000);
     }, 500);
 
     setTimeout(() => {
       addBotMessage(
-        "Eu sou o assistente virtual e vou te ajudar a descobrir TUDO sobre o WhatsApp da pessoa que você desconfia.",
-        2500
+        "Antes de iniciar, veja o relato desse motorista de Uber que usou nossa ferramenta, indicado pelo nosso usuário Thiago!",
+        3000
       );
-    }, 2000);
+    }, 2500);
+
+    setTimeout(() => {
+      addBotMessage(
+        "🎥 Graças à nossa ferramenta, o motorista conseguiu se livrar de um relacionamento tóxico e cheio de traições:",
+        5000,
+        undefined,
+        undefined,
+        undefined,
+        "/motorista-depoimento.mov"
+      );
+    }, 5000);
 
     setTimeout(() => {
       addBotMessage(
         "⚠️ ATENÇÃO: Este sistema já ajudou mais de 8.473 pessoas a descobrirem traições!",
-        4000
+        8000
       );
-    }, 4500);
+    }, 8000);
 
     setTimeout(() => {
       addBotMessage(
         "Para começar, me diga: você deseja monitorar seu parceiro ou parceira?",
-        6000,
+        10000,
         [
           { text: "👨 Parceiro", value: "masculino" },
           { text: "👩 Parceira", value: "feminino" },
         ]
       );
-    }, 6500);
+    }, 10000);
   }, []);
 
   const addBotMessage = (
@@ -126,7 +153,8 @@ export default function ZapNovo() {
     delay: number = 0,
     buttons?: { text: string; value: string }[],
     images?: string[],
-    showTimer?: boolean
+    showTimer?: boolean,
+    video?: string
   ) => {
     setTimeout(() => {
       setIsTyping(true);
@@ -144,6 +172,7 @@ export default function ZapNovo() {
             buttons,
             images,
             showTimer,
+            video,
           },
         ]);
         if (showTimer) {
@@ -310,7 +339,7 @@ export default function ZapNovo() {
       addBotMessage(
         `⚠️ **ATENÇÃO: INFORMAÇÃO CRÍTICA!**\n\n` +
         `O que você acabou de ver é apenas uma PEQUENA AMOSTRA.\n\n` +
-        `No relatório completo você terá acesso a:\n\n` +
+        `Para ter acesso completo à ferramenta **Whatsapp Espião 2026**, você terá:\n\n` +
         `✅ Todas as 47 conversas completas (incluindo apagadas)\n` +
         `✅ 234 fotos e vídeos SEM CENSURA\n` +
         `✅ Todos os áudios e chamadas gravadas\n` +
@@ -342,10 +371,10 @@ export default function ZapNovo() {
 
     setTimeout(() => {
       addBotMessage(
-        `🔓 Deseja liberar o acesso completo AGORA e descobrir toda a verdade?`,
+        `🔓 Deseja ter acesso à ferramenta **Whatsapp Espião 2026** AGORA e descobrir toda a verdade?`,
         32000,
         [
-          { text: "✅ SIM! QUERO DESCOBRIR TUDO", value: "checkout" },
+          { text: "✅ SIM! QUERO TER ACESSO", value: "checkout" },
           { text: "❌ Não, deixar pra depois", value: "cancel" },
         ]
       );
@@ -354,7 +383,7 @@ export default function ZapNovo() {
 
   const handleCheckout = (action: string) => {
     if (action === "checkout") {
-      addUserMessage("✅ SIM! QUERO DESCOBRIR TUDO");
+      addUserMessage("✅ SIM! QUERO TER ACESSO");
       
       setTimeout(() => {
         addBotMessage("🎉 Perfeito! Você tomou a decisão certa!", 500);
@@ -365,7 +394,7 @@ export default function ZapNovo() {
       }, 2000);
 
       setTimeout(() => {
-        addBotMessage("✅ Após a confirmação, você terá acesso IMEDIATO a tudo!", 3500);
+        addBotMessage("✅ Após a confirmação, você terá acesso IMEDIATO à ferramenta completa!", 3500);
       }, 3500);
 
       setTimeout(() => {
@@ -397,10 +426,10 @@ export default function ZapNovo() {
 
       setTimeout(() => {
         addBotMessage(
-          `🔓 Última chance! Deseja garantir seu acesso agora?`,
+          `🔓 Última chance! Deseja ter acesso à ferramenta agora?`,
           6000,
           [
-            { text: "✅ SIM! LIBERAR AGORA", value: "checkout" },
+            { text: "✅ SIM! TER ACESSO AGORA", value: "checkout" },
             { text: "❌ Não quero saber a verdade", value: "final_no" },
           ]
         );
@@ -448,12 +477,12 @@ export default function ZapNovo() {
         
         <div className="flex items-center flex-1">
           <img
-            src="https://ui-avatars.com/api/?name=WhatSpy&background=25D366&color=fff&bold=true"
-            alt="WhatSpy"
+            src="/bot-avatar.png"
+            alt="Whatsapp Espião"
             className="w-10 h-10 rounded-full mr-3"
           />
           <div className="flex-1">
-            <h1 className="text-white font-semibold text-lg">WhatSpy Pro</h1>
+            <h1 className="text-white font-semibold text-lg">Whatsapp Espião</h1>
             {isTyping && <p className="text-white text-xs opacity-80">digitando...</p>}
           </div>
         </div>
@@ -495,7 +524,7 @@ export default function ZapNovo() {
               <div className={`flex items-start max-w-[85%] ${msg.isBot ? "" : "flex-row-reverse"}`}>
                 {msg.isBot && (
                   <img
-                    src="https://ui-avatars.com/api/?name=WhatSpy&background=25D366&color=fff&bold=true"
+                    src="/bot-avatar.png"
                     alt="Bot"
                     className="w-8 h-8 rounded-full mr-2 flex-shrink-0"
                   />
@@ -511,6 +540,23 @@ export default function ZapNovo() {
                     <p className="text-gray-800 text-[15px] leading-relaxed whitespace-pre-wrap">
                       {msg.text}
                     </p>
+                    
+                    {/* Vídeo de Depoimento */}
+                    {msg.video && (
+                      <div className="mt-3">
+                        <video
+                          ref={(el) => {
+                            if (el) videoRefs.current[msg.id] = el;
+                          }}
+                          src={msg.video}
+                          controls
+                          autoPlay
+                          muted={false}
+                          playsInline
+                          className="w-full rounded-lg"
+                        />
+                      </div>
+                    )}
                     
                     {/* Timer de Promoção */}
                     {msg.showTimer && showTimer && (
@@ -583,7 +629,7 @@ export default function ZapNovo() {
             <div className="flex mb-4">
               <div className="flex items-start max-w-[70%]">
                 <img
-                  src="https://ui-avatars.com/api/?name=WhatSpy&background=25D366&color=fff&bold=true"
+                  src="/bot-avatar.png"
                   alt="Bot"
                   className="w-8 h-8 rounded-full mr-2 flex-shrink-0"
                 />
