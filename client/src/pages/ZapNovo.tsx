@@ -129,24 +129,24 @@ export default function ZapNovo() {
       );
     }, 5000);
 
-    // Aguardar 30 segundos após o vídeo antes de continuar
+    // Aguardar 15 segundos após o vídeo antes de continuar
     setTimeout(() => {
       addBotMessage(
         "⚠️ ATENÇÃO: Este sistema já ajudou mais de 8.473 pessoas a descobrirem traições!",
-        35000
+        20000
       );
-    }, 35000);
+    }, 20000);
 
     setTimeout(() => {
       addBotMessage(
         "Para começar, me diga: você deseja monitorar seu parceiro ou parceira?",
-        38000,
+        23000,
         [
           { text: "👨 Parceiro", value: "masculino" },
           { text: "👩 Parceira", value: "feminino" },
         ]
       );
-    }, 38000);
+    }, 23000);
   }, []);
 
   const addBotMessage = (
