@@ -57,44 +57,10 @@ export default function Invisivel() {
 
         {/* Container Principal */}
         <div className="max-w-6xl mx-auto px-4 py-8">
-          {/* Título Principal com Glassmorphism */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-white/20 shadow-2xl">
-            <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-center text-white mb-4 leading-tight">
-              Descubra se está sendo{" "}
-              <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-transparent bg-clip-text">
-                traído(a)
-              </span>{" "}
-              com um app 100% invisível
-            </h1>
-            <p className="text-center text-gray-300 text-lg max-w-3xl mx-auto">
-              Método comprovado por mais de 2 mil pessoas que recuperaram sua paz de espírito
-            </p>
-          </div>
+
 
           <div className="mb-8 bg-white/5 backdrop-blur-lg rounded-3xl p-4 border border-white/10 shadow-2xl">
-            <style dangerouslySetInnerHTML={{__html: `
-              vturb-smartplayer [data-smartplayer-headline],
-              vturb-smartplayer .smartplayer-headline,
-              vturb-smartplayer h1,
-              vturb-smartplayer h2,
-              vturb-smartplayer h3,
-              vturb-smartplayer [class*=headline],
-              vturb-smartplayer [class*=title],
-              vturb-smartplayer [id*=headline],
-              vturb-smartplayer [id*=title],
-              vturb-smartplayer div[style*=font-size][style*=font-weight],
-              #vid-691cfcf549412e64e11b14a6 h1,
-              #vid-691cfcf549412e64e11b14a6 h2,
-              #vid-691cfcf549412e64e11b14a6 h3,
-              #vid-691cfcf549412e64e11b14a6 [class*=headline],
-              #vid-691cfcf549412e64e11b14a6 [class*=title] {
-                display: none !important;
-                visibility: hidden !important;
-                opacity: 0 !important;
-                height: 0 !important;
-                overflow: hidden !important;
-              }
-            `}} />
+
             <vturb-smartplayer 
               id="vid-691cfcf549412e64e11b14a6" 
               style={{ 
