@@ -25,24 +25,7 @@ export default function Invisivel() {
       utms1.setAttribute("defer", "");
       document.head.appendChild(utms1);
 
-      // Pixel 2
-      setTimeout(() => {
-        window.pixelId = "692b7dfa7ea9d3ffa76a2269";
-        const pixel2 = document.createElement("script");
-        pixel2.setAttribute("async", "");
-        pixel2.setAttribute("defer", "");
-        pixel2.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-        document.head.appendChild(pixel2);
-      }, 100);
 
-      // UTMs 2
-      const utms2 = document.createElement("script");
-      utms2.setAttribute("src", "https://cdn.utmify.com.br/scripts/utms/latest.js");
-      utms2.setAttribute("data-utmify-prevent-xcod-sck", "");
-      utms2.setAttribute("data-utmify-prevent-subids", "");
-      utms2.setAttribute("async", "");
-      utms2.setAttribute("defer", "");
-      document.head.appendChild(utms2);
     };
 
     loadPixels();
