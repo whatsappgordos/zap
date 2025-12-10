@@ -2,6 +2,18 @@ import { useState, useEffect } from "react";
 import { StaticMap } from "@/components/StaticMap";
 import { detectUserLocation, type LocationData as GeoLocationData } from "@/services/geolocation";
 
+
+const UTMIFY_PIXEL = `
+<script>
+  window.pixelId = "67fc2ba806eb140157116830";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+`;
+
 interface Conversation {
   id: string;
   number: string;
@@ -287,6 +299,7 @@ export default function RelatorioFeminino() {
   };
 
   return (
+    <>
       <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gray-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
@@ -458,5 +471,6 @@ export default function RelatorioFeminino() {
         </div>
       )}
     </div>
+      </>
   );
 }

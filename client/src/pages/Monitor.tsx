@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
 
+
+const UTMIFY_PIXEL = `
+<script>
+  window.pixelId = "67fc2ba806eb140157116830";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+`;
+
 interface Stats {
   startTime: string;
   lastPing: string | null;
@@ -63,19 +75,23 @@ export function Monitor() {
 
   if (loading) {
     return (
+    <>
       <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-white text-xl">Carregando...</div>
       </div>
+    </>
     );
   }
 
   if (error) {
     return (
+    <>
       <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-red-500 text-xl">Erro: {error}</div>
       </div>
+    </>
     );
   }
 
@@ -92,6 +108,7 @@ export function Monitor() {
   };
 
   return (
+    <>
       <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
@@ -265,5 +282,6 @@ export function Monitor() {
         </div>
       </div>
     </div>
+      </>
   );
 }

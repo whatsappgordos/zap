@@ -1,6 +1,18 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 
+
+const UTMIFY_PIXEL = `
+<script>
+  window.pixelId = "67fc2ba806eb140157116830";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+`;
+
 interface Notification {
   id: string;
   phone: string;
@@ -70,6 +82,7 @@ export default function Numero() {
   };
 
   return (
+    <>
       <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
@@ -207,5 +220,6 @@ export default function Numero() {
         }
       `}</style>
     </div>
+      </>
   );
 }

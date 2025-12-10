@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
-const UTMIFY_PIXEL = \`
+const UTMIFY_PIXEL = `
 <script>
   window.pixelId = "67fc2ba806eb140157116830";
   var a = document.createElement("script");
@@ -9,12 +9,11 @@ const UTMIFY_PIXEL = \`
   a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
   document.head.appendChild(a);
 </script>
-\`;
+`;
 import { useLocation } from "wouter";
 import { detectUserLocation } from "@/services/geolocation";
 
 export default function Carregando() {
-  const [, setLocation] = useLocation();
   const [, setLocation] = useLocation();
   const [progress, setProgress] = useState(0);
   const [logs, setLogs] = useState<Array<{ text: string; class?: string }>>([]);
@@ -120,11 +119,11 @@ export default function Carregando() {
 
 
   return (
+    <>
       <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 py-4 px-4">
+      <div className="min-h-screen bg-gray-100 flex flex-col">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 py-4 px-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <button className="p-2 hover:bg-gray-100 rounded transition">
             <svg className="w-6 h-6 text-gray-800" viewBox="0 0 24 24" fill="currentColor">
@@ -306,6 +305,7 @@ export default function Carregando() {
           animation: fadeIn 0.5s ease-out;
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }
