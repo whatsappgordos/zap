@@ -246,7 +246,7 @@ export default function Carregando() {
                 if (selectedProfile === "female") {
                   setLocation("/relatorio-feminino");
                 } else {
-                  setLocation("/relatorio");
+                  setLocation("/relatorio/index.html");
                 }
               }}
               className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition border-2 border-black"
