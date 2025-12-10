@@ -10,6 +10,7 @@ export default function Index() {
   };
 
   return (
+      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-gray-50 border-b border-gray-200 py-4 px-4">

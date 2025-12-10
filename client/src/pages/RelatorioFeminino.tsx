@@ -287,6 +287,7 @@ export default function RelatorioFeminino() {
   };
 
   return (
+      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gray-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}

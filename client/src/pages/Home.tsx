@@ -14,6 +14,7 @@ export default function Home() {
   // Use APP_LOGO (as image src) and APP_TITLE if needed
 
   return (
+      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen flex flex-col">
       <main>
         {/* Example: lucide-react for icons */}

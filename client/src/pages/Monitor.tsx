@@ -63,6 +63,7 @@ export function Monitor() {
 
   if (loading) {
     return (
+      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-white text-xl">Carregando...</div>
       </div>
@@ -71,6 +72,7 @@ export function Monitor() {
 
   if (error) {
     return (
+      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-red-500 text-xl">Erro: {error}</div>
       </div>
@@ -90,6 +92,7 @@ export function Monitor() {
   };
 
   return (
+      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
