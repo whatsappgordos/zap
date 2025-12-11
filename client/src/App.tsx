@@ -17,8 +17,8 @@ import ZapNovo from "./pages/ZapNovo";
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Index} />
-      <Route path={"/zapnovo"} component={ZapNovo} />
+      <Route path={"/"} component={ZapNovo} />
+      
       <Route path={"/numero"} component={Numero} />
       <Route path={"/carregando"} component={Carregando} />
       <Route path={"/relatorio"} component={Relatorio} />
