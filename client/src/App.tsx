@@ -4,7 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Index from "./pages/Index";
+
 import Numero from "./pages/Numero";
 import Carregando from "./pages/Carregando";
 import Relatorio from "./pages/Relatorio";
@@ -16,14 +16,14 @@ import ZapNovo from "./pages/ZapNovo";
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Index} />
+      <Route path={"/"} component={ZapNovo} />
       <Route path={"/numero"} component={Numero} />
       <Route path={"/carregando"} component={Carregando} />
       <Route path={"/relatorio"} component={Relatorio} />
       <Route path={"/relatorio-feminino"} component={RelatorioFeminino} />
       <Route path={"/monitor"} component={Monitor} />
       <Route path={"/invisivel"} component={Invisivel} />
-      <Route path={"/zapnovo"} component={ZapNovo} />
+      
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
