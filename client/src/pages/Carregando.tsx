@@ -242,11 +242,7 @@ export default function Carregando() {
             <button
               onClick={() => {
                 const selectedProfile = localStorage.getItem("selectedProfile");
-                if (selectedProfile === "female") {
-                  window.location.href = "/relatorio-feminino";
-                } else {
-                  window.location.href = "/relatorio/index.html";
-                }
+window.location.href = "/relatorio/index.html";
               }}
               className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition border-2 border-black"
             >
