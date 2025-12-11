@@ -12,7 +12,7 @@ import RelatorioFeminino from "./pages/RelatorioFeminino";
 import { Monitor } from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
 import Index from "./pages/Index";
-import ZapNovo from "./pages/ZapNovo";
+
 
 function Router() {
   return (
