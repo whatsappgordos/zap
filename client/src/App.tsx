@@ -11,13 +11,13 @@ import Relatorio from "./pages/Relatorio";
 import RelatorioFeminino from "./pages/RelatorioFeminino";
 import { Monitor } from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
-import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
 
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Index} />
+      <Route path={"/"} component={LandingPage} />
       
       <Route path={"/numero"} component={Numero} />
       <Route path={"/carregando"} component={Carregando} />
