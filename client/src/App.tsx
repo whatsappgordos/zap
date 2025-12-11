@@ -11,12 +11,14 @@ import Relatorio from "./pages/Relatorio";
 import RelatorioFeminino from "./pages/RelatorioFeminino";
 import { Monitor } from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
+import Index from "./pages/Index";
 import ZapNovo from "./pages/ZapNovo";
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={ZapNovo} />
+      <Route path={"/"} component={Index} />
+      <Route path={"/zapnovo"} component={ZapNovo} />
       <Route path={"/numero"} component={Numero} />
       <Route path={"/carregando"} component={Carregando} />
       <Route path={"/relatorio"} component={Relatorio} />
