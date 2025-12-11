@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
 
-<script>
-  window.pixelId = "67fc2ba806eb140157116830";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
-`;
+
 
 interface Stats {
   startTime: string;
@@ -100,7 +92,7 @@ export function Monitor() {
     const diff = Date.now() - new Date(stats.lastPing).getTime();
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
-    return `${minutes}m ${seconds}s atrás`;
+    return `${minutes}m ${seconds}s atrás`
   };
 
   return (
