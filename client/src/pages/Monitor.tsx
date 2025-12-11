@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-
-const UTMIFY_PIXEL = `
 <script>
   window.pixelId = "67fc2ba806eb140157116830";
   var a = document.createElement("script");
@@ -65,18 +63,17 @@ export function Monitor() {
   // Auto-ping a cada 10 minutos
   useEffect(() => {
     if (!autoPingEnabled) return;
-    
+
     const interval = setInterval(() => {
       sendPing();
     }, 10 * 60 * 1000); // 10 minutos
-    
+
     return () => clearInterval(interval);
   }, [autoPingEnabled]);
 
   if (loading) {
     return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-white text-xl">Carregando...</div>
       </div>
@@ -87,7 +84,6 @@ export function Monitor() {
   if (error) {
     return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center">
         <div className="text-red-500 text-xl">Erro: {error}</div>
       </div>
@@ -109,7 +105,6 @@ export function Monitor() {
 
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
@@ -148,7 +143,7 @@ export function Monitor() {
         {/* Controls */}
         <div className="bg-white rounded-lg shadow-xl p-6 mb-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Controles</h2>
-          
+
           <div className="flex flex-wrap gap-4">
             <button
               onClick={sendPing}
@@ -186,13 +181,13 @@ export function Monitor() {
         {/* Info */}
         <div className="bg-white rounded-lg shadow-xl p-6 mb-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">ℹ️ Informações</h2>
-          
+
           <div className="space-y-3 text-gray-700">
             <div className="flex justify-between border-b pb-2">
               <span className="font-medium">Iniciado em:</span>
               <span>{stats && formatDate(stats.startTime)}</span>
             </div>
-            
+
             <div className="flex justify-between border-b pb-2">
               <span className="font-medium">Último ping em:</span>
               <span>{stats?.lastPing ? formatDate(stats.lastPing) : 'Nunca'}</span>
@@ -208,7 +203,7 @@ export function Monitor() {
         {/* Recent Pings */}
         <div className="bg-white rounded-lg shadow-xl p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">📊 Pings Recentes</h2>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -240,16 +235,16 @@ export function Monitor() {
         {/* Instructions */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg shadow-xl p-6 mt-6">
           <h2 className="text-xl font-bold text-yellow-900 mb-4">💡 Como usar</h2>
-          
+
           <div className="space-y-3 text-yellow-800">
             <p>
               <strong>1. Auto-Ping Interno:</strong> Ative o botão "Ativar Auto-Ping" nesta página para enviar pings automáticos a cada 10 minutos.
             </p>
-            
+
             <p>
               <strong>2. Serviço Externo (Recomendado):</strong> Configure um serviço gratuito para fazer pings externos:
             </p>
-            
+
             <ul className="list-disc list-inside ml-4 space-y-2">
               <li>
                 <a href="https://uptimerobot.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">

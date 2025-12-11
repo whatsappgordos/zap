@@ -3,7 +3,6 @@ import { Loader2 } from "lucide-react";
 import { APP_LOGO, APP_TITLE } from "@/const";
 import { Streamdown } from 'streamdown';
 
-const UTMIFY_PIXEL = `
 <script>
   window.pixelId = "67fc2ba806eb140157116830";
   var a = document.createElement("script");
@@ -26,7 +25,6 @@ export default function Home() {
 
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen flex flex-col">
         <main>
           {/* Example: lucide-react for icons */}

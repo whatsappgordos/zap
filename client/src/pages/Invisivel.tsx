@@ -25,7 +25,6 @@ export default function Invisivel() {
       utms1.setAttribute("defer", "");
       document.head.appendChild(utms1);
 
-
     };
 
     loadPixels();
@@ -81,7 +80,6 @@ export default function Invisivel() {
 
         {/* Container Principal */}
         <div className="max-w-6xl mx-auto px-4 py-8">
-
 
           <div className="mb-8 bg-white/5 backdrop-blur-lg rounded-3xl p-4 border border-white/10 shadow-2xl">
 
@@ -195,7 +193,7 @@ export default function Invisivel() {
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                   Quem é<br />Eduardo Furtado?
                 </h2>
-                
+
                 <div className="inline-flex items-center gap-2 bg-red-500/20 backdrop-blur-md border-2 border-red-500/50 rounded-full px-4 py-2 mb-6">
                   <span className="text-2xl">⭐</span>
                   <span className="text-sm font-semibold text-red-300">
@@ -231,7 +229,7 @@ export default function Invisivel() {
             <h2 className="text-3xl font-bold text-white text-center mb-8">
               ❓ Perguntas Frequentes
             </h2>
-            
+
             <div className="space-y-4">
               {/* FAQ 1 */}
               <details className="group bg-white/5 rounded-xl border border-white/10 overflow-hidden">
@@ -294,7 +292,7 @@ export default function Invisivel() {
               <p className="text-gray-300 mb-6">
                 Garanta seu acesso agora e descubra a verdade sobre seu relacionamento
               </p>
-              
+
               {/* Contador Regressivo */}
               <CountdownTimer />
               <button

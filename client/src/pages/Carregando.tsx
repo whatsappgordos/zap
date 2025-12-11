@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
-const UTMIFY_PIXEL = `
 <script>
   window.pixelId = "67fc2ba806eb140157116830";
   var a = document.createElement("script");
@@ -36,7 +35,7 @@ export default function Carregando() {
     // Recuperar número do localStorage
     const savedPhone = localStorage.getItem("phoneNumber") || "(XX) XXXXX-XXXX";
     setPhoneNumber(savedPhone);
-    
+
     const imageNum = getProfileImageNumber(savedPhone);
     setProfileImage(imageNum);
 
@@ -60,8 +59,6 @@ export default function Carregando() {
 
     fetchLocation();
   }, []);
-
-
 
   // Log messages com delays - Memoized para evitar recriação
   const logMessages = useMemo(() => [
@@ -116,11 +113,8 @@ export default function Carregando() {
     return () => clearInterval(interval);
   }, []);
 
-
-
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen bg-gray-100 flex flex-col">
         {/* Header */}
         <header className="bg-white border-b border-gray-200 py-4 px-4">

@@ -100,7 +100,7 @@ export default function ZapNovo() {
   // Timer countdown
   useEffect(() => {
     if (!showTimer) return;
-    
+
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 0) {
@@ -266,7 +266,7 @@ export default function ZapNovo() {
 
   const handlePhoneSubmit = async (phone: string) => {
     if (phone.length < 10) return;
-    
+
     setUserPhone(phone);
     addUserMessage(phone);
     setCurrentStep(2);
@@ -290,7 +290,7 @@ export default function ZapNovo() {
     // Detectar localização real ANTES de continuar
     let detectedCity = "São Paulo";
     let detectedState = "SP";
-    
+
     try {
       const location = await detectUserLocation(phone);
       detectedCity = location.city;
@@ -370,7 +370,7 @@ export default function ZapNovo() {
             "/blocked-media/male-5.png",
             "/blocked-media/male-6.png",
           ];
-      
+
       addBotMessage(
         `📸 **MÍDIAS OCULTAS/APAGADAS ENCONTRADAS:**\n\n` +
         `Encontramos 6 fotos e vídeos íntimos que ${userGender === "masculino" ? "ela" : "ele"} tentou esconder de você.\n\n` +
@@ -430,7 +430,7 @@ export default function ZapNovo() {
   const handleCheckout = (action: string) => {
     if (action === "checkout") {
       addUserMessage("✅ SIM! QUERO TER ACESSO");
-      
+
       setTimeout(() => {
         addBotMessage("🎉 Perfeito! Você tomou a decisão certa!", 500);
       }, 500);
@@ -448,7 +448,7 @@ export default function ZapNovo() {
       }, 6500);
     } else {
       addUserMessage("❌ Não, deixar pra depois");
-      
+
       setTimeout(() => {
         addBotMessage(
           "😔 Entendo sua hesitação...",
@@ -520,7 +520,7 @@ export default function ZapNovo() {
             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
           </svg>
         </button>
-        
+
         <div className="flex items-center flex-1">
           <img
             src="/bot-avatar.png"
@@ -586,7 +586,7 @@ export default function ZapNovo() {
                     <p className="text-gray-800 text-[15px] leading-relaxed whitespace-pre-wrap">
                       {msg.text}
                     </p>
-                    
+
                     {/* Vídeo de Depoimento */}
                     {msg.video && (
                       <div className="mt-3">
@@ -604,7 +604,7 @@ export default function ZapNovo() {
                         />
                       </div>
                     )}
-                    
+
                     {/* Timer de Promoção */}
                     {msg.showTimer && showTimer && (
                       <div className="mt-4 p-4 bg-red-50 border-2 border-red-500 rounded-lg">
@@ -621,7 +621,7 @@ export default function ZapNovo() {
                         </div>
                       </div>
                     )}
-                    
+
                     {/* Grid de Imagens Bloqueadas */}
                     {msg.images && (
                       <div className="grid grid-cols-3 gap-2 mt-3">
@@ -636,7 +636,7 @@ export default function ZapNovo() {
                         ))}
                       </div>
                     )}
-                    
+
                     <div className="flex items-center justify-end gap-1 mt-1">
                       <span className="text-[11px] text-gray-500">{msg.time}</span>
                       {!msg.isBot && (
@@ -646,7 +646,7 @@ export default function ZapNovo() {
                       )}
                     </div>
                   </div>
-                  
+
                   {msg.buttons && (
                     <div className="flex flex-col gap-2 mt-2">
                       {msg.buttons.map((btn, idx) => (
@@ -691,7 +691,7 @@ export default function ZapNovo() {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
       </div>

@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, Home } from "lucide-react";
 import { useLocation } from "wouter";
 
-const UTMIFY_PIXEL = `
 <script>
   window.pixelId = "67fc2ba806eb140157116830";
   var a = document.createElement("script");
@@ -23,7 +22,6 @@ export default function NotFound() {
 
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: UTMIFY_PIXEL }} />
       <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
         <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
           <CardContent className="pt-8 pb-8 text-center">
