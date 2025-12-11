@@ -3,15 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, Home } from "lucide-react";
 import { useLocation } from "wouter";
 
-<script>
-  window.pixelId = "67fc2ba806eb140157116830";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
-`;
+
 
 export default function NotFound() {
   const [, setLocation] = useLocation();

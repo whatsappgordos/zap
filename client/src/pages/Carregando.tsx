@@ -1,14 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
-<script>
-  window.pixelId = "67fc2ba806eb140157116830";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
-`;
+
 import { useLocation } from "wouter";
 import { detectUserLocation } from "@/services/geolocation";
 
