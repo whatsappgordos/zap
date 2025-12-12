@@ -9,51 +9,40 @@ import Numero from "./pages/Numero";
 import Carregando from "./pages/Carregando";
 import Relatorio from "./pages/Relatorio";
 import RelatorioFeminino from "./pages/RelatorioFeminino";
-import { Monitor } from "./pages/Monitor";
+import Monitor from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
 import LandingPage from "./pages/LandingPage";
 import SEOPageV2 from "./pages/SEOPageV2";
-
+import Cariani from "./pages/Cariani"; // Importação da nova página
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={LandingPage} />
-      <Route path={"/google"} component={SEOPageV2} />
-      
-      <Route path={"/numero"} component={Numero} />
-      <Route path={"/carregando"} component={Carregando} />
-      <Route path={"/relatorio"} component={Relatorio} />
-      <Route path={"/relatorio-feminino"} component={RelatorioFeminino} />
-      <Route path={"/monitor"} component={Monitor} />
-      <Route path={"/invisivel"} component={Invisivel} />
-      
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
+      <Route path="/" component={LandingPage} />
+      <Route path="/google" component={SEOPageV2} />
+      <Route path="/cariani" component={Cariani} /> {/* Nova rota */}
+
+      <Route path="/numero" component={Numero} />
+      <Route path="/carregando" component={Carregando} />
+      <Route path="/relatorio" component={Relatorio} />
+      <Route path="/relatorio-feminino" component={RelatorioFeminino} />
+      <Route path="/monitor" component={Monitor} />
+      <Route path="/invisivel" component={Invisivel} />
+
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
-function App() {
+export default function App() {
   return (
-    <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ErrorBoundary>
         <TooltipProvider>
-          <Toaster />
           <Router />
+          <Toaster />
         </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
-
-export default App;
