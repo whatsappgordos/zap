@@ -14,7 +14,7 @@ interface Stats {
   }>;
 }
 
-export function Monitor() {
+export default function Monitor() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
