@@ -12,14 +12,14 @@ import RelatorioFeminino from "./pages/RelatorioFeminino";
 import { Monitor } from "./pages/Monitor";
 import Invisivel from "./pages/Invisivel";
 import LandingPage from "./pages/LandingPage";
-import SEOPage from "./pages/SEOPage";
+import SEOPageV2 from "./pages/SEOPageV2";
 
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={LandingPage} />
-      <Route path={"/google"} component={SEOPage} />
+      <Route path={"/google"} component={SEOPageV2} />
       
       <Route path={"/numero"} component={Numero} />
       <Route path={"/carregando"} component={Carregando} />
