@@ -5,6 +5,7 @@ import { CheckCircle, Lock, MessageSquare, Search } from "lucide-react";
 const WHATSAPP_GREEN = "bg-[#25D366]";
 const WHATSAPP_DARK_GREEN = "bg-[#075E54]";
 const WHATSAPP_LIGHT_GREEN = "text-[#25D366]";
+const RED_ACCENT = "text-red-600"; // Cor para "Descobrir Traição"
 
 export default function SEOPageV2() {
   const [, setLocation] = useLocation();
@@ -37,12 +38,12 @@ export default function SEOPageV2() {
         <div className="w-full max-w-4xl">
           {/* Título Principal Otimizado */}
           <h2 className="text-4xl md:text-5xl font-extrabold text-center text-gray-800 mb-4 leading-tight">
-            A Ferramenta Definitiva para <span className={`${WHATSAPP_LIGHT_GREEN} font-extrabold`}>Rastrear WhatsApp</span> e <span className="text-red-600">Descobrir Traição</span>
+            A Ferramenta Definitiva para <span className={`${WHATSAPP_LIGHT_GREEN} font-extrabold`}>Rastrear WhatsApp</span> e <span className={RED_ACCENT}>Descobrir Traição</span>
           </h2>
 
-          {/* Subtítulo */}
+          {/* Subtítulo - Corrigido */}
           <p className="text-center text-gray-600 text-xl mb-10">
-            Seu parceiro(a) está escondendo algo? Use o **Espião WhatsApp** mais seguro e eficaz do Brasil.
+            Seu parceiro(a) está escondendo algo? Use o <span className={WHATSAPP_LIGHT_GREEN}>Espião WhatsApp</span> mais seguro e eficaz do Brasil.
           </p>
 
           {/* Botão de Ação Flutuante - Estilo WhatsApp */}
@@ -62,45 +63,45 @@ export default function SEOPageV2() {
               <Search className="w-8 h-8 text-red-500 mb-3" />
               <h3 className="text-xl font-bold text-gray-800 mb-2">Descubra a Verdade</h3>
               <p className="text-gray-600">
-                Chega de dúvidas. Nossa tecnologia de **Espião WhatsApp** permite que você acesse as informações que precisa para **descobrir traição**.
+                Chega de dúvidas. Nossa tecnologia de <span className={WHATSAPP_LIGHT_GREEN}>Espião WhatsApp</span> permite que você acesse as informações que precisa para <span className={RED_ACCENT}>descobrir traição</span>.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
               <Lock className="w-8 h-8 text-blue-500 mb-3" />
               <h3 className="text-xl font-bold text-gray-800 mb-2">100% Seguro e Anônimo</h3>
               <p className="text-gray-600">
-                Sua privacidade é nossa prioridade. **Rastrear WhatsApp** nunca foi tão discreto. Seu parceiro(a) jamais saberá.
+                Sua privacidade é nossa prioridade. <span className={WHATSAPP_LIGHT_GREEN}>Rastrear WhatsApp</span> nunca foi tão discreto. Seu parceiro(a) jamais saberá.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500">
               <CheckCircle className="w-8 h-8 text-green-500 mb-3" />
               <h3 className="text-xl font-bold text-gray-800 mb-2">Tecnologia 2026</h3>
               <p className="text-gray-600">
-                Usamos a versão mais recente do **Whatsapp Espião 2026** para garantir compatibilidade total com todos os dispositivos.
+	                Usamos a versão mais recente do <span className={WHATSAPP_LIGHT_GREEN}>Whatsapp Espião 2026</span> para garantir compatibilidade total com todos os dispositivos.
               </p>
             </div>
           </div>
 
-          {/* Bloco de Conteúdo Otimizado para SEO (Texto Longo) */}
-          <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-gray-700 space-y-6">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Por Que Nossa Ferramenta é a Melhor para **Monitorar Parceiro(a)**?
-            </h3>
-            <p>
-              A busca por um **espião WhatsApp** confiável é constante. Muitos sites prometem resultados, mas apenas o nosso oferece uma solução robusta para **rastrear WhatsApp** de forma indetectável. Nosso sistema foi desenvolvido para quem precisa de respostas rápidas e precisas, seja para **descobrir traição** ou apenas para ter paz de espírito.
-            </p>
-            <p>
-              Não perca mais tempo com aplicativos falsos. Clique no botão e comece a **monitorar parceiro(a)** com a tecnologia mais avançada do mercado.
-            </p>
-          </div>
-
-          {/* Botão de Ação Final */}
+	          {/* Bloco de Conteúdo Otimizado para SEO (Texto Longo) - Corrigido */}
+	          <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-gray-700 space-y-6">
+	            <h3 className="text-2xl font-bold text-gray-800">
+	              Por Que Nossa Ferramenta é a Melhor para <span className={RED_ACCENT}>Monitorar Parceiro(a)</span>?
+	            </h3>
+	            <p>
+	              A busca por um <span className={WHATSAPP_LIGHT_GREEN}>espião WhatsApp</span> confiável é constante. Muitos sites prometem resultados, mas apenas o nosso oferece uma solução robusta para <span className={WHATSAPP_LIGHT_GREEN}>rastrear WhatsApp</span> de forma indetectável. Nossa solução permite que você <span className={RED_ACCENT}>descobrir traição</span> de forma discreta.
+	            </p>
+	            <p>
+	              Não perca mais tempo com aplicativos falsos. Clique no botão acima e comece a <span className={RED_ACCENT}>monitorar parceiro(a)</span> com a tecnologia mais avançada do mercado.
+	            </p>
+	          </div>
+	
+	          {/* Botão de Ação Final - Corrigido */}
           <div className="flex justify-center mt-12">
             <button
               onClick={handleRedirectToMain}
               className={`${WHATSAPP_DARK_GREEN} text-white font-bold py-4 px-10 rounded-xl text-xl shadow-lg hover:shadow-xl transition transform hover:scale-105 focus:outline-none`}
             >
-              QUERO **RASTREAR WHATSAPP** AGORA!
+	              QUERO RASTREAR WHATSAPP AGORA!
             </button>
           </div>
 
