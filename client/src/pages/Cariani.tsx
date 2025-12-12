@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 
 // Componente para a página de VSL clonada do Cariani
 export default function Cariani() {
   const [, setLocation] = useLocation();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [showButton, setShowButton] = useState(false);
   const videoUrl = "https://cdn.converteai.net/1.mp4";
   const ctaLink = "http://pay.kiwify.com.br/2p7bMLf"; // Link base do checkout
@@ -14,6 +15,15 @@ export default function Cariani() {
   const buttonDelayMs = 8000; 
 
   useEffect(() => {
+    // Tenta iniciar a reprodução do vídeo
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error("Erro ao tentar reproduzir o vídeo automaticamente:", error);
+        // O erro é esperado em alguns navegadores, mas a tentativa é válida.
+      });
+    }
+
+    // Lógica para liberar o botão
     const timer = setTimeout(() => {
       setShowButton(true);
     }, buttonDelayMs);
@@ -44,6 +54,7 @@ export default function Cariani() {
         {/* Player de Vídeo */}
         <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
           <video
+            ref={videoRef} // Adiciona a referência
             src={videoUrl}
             controls
             autoPlay
