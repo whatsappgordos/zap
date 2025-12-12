@@ -14,6 +14,20 @@ const PORT = process.env.PORT || 10000; // Alterado de 3000 para 10000 para comp
 // Middleware para JSON
 app.use(express.json());
 
+// Middleware para adicionar headers CORS e permitir acesso do Googlebot
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  
+  // Permitir requisições OPTIONS (preflight)
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
 // Armazenar estatísticas de keep-alive
 let keepAliveStats = {
   startTime: new Date(),
@@ -79,14 +93,48 @@ function formatUptime(seconds) {
   return `${days}d ${hours}h ${minutes}m ${secs}s`;
 }
 
+// Middleware específico para servir sitemap.xml com headers corretos
+app.get('/sitemap.xml', (req, res) => {
+  const sitemapPath = path.join(__dirname, '..', 'dist', 'public', 'sitemap.xml');
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.sendFile(sitemapPath, (err) => {
+    if (err) {
+      console.error('Erro ao servir sitemap.xml:', err);
+      res.status(404).send('Sitemap não encontrado');
+    }
+  });
+});
+
+// Middleware específico para servir robots.txt com headers corretos
+app.get('/robots.txt', (req, res) => {
+  const robotsPath = path.join(__dirname, '..', 'dist', 'public', 'robots.txt');
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.sendFile(robotsPath, (err) => {
+    if (err) {
+      console.error('Erro ao servir robots.txt:', err);
+      res.status(404).send('Robots.txt não encontrado');
+    }
+  });
+});
+
 // Servir os arquivos estáticos gerados pelo Vite (o build vai para client/dist)
 // Ajuste o caminho para ser compatível com ESM
 const staticPath = path.join(__dirname, '..', 'dist', 'public');
-app.use(express.static(staticPath));
+app.use(express.static(staticPath, {
+  maxAge: '1d',
+  etag: false
+}));
 
 // Para roteamento client-side (como o Wouter), todas as requisições
 // que não são arquivos estáticos devem retornar o index.html
 app.get('*', (req, res) => {
+  // Não servir index.html para requisições de arquivos específicos
+  if (req.path.includes('.')) {
+    return res.status(404).send('Not found');
+  }
   res.sendFile(path.join(staticPath, 'index.html'));
 });
 
