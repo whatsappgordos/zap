@@ -1,0 +1,9 @@
+# render.yaml - Configuração para forçar o Content-Type correto para o sitemap.xml
+
+static_sites:
+  - name: zap-muny
+    headers:
+      - path: /sitemap.xml
+        headers:
+          - key: Content-Type
+            value: application/xml
