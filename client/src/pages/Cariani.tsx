@@ -6,7 +6,7 @@ export default function Cariani() {
   const [, setLocation] = useLocation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showButton, setShowButton] = useState(false);
-  const videoUrl = "https://cdn.converteai.net/1.mp4";
+  const videoUrl = "/cariani_vsl.mp4"; // Usando o arquivo local
   const ctaLink = "http://pay.kiwify.com.br/2p7bMLf"; // Link base do checkout
   const ctaText = "SIM! ACEITO PERDER ATÉ 10KG DE GORDURA!";
   
