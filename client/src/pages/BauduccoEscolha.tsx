@@ -79,7 +79,7 @@ export default function BauduccoEscolha() {
     setSelectedProduct(productId);
     // Redirecionar para o checkout com o produto selecionado
     setTimeout(() => {
-      window.location.href = 'https://pay.natalfortuna.com/bz5KZb5EA5Y37dL';
+      window.location.href = 'https://pay.frequenciaboa.shop/2wq7Gr7Den8gBAN';
     }, 500);
   };
 
@@ -114,13 +114,13 @@ export default function BauduccoEscolha() {
       {/* Main Content */}
       <main className="flex-grow w-full bg-white p-8">
         {/* Banner Promocional */}
-        <div className="bg-[#fbcb07] rounded-lg p-8 mb-8 flex items-center justify-between">
+        <div className="bg-[#fbcb07] rounded-lg p-4 sm:p-6 mb-8 flex items-center justify-between">
           <div>
-            <h2 className="text-4xl font-bold text-[#8B4513] mb-4">Camadas de sabor</h2>
-            <p className="text-2xl font-bold text-[#8B4513]">que conquistam.</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#8B4513] mb-2">Camadas de sabor</h2>
+            <p className="text-lg sm:text-xl font-bold text-[#8B4513]">que conquistam.</p>
           </div>
           <div className="hidden md:block">
-            <img src="/bauducco_assets/HEAD-R-P-PERDI-removebg-preview.png" alt="Produtos" className="h-40" />
+            <img src="/bauducco_assets/HEAD-R-P-PERDI-removebg-preview.png" alt="Produtos" className="h-32" />
           </div>
         </div>
 
