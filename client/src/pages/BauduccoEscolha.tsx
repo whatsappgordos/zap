@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 
+// Hook para alterar o título da página
+const usePageTitle = (title: string) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+};
+
 interface Product {
   id: string;
   name: string;
@@ -14,6 +21,7 @@ interface Product {
 }
 
 export default function BauduccoEscolha() {
+  usePageTitle("Natal Bauducco - Escolha seu Kit");
   const [, setLocation] = useLocation();
   const [timeLeft, setTimeLeft] = useState(1799); // 29:59 em segundos
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);

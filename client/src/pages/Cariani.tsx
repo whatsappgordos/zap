@@ -1,8 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { useLocation } from "wouter";
 
+// Hook para alterar o título da página
+const usePageTitle = (title: string) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+};
+
 // Componente para a página de VSL clonada do Cariani
 export default function Cariani() {
+  usePageTitle("Seca Barriga");
   const [, setLocation] = useLocation();
   // Não é mais necessário o videoRef para o YouTube
   const [showButton, setShowButton] = useState(false);

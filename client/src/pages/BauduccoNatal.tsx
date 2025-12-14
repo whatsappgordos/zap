@@ -1,7 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'wouter';
 
+// Hook para alterar o título da página
+const usePageTitle = (title: string) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+};
+
 export default function BauduccoNatal() {
+  usePageTitle("Natal Bauducco");
   const [, setLocation] = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
