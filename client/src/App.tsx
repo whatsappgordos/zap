@@ -23,7 +23,7 @@ function Router() {
       <Route path="/" component={LandingPage} />
       <Route path="/google" component={SEOPageV2} />
       <Route path="/cariani" component={Cariani} /> {/* Nova rota */}
-      <Route path="/bauduconatal" component={BauduccoNatal} /> {/* Rota Bauducco Natal */}
+      <Route path="/bauducconatal" component={BauduccoNatal} /> {/* Rota Bauducco Natal */}
       <Route path="/bauducco-escolha" component={BauduccoEscolha} /> {/* Rota de seleção de produtos */}
 
       <Route path="/numero" component={Numero} />
