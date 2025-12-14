@@ -28,7 +28,7 @@ export default function BauduccoEscolha() {
       originalPrice: 599.80,
       discountPrice: 0,
       remaining: 32,
-      image: 'https://via.placeholder.com/300x200?text=Cesta+Pequena',
+      image: 'https://natalbauducco.vercel.app/escolha/images/bassi.webp',
     },
     {
       id: 'grande',
@@ -39,7 +39,7 @@ export default function BauduccoEscolha() {
       originalPrice: 419.00,
       discountPrice: 0,
       remaining: 28,
-      image: 'https://via.placeholder.com/300x200?text=Cesta+Grande',
+      image: 'https://natalbauducco.vercel.app/escolha/images/harmonia.webp',
     },
     {
       id: 'pp',
@@ -50,7 +50,7 @@ export default function BauduccoEscolha() {
       originalPrice: 799.90,
       discountPrice: 0,
       remaining: 22,
-      image: 'https://via.placeholder.com/300x200?text=Cesta+PP',
+      image: 'https://natalbauducco.vercel.app/escolha/images/gloria.webp',
     },
   ];
 
