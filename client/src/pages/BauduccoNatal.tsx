@@ -156,12 +156,12 @@ export default function BauduccoNatal() {
             {currentStep <= 4 ? (
               <div className="quiz-step">
                 <p className="font-semibold mb-4 text-lg">{quizQuestions[currentStep - 1].question}</p>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {quizQuestions[currentStep - 1].options.map((option, index) => (
                     <button
                       key={index}
                       onClick={() => handleQuizOption(option)}
-                      className="w-full text-left px-6 py-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-300 border-2 border-yellow-400"
+                      className="w-full text-left px-6 py-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-300 border-2 border-yellow-400" style={{borderStyle: 'dashed'}}
                     >
                       {option}
                     </button>
@@ -283,7 +283,7 @@ export default function BauduccoNatal() {
             <div className="md:w-1/2">
               <h1 className="text-3xl font-bold mb-4">Kit Fortuna Bauducco 8 Itens 9,5 kg</h1>
               <div className="mb-4">
-                <span className="text-2xl font-bold text-[#d32e2e]">R$ 0,00</span>
+                <span className="text-2xl font-bold text-[#d32e2e]">Grátis (apenas frete)</span>
                 <span className="text-lg text-gray-500 line-through ml-2">R$ 575,90</span>
               </div>
               <p className="text-green-600 font-semibold mb-4">Você economizou R$ 575,90 (100% de desconto)</p>
