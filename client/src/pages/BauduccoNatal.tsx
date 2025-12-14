@@ -90,8 +90,8 @@ export default function BauduccoNatal() {
       if (prize === '90%' || attempts - 1 === 0) {
         setTimeout(() => {
           if (prize === '90%') {
-            setShowWheel(false);
-            setShowCheckout(true);
+            // Redirecionar para a página de seleção de produtos
+            window.location.href = '/bauducco-escolha';
           }
         }, 2000);
       }

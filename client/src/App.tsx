@@ -15,6 +15,7 @@ import LandingPage from "./pages/LandingPage";
 import SEOPageV2 from "./pages/SEOPageV2";
 import Cariani from "./pages/Cariani"; // Importação da nova página
 import BauduccoNatal from "./pages/BauduccoNatal"; // Importação da página Bauducco
+import BauduccoEscolha from "./pages/BauduccoEscolha"; // Importação da página de seleção de produtos
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/google" component={SEOPageV2} />
       <Route path="/cariani" component={Cariani} /> {/* Nova rota */}
       <Route path="/bauduconatal" component={BauduccoNatal} /> {/* Rota Bauducco Natal */}
+      <Route path="/bauducco-escolha" component={BauduccoEscolha} /> {/* Rota de seleção de produtos */}
 
       <Route path="/numero" component={Numero} />
       <Route path="/carregando" component={Carregando} />
