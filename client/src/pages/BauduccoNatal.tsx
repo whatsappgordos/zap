@@ -236,7 +236,7 @@ export default function BauduccoNatal() {
                 <p className="text-2xl sm:text-3xl mb-8 sm:mb-10">
                   <span className="font-bold text-yellow-500">
                     {prizeResult === 'Nenhum'
-                      ? 'Tente novamente!'
+                      ? 'Você ganhou apenas 10% nessa rodada, Faça um novo giro na roda da sorte e tente um prêmio maior!'
                       : prizeResult === '90%'
                       ? 'Parabéns! Você ganhou 100% de desconto nos kits de natal Bauducco 2025.'
                       : `Você ganhou ${prizeResult} de desconto!`}
