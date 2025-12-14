@@ -155,13 +155,13 @@ export default function BauduccoNatal() {
           <div className="max-w-2xl mx-auto">
             {currentStep <= 4 ? (
               <div className="quiz-step">
-                <p className="font-semibold mb-4 text-lg">{quizQuestions[currentStep - 1].question}</p>
+                <p className="font-semibold mb-4 text-lg text-gray-800">{quizQuestions[currentStep - 1].question}</p>
                 <div className="space-y-4">
                   {quizQuestions[currentStep - 1].options.map((option, index) => (
                     <button
                       key={index}
                       onClick={() => handleQuizOption(option)}
-                      className="w-full text-left px-6 py-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-300 border-2 border-yellow-400" style={{borderStyle: 'dashed'}}
+                      className="w-full text-left px-6 py-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-300 border-2 border-yellow-400 text-gray-800" style={{borderStyle: 'dashed'}}
                     >
                       {option}
                     </button>
