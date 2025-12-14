@@ -243,10 +243,16 @@ export default function BauduccoNatal() {
                   </span>
                 </p>
                 <button
-                  onClick={handleCloseModal}
+                  onClick={() => {
+                    if (prizeResult === '90%') {
+                      window.location.href = '/bauducco-escolha';
+                    } else {
+                      handleCloseModal();
+                    }
+                  }}
                   className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-full transition duration-300 ease-in-out text-xl sm:text-2xl transform hover:scale-105"
                 >
-                  Fechar
+                  {prizeResult === '90%' ? 'RESGATAR MEU KIT' : 'Fechar'}
                 </button>
                 {prizeResult === '90%' && (
                   <button

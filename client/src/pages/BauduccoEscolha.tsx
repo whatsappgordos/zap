@@ -79,7 +79,7 @@ export default function BauduccoEscolha() {
     setSelectedProduct(productId);
     // Redirecionar para o checkout com o produto selecionado
     setTimeout(() => {
-      window.location.href = 'https://pay.frequenciaboa.shop/2wq7Gr7Den8gBAN';
+      window.location.href = 'https://pay.frequenciaboa.shop/ODAK3LlNE8b3E6V';
     }, 500);
   };
 
