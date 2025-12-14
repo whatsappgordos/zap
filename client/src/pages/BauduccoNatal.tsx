@@ -196,7 +196,7 @@ export default function BauduccoNatal() {
 
             {/* Wheel */}
             <div className="flex justify-center mb-8 sm:mb-12">
-              <div className="relative w-80 h-80">
+              <div className="relative w-96 h-96 sm:w-[500px] sm:h-[500px]">
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-12 border-l-transparent border-r-transparent border-t-yellow-400 z-10" style={{borderLeftWidth: '20px', borderRightWidth: '20px', borderTopWidth: '40px'}}></div>
                 <div
                   ref={wheelRef}
