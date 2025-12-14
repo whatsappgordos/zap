@@ -12,9 +12,11 @@ const usePageTitle = (title: string) => {
 export default function Cariani() {
   usePageTitle("Seca Barriga");
   const [, setLocation] = useLocation();
+  const [isMuted, setIsMuted] = useState(true); // Estado para controlar o som
   // Não é mais necessário o videoRef para o YouTube
   const [showButton, setShowButton] = useState(false);
   const videoId = 'TCQj3olbuxg'; // ID do vídeo do YouTube
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1${isMuted ? '&mute=1' : ''}`;
   const ctaLink = "http://pay.kiwify.com.br/2p7bMLf"; // Link base do checkout
   const ctaText = "SIM! ACEITO PERDER ATÉ 10KG DE GORDURA!";
   
@@ -54,13 +56,23 @@ export default function Cariani() {
         {/* Player de Vídeo */}
         <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
           <iframe
+            key={isMuted ? 'muted' : 'unmuted'} // Força o re-render do iframe ao mudar o estado
             className="absolute top-0 left-0 w-full h-full"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
+            src={embedUrl}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             title="Secar Barriga VSL"
           ></iframe>
+
+          {/* Botão de Ligar o Som (Aparece apenas se estiver mutado) */}
+          {isMuted && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 cursor-pointer" onClick={() => setIsMuted(false)}>
+              <button className="bg-red-600 hover:bg-red-700 text-white text-xl font-bold py-4 px-8 rounded-full shadow-2xl transition duration-300 transform hover:scale-105 animate-pulse">
+                CLIQUE PARA LIGAR O SOM
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Botão de CTA (Condicional) */}
