@@ -4,9 +4,9 @@ import { useLocation } from "wouter";
 // Componente para a página de VSL clonada do Cariani
 export default function Cariani() {
   const [, setLocation] = useLocation();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // Não é mais necessário o videoRef para o YouTube
   const [showButton, setShowButton] = useState(false);
-  const videoUrl = "/cariani_vsl.mp4"; // Usando o arquivo local
+  const videoId = 'TCQj3olbuxg'; // ID do vídeo do YouTube
   const ctaLink = "http://pay.kiwify.com.br/2p7bMLf"; // Link base do checkout
   const ctaText = "SIM! ACEITO PERDER ATÉ 10KG DE GORDURA!";
   
@@ -15,14 +15,6 @@ export default function Cariani() {
   const buttonDelayMs = 8000; 
 
   useEffect(() => {
-    // Tenta iniciar a reprodução do vídeo
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.error("Erro ao tentar reproduzir o vídeo automaticamente:", error);
-        // O erro é esperado em alguns navegadores, mas a tentativa é válida.
-      });
-    }
-
     // Lógica para liberar o botão
     const timer = setTimeout(() => {
       setShowButton(true);
@@ -53,16 +45,14 @@ export default function Cariani() {
 
         {/* Player de Vídeo */}
         <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
-          <video
-            ref={videoRef} // Adiciona a referência
-            src={videoUrl}
-            controls
-            autoPlay
-            playsInline
-            muted
-            className="w-full h-full object-cover"
-            poster="https://cariani.com.br/wp-content/uploads/2024/05/thumb-vsl-d.jpg" // Imagem de capa do vídeo (tentativa de clonar)
-          />
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            title="Secar Barriga VSL"
+          ></iframe>
         </div>
 
         {/* Botão de CTA (Condicional) */}
