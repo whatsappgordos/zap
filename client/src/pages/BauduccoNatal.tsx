@@ -286,14 +286,6 @@ export default function BauduccoNatal() {
                 >
                   {prizeResult === '90%' ? 'RESGATAR MEU KIT' : 'Fechar'}
                 </button>
-                {prizeResult === '90%' && (
-                  <button
-                    onClick={handleRedeem}
-                    className="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-full transition duration-300 ease-in-out text-xl sm:text-2xl transform hover:scale-105 mt-4"
-                  >
-                    Resgatar Presente
-                  </button>
-                )}
               </div>
             </div>
           )}
