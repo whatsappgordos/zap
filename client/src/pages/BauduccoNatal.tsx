@@ -10,6 +10,34 @@ const usePageTitle = (title: string) => {
 
 export default function BauduccoNatal() {
   usePageTitle("Natal Bauducco");
+
+  // Lógica para injetar o pixel de rastreamento
+  useEffect(() => {
+    const pixelId = "6938e5536b4570432e6c8d5a";
+    
+    // Remove qualquer pixel anterior para garantir que apenas este esteja ativo
+    const existingScript = document.querySelector(`script[src="https://cdn.utmify.com.br/scripts/pixel/pixel.js"]`);
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    // Injeta o novo pixel
+    (window as any).pixelId = pixelId;
+    const a = document.createElement("script");
+    a.setAttribute("async", "");
+    a.setAttribute("defer", "");
+    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+    document.head.appendChild(a);
+
+    return () => {
+      // Limpeza: remove o script quando o componente é desmontado
+      const scriptToRemove = document.querySelector(`script[src="https://cdn.utmify.com.br/scripts/pixel/pixel.js"]`);
+      if (scriptToRemove) {
+        scriptToRemove.remove();
+      }
+      delete (window as any).pixelId;
+    };
+  }, []);
   const [, setLocation] = useLocation();
   const [currentStep, setCurrentStep] = useState(1);
   const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
