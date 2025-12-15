@@ -23,29 +23,7 @@ interface Product {
 export default function BauduccoEscolha() {
   usePageTitle("Natal Bauducco - Escolha seu Kit");
 
-  // Lógica para injetar o pixel no head
-  useEffect(() => {
-    const pixelId = "6938e5536b4570432e6c8d5a";
-    
-    // 1. Define o ID
-    (window as any).pixelId = pixelId;
 
-    // 2. Injeta o script no <head>
-    const a = document.createElement("script");
-    a.setAttribute("async", "");
-    a.setAttribute("defer", "");
-    a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-    document.head.appendChild(a);
-
-    return () => {
-      // 3. Limpeza: remove o script e o ID ao sair da página
-      const scriptToRemove = document.querySelector(`script[src="https://cdn.utmify.com.br/scripts/pixel/pixel.js"]`);
-      if (scriptToRemove) {
-        scriptToRemove.remove();
-      }
-      delete (window as any).pixelId;
-    };
-  }, []);
   const [, setLocation] = useLocation();
   const [timeLeft, setTimeLeft] = useState(1799); // 29:59 em segundos
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
