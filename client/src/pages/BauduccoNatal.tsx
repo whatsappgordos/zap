@@ -1,15 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'wouter';
 
-<script>
-  window.pixelId = "6938e5536b4570432e6c8d5a";
-  var a = document.createElement("script");
-  a.setAttribute("async", "");
-  a.setAttribute("defer", "");
-  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-  document.head.appendChild(a);
-</script>
-
 // Hook para alterar o título da página
 const usePageTitle = (title: string) => {
   useEffect(() => {
